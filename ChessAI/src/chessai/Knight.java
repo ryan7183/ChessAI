@@ -10,10 +10,8 @@ package chessai;
  * @author Ryan and Parm
  */
 public class Knight extends Piece{
-    public String textRepresentation;
-    public Knight(boolean c, int x, int y) {
-	super(c, x, y);
-	textRepresentation = "N";
+    public Knight(boolean c, int x, int y, String n) {
+	super(c, x, y, n);
     }
     
 }
