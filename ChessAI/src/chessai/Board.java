@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  *
- * @author Ryan
+ * @author Ryan and Parm
  * 
  */
 public class Board {
