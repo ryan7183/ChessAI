@@ -3,7 +3,7 @@ package chessai;
 
 /**
  *
- * @author Ryan
+ * @author Ryan and Parm
  * Is a single position on the chess board
  * Store location on the board, and which piece if any the position holds.
  */
