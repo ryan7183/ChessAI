@@ -10,11 +10,9 @@ package chessai;
  * @author Ryan and Parm
  */
 public class Queen extends Piece{
-    public String textRepresentation;
-    public Queen(boolean c, int x, int y) {
-	super(c, x, y);
+    public Queen(boolean c, int x, int y, String n) {
+	super(c, x, y, n);
 	System.out.println(1);
-	textRepresentation = "Q";
 	
     }
     
