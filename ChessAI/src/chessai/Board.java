@@ -44,7 +44,7 @@ public class Board {
 	board[7][4].setPiece(new King(true,4,7));
 	//White pawns
 	for(int x=0;x<8;x++){
-	    board[6][x].setPiece(new Pawn(false,x,6));
+	    board[6][x].setPiece(new Pawn(true,x,6));
 	
 	}
 	printBoard();
