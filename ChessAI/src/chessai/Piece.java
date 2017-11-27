@@ -13,9 +13,10 @@ public class Piece {
     boolean colour;//false black, true white
     int x,y;//Coordinates
     public String textRepresentation;
-    Piece(boolean c,int x, int y){
+    Piece(boolean c,int x, int y, String n){
 	colour = c;
 	this.x=x;
 	this.y=y;
+        this.textRepresentation = n;
     }
 }
