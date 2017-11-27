@@ -10,8 +10,8 @@ package chessai;
  * @author Ryan and Parm
  */
 public class Bishop extends Piece{
-    public Bishop(boolean c, int x, int y) {
-	super(c, x, y);
+    public Bishop(boolean c, int x, int y, String n) {
+	super(c, x, y, n);
     }
     
 }
