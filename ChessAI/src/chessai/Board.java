@@ -20,31 +20,31 @@ public class Board {
 	}
 	//Set up pieces
 	//Black first row
-	board[0][0].setPiece(new Rook(false,0,0));
-	board[0][7].setPiece(new Rook(false,7,0));
-	board[0][1].setPiece(new Knight(false,1,0));
-	board[0][6].setPiece(new Knight(false,6,0));
-	board[0][2].setPiece(new Bishop(false,2,0));
-	board[0][5].setPiece(new Bishop(false,5,0));
-	board[0][3].setPiece(new Queen(false,3,0));
-	board[0][4].setPiece(new King(false,4,0));
+	board[0][0].setPiece(new Rook(false,0,0,"R"));
+	board[0][7].setPiece(new Rook(false,7,0,"R"));
+	board[0][1].setPiece(new Knight(false,1,0,"N"));
+	board[0][6].setPiece(new Knight(false,6,0,"N"));
+	board[0][2].setPiece(new Bishop(false,2,0,"B"));
+	board[0][5].setPiece(new Bishop(false,5,0,"B"));
+	board[0][3].setPiece(new Queen(false,3,0,"Q"));
+	board[0][4].setPiece(new King(false,4,0,"K"));
 	//Black pawns
 	for(int x=0;x<8;x++){
-	    board[1][x].setPiece(new Pawn(false,x,1));
+	    board[1][x].setPiece(new Pawn(false,x,1,"P"));
 	
 	}
 	//White first row
-	board[7][0].setPiece(new Rook(true,0,7));
-	board[7][7].setPiece(new Rook(true,7,7));
-	board[7][1].setPiece(new Knight(true,1,7));
-	board[7][6].setPiece(new Knight(true,6,7));
-	board[7][2].setPiece(new Bishop(true,2,7));
-	board[7][5].setPiece(new Bishop(true,05,7));
-	board[7][3].setPiece(new Queen(true,3,7));
-	board[7][4].setPiece(new King(true,4,7));
+	board[7][0].setPiece(new Rook(true,0,7,"r"));
+	board[7][7].setPiece(new Rook(true,7,7,"r"));
+	board[7][1].setPiece(new Knight(true,1,7,"n"));
+	board[7][6].setPiece(new Knight(true,6,7,"n"));
+	board[7][2].setPiece(new Bishop(true,2,7,"b"));
+	board[7][5].setPiece(new Bishop(true,05,7,"b"));
+	board[7][3].setPiece(new Queen(true,3,7,"q"));
+	board[7][4].setPiece(new King(true,4,7,"k"));
 	//White pawns
 	for(int x=0;x<8;x++){
-	    board[6][x].setPiece(new Pawn(true,x,6));
+	    board[6][x].setPiece(new Pawn(true,x,6,"p"));
 	
 	}
 	printBoard();
