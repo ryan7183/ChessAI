@@ -7,7 +7,7 @@ package chessai;
 
 /**
  *
- * @author Ryan
+ * @author Ryan and Parm
  */
 public class Piece {
     boolean colour;//false black, true white
