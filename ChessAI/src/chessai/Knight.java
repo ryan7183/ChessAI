@@ -7,7 +7,7 @@ package chessai;
 
 /**
  *
- * @author Ryan
+ * @author Ryan and Parm
  */
 public class Knight extends Piece{
     public String textRepresentation;
