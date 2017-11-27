@@ -35,13 +35,13 @@ public class Board {
 	}
 	//White first row
 	board[7][0].setPiece(new Rook(true,0,7));
-	board[7][7].setPiece(new Rook(false,7,7));
-	board[7][1].setPiece(new Knight(false,1,7));
-	board[7][6].setPiece(new Knight(false,6,7));
-	board[7][2].setPiece(new Bishop(false,2,7));
-	board[7][5].setPiece(new Bishop(false,05,7));
-	board[7][3].setPiece(new Queen(false,3,7));
-	board[7][4].setPiece(new King(false,4,7));
+	board[7][7].setPiece(new Rook(true,7,7));
+	board[7][1].setPiece(new Knight(true,1,7));
+	board[7][6].setPiece(new Knight(true,6,7));
+	board[7][2].setPiece(new Bishop(true,2,7));
+	board[7][5].setPiece(new Bishop(true,05,7));
+	board[7][3].setPiece(new Queen(true,3,7));
+	board[7][4].setPiece(new King(true,4,7));
 	//White pawns
 	for(int x=0;x<8;x++){
 	    board[6][x].setPiece(new Pawn(false,x,6));
