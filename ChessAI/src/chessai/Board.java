@@ -48,7 +48,7 @@ public class Board {
 	
 	}
 	p.setBoard(board);
-	printBoard();
+	//printBoard();
     }
    
     //Set up a board from a file
