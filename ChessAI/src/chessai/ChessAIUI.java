@@ -42,11 +42,13 @@ public class ChessAIUI extends Application {
 	
 	
 	Passer p = new Passer();//Create a way to communicate with board
+	Human p1=new Human(p);
+	AIdriver p2 = new AIdriver(p);
 	
 	Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
-                Board b = new Board(p);
+                Board b = new Board(p,p1,p2);
                 return null;
                 
             }
@@ -59,8 +61,12 @@ public class ChessAIUI extends Application {
 	EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
          @Override 
          public void handle(MouseEvent e) { 
-            p.mouseX=e.getX();
-	    p.mouseY=e.getY(); 
+	     //If a player is selecting a piece update coordinates
+	     if(p.playerSelect){
+		 p.mouseX=e.getX();
+		p.mouseY=e.getY();
+	     }
+             
          } 
 	}; 
 	canvas.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -70,7 +76,6 @@ public class ChessAIUI extends Application {
 	    @Override
 	    public void handle(long now) {
 		
-		p.update=true;
 		if(p.update){
 		    renderBoard(p.board);
 		}

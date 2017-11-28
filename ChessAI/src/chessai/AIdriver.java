@@ -10,5 +10,19 @@ package chessai;
  * @author Ryan and Parm
  */
 public class AIdriver extends Player{
+    Passer passer;
+    AIdriver(Passer p){
+	passer=p;
+    }
     
+    @Override
+    int[] requestMove(){
+	return null;
+	
+    }
+
+    @Override
+    int[] requestPiece() {
+	return null;
+    }
 }

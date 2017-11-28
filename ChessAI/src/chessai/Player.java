@@ -9,6 +9,8 @@ package chessai;
  *
  * @author Ryan and Parm
  */
-public class Player {
-    
+public abstract class Player {
+
+    abstract int[] requestPiece();
+    abstract int[] requestMove();
 }

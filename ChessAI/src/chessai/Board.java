@@ -9,9 +9,15 @@ import java.io.File;
  */
 public class Board {
     BoardSquare[][] board;
+    Passer p;
+    Player player1;
+    Player player2;
     //Set up a regular board
-    Board(Passer p){
+    Board(Passer p,Player player1, Player player2){
+	this.player1 = player1;
+	this.player2 =player2;
 	board = new BoardSquare[8][8];
+	this.p =p;
 	//Make board
 	for(int y=0;y<8;y++){
 	    for(int x=0;x<8;x++){
@@ -49,16 +55,36 @@ public class Board {
 	}
 	p.setBoard(board);
 	//printBoard();
+	start();
     }
    
     //Set up a board from a file
-    Board(File f,Passer p){
-	
+    Board(File f,Passer p,Player player1, Player player2){
+	start();
     }
     
     //Set up a board from an array of board squares
-    Board(BoardSquare[][] board, Passer p){
+    Board(BoardSquare[][] board, Passer p,Player player1, Player player2){
 	this.board = board;
+	start();
+    }
+    
+    void start(){
+	boolean cont=true;
+	boolean valid = false;
+	Piece piece;
+	while(cont){
+	    //Ask player1
+	    valid = false;
+	    //Wait till valid piece is selected
+	    piece = player1.requestPiece();
+	    //Wait till valid move is selected
+	    player1.requestMove();
+	    p.update = true;//Tell the render there is a change to update
+	    //Update board
+	    //Ask player2
+	    //Update board
+	}
     }
     
     void printBoard(){

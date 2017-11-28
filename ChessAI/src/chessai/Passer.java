@@ -14,7 +14,11 @@ public class Passer {
     BoardSquare[][] board;
     double mouseX;
     double mouseY;
+    boolean playerSelect;
+    boolean playerDone;
     Passer(){
+	playerSelect = false;
+	playerDone = false;
 	update =false;
 	board = null;
 	mouseX=0;
@@ -23,5 +27,13 @@ public class Passer {
     
     public void setBoard(BoardSquare[][] b){
 	board = b;
+    }
+    
+    public void playerSelectSet(Boolean b){
+	playerSelect = b;
+    }
+    
+    public void playerDoneSet(Boolean b){
+	playerDone = b;
     }
 }

@@ -19,7 +19,9 @@ public class ChessAI {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 	Passer p = new Passer();//Not really needed
-	Board b = new Board(p);
+	//Player p1 = new Human();
+	//Player p2 = new AIdriver();
+	//Board b = new Board(p,p1,p2);
         int[] ogPos = new int[2];
         int[] newPos = new int[2];
         System.out.print("Choose piece to move and position to move it to(eg. A:6-A:4): ");
@@ -29,7 +31,7 @@ public class ChessAI {
         ogPos[1] = Integer.parseInt(pos[1]);
         newPos[0] = (int)pos[2].charAt(0)-65;
         newPos[1] = Integer.parseInt(pos[3]);
-        b.movePiece(ogPos, newPos);
+        //b.movePiece(ogPos, newPos);
     }
     
 }
