@@ -18,7 +18,8 @@ public class ChessAI {
      */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-	Board b = new Board();
+	Passer p = new Passer();//Not really needed
+	Board b = new Board(p);
         int[] ogPos = new int[2];
         int[] newPos = new int[2];
         System.out.print("Choose piece to move and position to move it to(eg. A:6-A:4): ");
