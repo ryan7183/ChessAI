@@ -12,9 +12,13 @@ package chessai;
 public class Passer {
     Boolean update;
     BoardSquare[][] board;
+    double mouseX;
+    double mouseY;
     Passer(){
 	update =false;
 	board = null;
+	mouseX=0;
+	mouseY = 0;
     }
     
     public void setBoard(BoardSquare[][] b){
