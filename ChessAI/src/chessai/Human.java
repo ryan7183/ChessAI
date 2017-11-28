@@ -16,14 +16,31 @@ public class Human extends Player {
     }
 
     @Override
-    int[] requestPiece() {
+    int[] requestPiece(Board b) {
 	passer.playerSelectSet(true);
-	
-	return null;
+	int x = (int)(passer.mouseX/8);
+	int y = (int)(passer.mouseY/8);
+	int[] coords = new int[2];
+	while(!validPiece(x,y)){
+	    x = (int)(passer.mouseX/8);
+	    y = (int)(passer.mouseY/8);
+	}
+	coords[0]=x;
+	coords[1]=y;
+	return coords;
     }
 
+    boolean validPiece(int x,int y){
+	
+	return true;
+    }
+    
     @Override
-    int[] requestMove() {
+    Board requestMove(int[] piece) {
 	return null;
+    }
+    
+    boolean validMove(int x,int y){
+	return true;
     }
 }
