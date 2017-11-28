@@ -15,14 +15,14 @@ public class AIdriver extends Player{
 	passer=p;
     }
     
+
     @Override
-    int[] requestMove(){
+    int[] requestPiece(Board b) {
 	return null;
-	
     }
 
     @Override
-    int[] requestPiece() {
+    Board requestMove(int[] piece) {
 	return null;
     }
 }
