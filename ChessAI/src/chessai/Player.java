@@ -11,6 +11,6 @@ package chessai;
  */
 public abstract class Player {
 
-    abstract int[] requestPiece();
-    abstract int[] requestMove();
+    abstract int[] requestPiece(Board b);
+    abstract Board requestMove(int[] piece);
 }
