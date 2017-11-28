@@ -72,14 +72,15 @@ public class Board {
     void start(){
 	boolean cont=true;
 	boolean valid = false;
-	Piece piece;
+	int[] pieceSelected;
+	int[] pieceMove;
 	while(cont){
 	    //Ask player1
 	    valid = false;
 	    //Wait till valid piece is selected
-	    piece = player1.requestPiece();
+	    pieceSelected = player1.requestPiece(this);
 	    //Wait till valid move is selected
-	    player1.requestMove();
+	    player1.requestMove(pieceSelected);
 	    p.update = true;//Tell the render there is a change to update
 	    //Update board
 	    //Ask player2
