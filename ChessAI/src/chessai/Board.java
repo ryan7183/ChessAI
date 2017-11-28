@@ -10,7 +10,7 @@ import java.io.File;
 public class Board {
     BoardSquare[][] board;
     //Set up a regular board
-    Board(){
+    Board(Passer p){
 	board = new BoardSquare[8][8];
 	//Make board
 	for(int y=0;y<8;y++){
@@ -47,16 +47,17 @@ public class Board {
 	    board[6][x].setPiece(new Pawn(true,x,6,"p"));
 	
 	}
+	p.setBoard(board);
 	printBoard();
     }
    
     //Set up a board from a file
-    Board(File f){
+    Board(File f,Passer p){
 	
     }
     
     //Set up a board from an array of board squares
-    Board(BoardSquare[][] board){
+    Board(BoardSquare[][] board, Passer p){
 	this.board = board;
     }
     
