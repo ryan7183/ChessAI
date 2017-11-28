@@ -61,7 +61,13 @@ public class Board {
     }
     
     void printBoard(){
+        System.out.print(" ");
+        for (int i=0; i<board[0].length; i++){
+            System.out.print(" "+(char)(i+65)+" ");
+        }
+        System.out.println();
 	for(int x=0;x<board[0].length;x++){
+            System.out.print(x);
 	    for(int y=0;y<board.length;y++){
 		if(board[x][y].hasPiece){
 		    System.out.print("["+board[x][y].piece.textRepresentation+"]");
@@ -72,5 +78,11 @@ public class Board {
 	    }
 	    System.out.println();
 	}
+    }
+    
+    void movePiece (int[] ogPos, int[] newPos){
+        board[newPos[1]][newPos[0]].setPiece(board[ogPos[1]][ogPos[0]].piece);
+        board[ogPos[1]][ogPos[0]].removePiece();
+        printBoard();
     }
 }
