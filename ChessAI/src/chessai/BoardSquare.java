@@ -33,12 +33,10 @@ public class BoardSquare {
 	return l;
     }
     
-    //Removes the piece fromt he square and returns it.
-    Piece removePiece(){
-	Piece temp=piece;
+    //Removes the piece fromt the square and returns it.
+    void removePiece(){
 	piece= null;
 	hasPiece=false;
-	return temp;
     }
     
     void setPiece(Piece p){
