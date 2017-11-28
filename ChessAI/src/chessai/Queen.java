@@ -12,7 +12,6 @@ package chessai;
 public class Queen extends Piece{
     public Queen(boolean c, int x, int y, String n) {
 	super(c, x, y, n);
-	System.out.println(1);
 	
     }
     
