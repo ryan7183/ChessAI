@@ -36,14 +36,14 @@ public class ChessAIUI extends Application {
 	root.getChildren().add( canvas );
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 	
-	primaryStage.setTitle("Best Chess Game The World.. Maybe, Possibly Not, I Don't Know!");
+	primaryStage.setTitle("Best Chess Game In The World... Maybe, Possibly Not, I Don't Know!");
 	primaryStage.setScene(scene);
 	
 	
 	
 	Passer p = new Passer();//Create a way to communicate with board
-	Human p1=new Human(p);
-	AIdriver p2 = new AIdriver(p);
+	Human p1=new Human(p,true);
+	AIdriver p2 = new AIdriver(p,false);
 	
 	Task<Void> task = new Task<Void>(){
             @Override
@@ -62,9 +62,10 @@ public class ChessAIUI extends Application {
          @Override 
          public void handle(MouseEvent e) { 
 	     //If a player is selecting a piece update coordinates
-	     if(p.playerSelect){
-		 p.mouseX=e.getSceneX();
-		p.mouseY=e.getSceneY();
+	     if(!p.mouseClicked){
+		p.mouseX=e.getX();
+		p.mouseY=e.getY();
+		p.mouseClicked =true;
 	     }
              
          } 
@@ -76,8 +77,9 @@ public class ChessAIUI extends Application {
 	    @Override
 	    public void handle(long now) {
 		
-		if(p.update){
+		if(p.boardUpdate){
 		    renderBoard(p.board);
+		    p.boardUpdate = false;
 		}
 	    }
 	    public void renderBoard(BoardSquare[][] b){

@@ -11,15 +11,19 @@ package chessai;
  */
 public class Human extends Player {
     Passer passer;
-    Human(Passer p){
+    boolean colour;
+    Human(Passer p, boolean colour){
+	this.colour = colour;
 	passer=p;
     }
 
     @Override
-    int[] requestPiece(Board b) {
-	passer.playerSelectSet(true);
-	int x = (int)(passer.mouseX/8);
-	int y = (int)(passer.mouseY/8);
+    int[] requestPiece() {
+	passer.mouseClicked=false;
+	while(!passer.mouseClicked){
+	}
+	int x = (int)((passer.mouseX-54)/73);
+	int y = (int)((passer.mouseY-60)/74);
 	int[] coords = new int[2];
 	while(!validPiece(x,y)){
 	    x = (int)(passer.mouseX/8);

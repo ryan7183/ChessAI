@@ -11,13 +11,15 @@ package chessai;
  */
 public class AIdriver extends Player{
     Passer passer;
-    AIdriver(Passer p){
+    boolean colour;
+    AIdriver(Passer p, boolean colour){
+	this.colour = colour;
 	passer=p;
     }
     
 
     @Override
-    int[] requestPiece(Board b) {
+    int[] requestPiece() {
 	return null;
     }
 

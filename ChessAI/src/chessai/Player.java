@@ -10,7 +10,7 @@ package chessai;
  * @author Ryan and Parm
  */
 public abstract class Player {
-
-    abstract int[] requestPiece(Board b);
+    boolean colour;
+    abstract int[] requestPiece();
     abstract Board requestMove(int[] piece);
 }

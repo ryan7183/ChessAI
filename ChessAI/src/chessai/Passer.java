@@ -10,16 +10,19 @@ package chessai;
  * @author RyanS
  */
 public class Passer {
-    Boolean update;
+    boolean boardUpdate;
     BoardSquare[][] board;
     double mouseX;
     double mouseY;
+    boolean mouseClicked;
     boolean playerSelect;
     boolean playerDone;
+    boolean request ;
+    boolean mouseUpdate;
     Passer(){
 	playerSelect = false;
 	playerDone = false;
-	update =false;
+	boardUpdate =true;
 	board = null;
 	mouseX=0;
 	mouseY = 0;
