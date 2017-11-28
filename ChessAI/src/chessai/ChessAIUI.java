@@ -63,8 +63,8 @@ public class ChessAIUI extends Application {
          public void handle(MouseEvent e) { 
 	     //If a player is selecting a piece update coordinates
 	     if(p.playerSelect){
-		 p.mouseX=e.getX();
-		p.mouseY=e.getY();
+		 p.mouseX=e.getSceneX();
+		p.mouseY=e.getSceneY();
 	     }
              
          } 
