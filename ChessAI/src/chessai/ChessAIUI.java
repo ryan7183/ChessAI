@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import static javafx.scene.paint.Color.color;
 import javafx.stage.Stage;
 
 /**
@@ -155,7 +156,10 @@ public class ChessAIUI extends Application {
 			break;
 		}
 		if(p.drawSelection){
+		    gc.setStroke(Color.BLUE);
+		    gc.setLineWidth(10);
 		    gc.strokeRect(p.selectionPosition[0], p.selectionPosition[1], pieceWidth, pieceHeight);
+		    gc.setStroke(Color.BLACK);
 		}
 	    }
 	};
