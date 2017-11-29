@@ -13,5 +13,10 @@ public class Pawn extends Piece {
     public Pawn(boolean c, int x, int y, String n) {
 	super(c, x, y, n);
     }
+
+    @Override
+    public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+        return true;
+    }
     
 }
