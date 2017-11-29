@@ -14,5 +14,10 @@ public class Queen extends Piece{
 	super(c, x, y, n);
 	
     }
+
+    @Override
+    public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+        return true;
+    }
     
 }
