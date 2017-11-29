@@ -45,22 +45,30 @@ public class Human extends Player {
     
     @Override
     BoardSquare[][] requestMove(int[] piece,BoardSquare[][] bs) {
-	passer.mouseClicked = false;
-	while(!passer.mouseClicked){
-	    try {
-		Thread.sleep(1);
-	    } catch (InterruptedException ex) {
-		Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
+	int x,y;
+	while(true){
+	    passer.mouseClicked = false;
+	    while(!passer.mouseClicked){
+		try {
+		    Thread.sleep(1);
+		} catch (InterruptedException ex) {
+		    Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	    }
+	    x = (int)((passer.mouseX-54)/73);
+	    y = (int)((passer.mouseY-60)/74);
+	    int[] newPos = new int[2];
+	    newPos[0] = y;
+	    newPos[1] = x;
+	    /*while(!bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
+		requestMove(piece,bs);
+	    }*/
+	    if(bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
+
+		break;
+	    }
+	    System.out.println("Can't move the piece like that");
 	}
-	int x = (int)((passer.mouseX-54)/73);
-	int y = (int)((passer.mouseY-60)/74);
-        int[] newPos = new int[2];
-        newPos[0] = y;
-        newPos[1] = x;
-        while(!bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
-            requestMove(piece,bs);
-        }
 	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
 	bs[piece[1]][piece[0]].hasPiece=false;
 	bs[y][x].hasPiece=true;

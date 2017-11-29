@@ -5,6 +5,8 @@
  */
 package chessai;
 
+import javafx.stage.Stage;
+
 /**
  *
  * @author RyanS
@@ -21,6 +23,7 @@ public class Passer {
     boolean mouseUpdate;
     boolean drawSelection;
     int[] selectionPosition;
+    Stage primaryStage;
     Passer(){
 	playerSelect = false;
 	playerDone = false;

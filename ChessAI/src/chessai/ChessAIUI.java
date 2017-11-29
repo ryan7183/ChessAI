@@ -43,6 +43,7 @@ public class ChessAIUI extends Application {
 	
 	
 	Passer p = new Passer();//Create a way to communicate with board
+	p.primaryStage = primaryStage;
 	Human p1=new Human(p,true);
 	Human p2 = new Human(p,false);
 	
