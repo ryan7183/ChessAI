@@ -13,7 +13,9 @@ public abstract class Piece {
     boolean colour;//false black, true white
     int x,y;//Coordinates
     public String textRepresentation;
+    boolean hasMoved;
     Piece(boolean c,int x, int y, String n){
+	hasMoved=false;
 	colour = c;
 	this.x=x;
 	this.y=y;
