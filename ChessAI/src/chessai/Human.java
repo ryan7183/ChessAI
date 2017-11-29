@@ -54,8 +54,9 @@ public class Human extends Player {
 	int x = (int)((passer.mouseX-54)/73);
 	int y = (int)((passer.mouseY-60)/74);
 	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
-	bs[y][x].hasPiece=false;
-	bs[piece[1]][piece[0]].hasPiece=true;
+	bs[piece[1]][piece[0]].hasPiece=false;
+	bs[y][x].hasPiece=true;
+	
 	System.out.println(bs[y][x].hasPiece);
 	return bs;
     }
