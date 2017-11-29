@@ -43,7 +43,7 @@ public class ChessAIUI extends Application {
 	
 	Passer p = new Passer();//Create a way to communicate with board
 	Human p1=new Human(p,true);
-	AIdriver p2 = new AIdriver(p,false);
+	Human p2 = new Human(p,false);
 	
 	Task<Void> task = new Task<Void>(){
             @Override

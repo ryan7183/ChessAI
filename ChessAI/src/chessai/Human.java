@@ -56,8 +56,6 @@ public class Human extends Player {
 	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
 	bs[piece[1]][piece[0]].hasPiece=false;
 	bs[y][x].hasPiece=true;
-	
-	System.out.println(bs[y][x].hasPiece);
 	return bs;
     }
     

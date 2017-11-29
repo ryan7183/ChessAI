@@ -88,12 +88,24 @@ public class Board {
 	    }
 	    //Wait till valid move is selected
 	    board = player1.requestMove(pieceSelected,board);
-	    
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
 	    //Ask player2
+	    valid = false;
+	    //Wait till valid piece is selected
+	     while(true){
+		pieceSelected = player2.requestPiece();
+		valid = validPiece(player2,pieceSelected);
+		
+		if(valid){
+		    break;
+		}
+	    }
+	    //Wait till valid move is selected
+	    board = player2.requestMove(pieceSelected,board);
 	    //Update board
+	     p.boardUpdate = true;//Tell the render there is a change to update
 	}
     }
     
