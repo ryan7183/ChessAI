@@ -9,7 +9,7 @@ package chessai;
  *
  * @author Ryan and Parm
  */
-public class Piece {
+public abstract class Piece {
     boolean colour;//false black, true white
     int x,y;//Coordinates
     public String textRepresentation;
@@ -19,4 +19,6 @@ public class Piece {
 	this.y=y;
         this.textRepresentation = n;
     }
+    
+    public abstract Boolean isValidMove(int[] newPos, BoardSquare[][] bs);
 }
