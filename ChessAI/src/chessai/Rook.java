@@ -16,11 +16,6 @@ public class Rook extends Piece {
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
-        
-        if (!(this.x == newPos[1] || this.y == newPos[0])){
-            return false;
-        }
-        else {
             if(this.x==newPos[1]){
                 int changeInY;
                 if(this.y>newPos[0]){
@@ -30,7 +25,9 @@ public class Rook extends Piece {
                     changeInY = 1;
                 }
                 for (int i=this.y+changeInY;i!=newPos[0];i+=changeInY){
-                    if (bs[this.x][i].hasPiece){
+                    if (bs[i][this.x].hasPiece){
+                        System.out.println("First");
+                        //System.out.println(bs[this.x][]);
                         return false;
                     }
                 }
@@ -44,12 +41,12 @@ public class Rook extends Piece {
                     changeInX = 1;
                 }
                 for (int i=this.x+changeInX;i!=newPos[1];i+=changeInX){
-                    if (bs[i][this.y].hasPiece){
+                    if (bs[this.y][i].hasPiece){
+                        System.out.println("Second");
                         return false;
                     }
                 }
             }
-        }
         return true;
     }
     
