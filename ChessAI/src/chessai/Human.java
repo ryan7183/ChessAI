@@ -70,6 +70,8 @@ public class Human extends Player {
 	    System.out.println("Can't move the piece like that");
 	}
 	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
+	bs[y][x].piece.x = x;
+	bs[y][x].piece.y = y;
 	bs[piece[1]][piece[0]].hasPiece=false;
 	bs[y][x].hasPiece=true;
 	return bs;
