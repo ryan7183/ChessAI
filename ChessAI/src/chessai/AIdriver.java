@@ -11,7 +11,6 @@ package chessai;
  */
 public class AIdriver extends Player{
     Passer passer;
-    boolean colour;
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;
 	passer=p;
@@ -23,8 +22,14 @@ public class AIdriver extends Player{
 	return null;
     }
 
+
     @Override
-    Board requestMove(int[] piece) {
-	return null;
+    boolean validPiece() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    BoardSquare[][] requestMove(int[] piece, BoardSquare[][] bs) {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -79,36 +79,33 @@ public class Board {
 	    valid = false;
 	    //Wait till valid piece is selected
 	    while(true){
-		System.out.println(1);
 		pieceSelected = player1.requestPiece();
-		System.out.println(2);
-		valid = validPiece(player1, pieceSelected);
-		System.out.println(3);
+		valid = validPiece(player1,pieceSelected);
+		
 		if(valid){
-		    System.out.println(4);
 		    break;
 		}
 	    }
-	    System.out.println(valid);
 	    //Wait till valid move is selected
-	    player1.requestMove(pieceSelected);
-	    p.boardUpdate = true;//Tell the render there is a change to update
+	    board = player1.requestMove(pieceSelected,board);
+	    
 	    //Update board
+	    p.boardUpdate = true;//Tell the render there is a change to update
+	    
 	    //Ask player2
 	    //Update board
 	}
     }
     
-    boolean validPiece(Player p, int[] piece){
+    
+    boolean validPiece(Player player, int[] c){
 	boolean valid = true;
-	if(board[piece[0]][piece[1]].piece.colour!=p.colour){
+	
+	if(!board[c[1]][c[0]].hasPiece || player.colour!=board[c[1]][c[0]].piece.colour){
 	    valid = false;
-	    System.out.println(9);
 	}
 	return valid;
     }
-    
-    
     void printBoard(){
         System.out.print(" ");
         for (int i=0; i<board[0].length; i++){

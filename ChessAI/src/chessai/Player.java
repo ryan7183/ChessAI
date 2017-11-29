@@ -12,5 +12,6 @@ package chessai;
 public abstract class Player {
     boolean colour;
     abstract int[] requestPiece();
-    abstract Board requestMove(int[] piece);
+    abstract BoardSquare[][] requestMove(int[] piece,BoardSquare[][] bs) ;
+    abstract boolean validPiece();
 }

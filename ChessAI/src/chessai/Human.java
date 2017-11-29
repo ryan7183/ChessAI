@@ -5,15 +5,17 @@
  */
 package chessai;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Ryan and Parm
  */
 public class Human extends Player {
     Passer passer;
-    boolean colour;
-    Human(Passer p, boolean colour){
-	this.colour = colour;
+    Human(Passer p, boolean c){
+	this.colour = c;
 	passer=p;
     }
 
@@ -21,30 +23,49 @@ public class Human extends Player {
     int[] requestPiece() {
 	passer.mouseClicked=false;
 	while(!passer.mouseClicked){
+	    try {
+		Thread.sleep(1);
+	    } catch (InterruptedException ex) {
+		Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
+	    }
 	}
 	int x = (int)((passer.mouseX-54)/73);
 	int y = (int)((passer.mouseY-60)/74);
 	int[] coords = new int[2];
-	while(!validPiece(x,y)){
-	    x = (int)(passer.mouseX/8);
-	    y = (int)(passer.mouseY/8);
-	}
 	coords[0]=x;
 	coords[1]=y;
 	return coords;
     }
 
-    boolean validPiece(int x,int y){
-	
-	return true;
+    boolean getColour(){
+	return colour;
     }
     
     @Override
-    Board requestMove(int[] piece) {
-	return null;
+    BoardSquare[][] requestMove(int[] piece,BoardSquare[][] bs) {
+	passer.mouseClicked = false;
+	while(!passer.mouseClicked){
+	    try {
+		Thread.sleep(1);
+	    } catch (InterruptedException ex) {
+		Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
+	int x = (int)((passer.mouseX-54)/73);
+	int y = (int)((passer.mouseY-60)/74);
+	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
+	bs[y][x].hasPiece=false;
+	bs[piece[1]][piece[0]].hasPiece=true;
+	System.out.println(bs[y][x].hasPiece);
+	return bs;
     }
     
     boolean validMove(int x,int y){
 	return true;
+    }
+
+    @Override
+    boolean validPiece() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
