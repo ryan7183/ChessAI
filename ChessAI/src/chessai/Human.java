@@ -72,6 +72,7 @@ public class Human extends Player {
 	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
 	bs[y][x].piece.x = x;
 	bs[y][x].piece.y = y;
+        bs[y][x].piece.hasMoved = true;
 	bs[piece[1]][piece[0]].hasPiece=false;
 	bs[y][x].hasPiece=true;
 	return bs;
