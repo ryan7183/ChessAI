@@ -16,34 +16,35 @@ public class Rook extends Piece {
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+        
         if (!(this.x == newPos[1] || this.y == newPos[0])){
             return false;
         }
         else {
-            if (this.x > newPos[1]){
-                for (int i=this.x;i!=newPos[1];i--){
-                    if (bs[i][this.y].hasPiece){
-                        return false;
-                    }
+            if(this.x==newPos[1]){
+                int changeInY;
+                if(this.y>newPos[0]){
+                    changeInY = -1;
                 }
-            }
-            else if (this.x < newPos[1]) {
-                for (int i=this.x;i!=newPos[1];i++){
-                    if (bs[i][this.y].hasPiece){
-                        return false;
-                    }
+                else{
+                    changeInY = 1;
                 }
-            }
-            else if (this.y > newPos[0]) {
-                for (int i=this.y;i!=newPos[0];i--){
+                for (int i=this.y+changeInY;i!=newPos[0];i+=changeInY){
                     if (bs[this.x][i].hasPiece){
                         return false;
                     }
                 }
             }
-            else if (this.y < newPos[0]) {
-                for (int i=this.y;i!=newPos[0];i++){
-                    if (bs[this.x][i].hasPiece){
+            else{
+                int changeInX;
+                if(this.x>newPos[1]){
+                    changeInX = -1;
+                }
+                else{
+                    changeInX = 1;
+                }
+                for (int i=this.x+changeInX;i!=newPos[1];i+=changeInX){
+                    if (bs[i][this.y].hasPiece){
                         return false;
                     }
                 }
