@@ -83,11 +83,16 @@ public class Board {
 		valid = validPiece(player1,pieceSelected);
 		
 		if(valid){
+		    p.setSelectionPosition(pieceSelected);
+		    p.drawSelection=true;
 		    break;
 		}
 	    }
+	    //Update board
+	    p.boardUpdate = true;//Tell the render there is a change to update
 	    //Wait till valid move is selected
 	    board = player1.requestMove(pieceSelected,board);
+	    p.drawSelection=false;
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
@@ -99,11 +104,16 @@ public class Board {
 		valid = validPiece(player2,pieceSelected);
 		
 		if(valid){
+		    p.setSelectionPosition(pieceSelected);
+		    p.drawSelection=true;
 		    break;
 		}
 	    }
+	     //Update board
+	     p.boardUpdate = true;//Tell the render there is a change to update
 	    //Wait till valid move is selected
 	    board = player2.requestMove(pieceSelected,board);
+	    p.drawSelection=false;
 	    //Update board
 	     p.boardUpdate = true;//Tell the render there is a change to update
 	}

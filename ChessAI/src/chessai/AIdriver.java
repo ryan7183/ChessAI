@@ -11,9 +11,11 @@ package chessai;
  */
 public class AIdriver extends Player{
     Passer passer;
+    int depth;
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;
 	passer=p;
+	depth=4;
     }
     
 
@@ -32,4 +34,14 @@ public class AIdriver extends Player{
     BoardSquare[][] requestMove(int[] piece, BoardSquare[][] bs) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    int[] aplhaBeta(){
+	return null;
+    }
+    
+    double boardEvaluation(){
+	return 0;
+    }
+    
+    
 }

@@ -154,6 +154,9 @@ public class ChessAIUI extends Application {
 		    default:
 			break;
 		}
+		if(p.drawSelection){
+		    gc.strokeRect(p.selectionPosition[0], p.selectionPosition[1], pieceWidth, pieceHeight);
+		}
 	    }
 	};
 	aTimer.start();

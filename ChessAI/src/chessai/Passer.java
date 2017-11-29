@@ -19,6 +19,8 @@ public class Passer {
     boolean playerDone;
     boolean request ;
     boolean mouseUpdate;
+    boolean drawSelection;
+    int[] selectionPosition;
     Passer(){
 	playerSelect = false;
 	playerDone = false;
@@ -26,6 +28,12 @@ public class Passer {
 	board = null;
 	mouseX=0;
 	mouseY = 0;
+	drawSelection=false;
+	selectionPosition = new int[2];
+    }
+    public void setSelectionPosition(int[] p){
+	selectionPosition[0] =54+( p[0]*73);
+	selectionPosition[1] =60+(p[1]*74);
     }
     
     public void setBoard(BoardSquare[][] b){
