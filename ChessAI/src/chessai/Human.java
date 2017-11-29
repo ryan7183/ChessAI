@@ -7,6 +7,8 @@ package chessai;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  *
@@ -53,6 +55,12 @@ public class Human extends Player {
 	}
 	int x = (int)((passer.mouseX-54)/73);
 	int y = (int)((passer.mouseY-60)/74);
+        int[] newPos = new int[2];
+        newPos[0] = y;
+        newPos[1] = x;
+        while(!bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
+            requestMove(piece,bs);
+        }
 	bs[y][x].piece = bs[piece[1]][piece[0]].piece;
 	bs[piece[1]][piece[0]].hasPiece=false;
 	bs[y][x].hasPiece=true;
