@@ -16,31 +16,31 @@ public class Bishop extends Piece{
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
-        if(this.x == newPos[1] || this.y == newPos[0]){
+        if(this.x == newPos[0] || this.y == newPos[1]){
             return false;
         }
-        if(Math.abs(this.x-newPos[1])!=Math.abs(this.y-newPos[0])){
+        if(Math.abs(this.x-newPos[0])!=Math.abs(this.y-newPos[1])){
             return false;
         }
         int addOne = 1;
         int subOne = -1;
         int nextX;
         int nextY;
-        if (this.x>newPos[1]){
+        if (this.x>newPos[0]){
             nextX=subOne;
         }
         else{
             nextX=addOne;
         }
-        if (this.y>newPos[0]){
+        if (this.y>newPos[1]){
             nextY=subOne;
         }
         else{
             nextY=addOne;
         }
         int newY = this.y+nextY;
-        for(int i=x+nextX; i!= newPos[1]; i+=nextX){
-            if (bs[newY][i].hasPiece){
+        for(int i=x+nextX; i!= newPos[0]; i+=nextX){
+            if (bs[i][newY].hasPiece){
                 return false;
             }
             newY+=nextY;
