@@ -39,6 +39,8 @@ public class ChessAIUI extends Application {
 	Scene scene = new Scene(root, 1920, 1080);
 	//Add canvas
 	Canvas canvas = new Canvas( 700,715 );
+	canvas.setLayoutX(350);
+	canvas.setLayoutY(50);
 	root.getChildren().add( canvas );
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 	
@@ -47,8 +49,8 @@ public class ChessAIUI extends Application {
 	//Undo selection button
 	Button undoSelect = new Button();
         undoSelect.setText("Undo Selection");
-        undoSelect.setLayoutX(700);
-        undoSelect.setLayoutY(0);
+        undoSelect.setLayoutX(350);
+        undoSelect.setLayoutY(765);
         undoSelect.setOnAction((ActionEvent event) -> {
             //Undo Selection
 	    p.cancelSelection=true;
@@ -58,9 +60,6 @@ public class ChessAIUI extends Application {
 	
 	primaryStage.setTitle("Best Chess Game In The World... Maybe, Possibly Not, I Don't Know!");
 	primaryStage.setScene(scene);
-	
-	
-	
 	
 	
 	Task<Void> task = new Task<Void>(){
