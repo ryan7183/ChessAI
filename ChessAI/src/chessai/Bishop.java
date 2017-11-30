@@ -39,8 +39,8 @@ public class Bishop extends Piece{
             nextY=addOne;
         }
         int newY = this.y+nextY;
-        for(int i=x+nextX; i!= newPos[1]; i+=nextX){
-            if (bs[newY][i].hasPiece){
+        for(int i=x+nextX; i!= newPos[0]; i+=nextX){
+            if (bs[i][newY].hasPiece){
                 return false;
             }
             newY+=nextY;
