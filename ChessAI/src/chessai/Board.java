@@ -61,12 +61,16 @@ public class Board {
 	p.setBoard(board);
 	//printBoard();
 	start();
-    }
+	}
    
     //Set up a board from a file
     Board(File f,Passer p,Player player1, Player player2){
+	this.player1 = player1;
+	this.player2 =player2;
+	this.p = p;
 	try {
 	    board = buildBoardFile(f);
+	    p.setBoard(board);
 	} catch (FileNotFoundException ex) {
 	    Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
 	}
@@ -79,6 +83,7 @@ public class Board {
 	start();
     }
     BoardSquare[][] buildBoardFile(File f) throws FileNotFoundException{
+	
 	FileReader fr = new FileReader(f);
 	Scanner in = new Scanner(fr);
 	String row;
