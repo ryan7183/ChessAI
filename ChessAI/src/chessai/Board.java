@@ -84,7 +84,7 @@ public class Board {
 		valid = false;
 		//Wait till valid piece is selected
 		while(true){
-		    pieceSelected = player1.requestPiece();
+		    pieceSelected = player1.requestPiece();//Get piece to be moved
 		    valid = validPiece(player1,pieceSelected);
 
 		    if(valid){
@@ -97,12 +97,12 @@ public class Board {
 		p.boardUpdate = true;//Tell the render there is a change to update
 		//Wait till valid move is selected
 		while(true){
-		    pieceMove =  player1.requestMove(pieceSelected);
+		    pieceMove =  player1.requestMove(pieceSelected);//Get postion piece will be moved to
 		    if(p.cancelSelection){
 			break;
 		    }
 		    if(board[pieceMove[1]][pieceMove[0]].piece.isValidMove(pieceMove, board)){
-			requestMove(pieceSelected,pieceMove);
+			requestMove(pieceSelected,pieceMove);//move piece
 			break;
 		    }
 		    System.out.println("Can't move a piece like that");
@@ -140,12 +140,12 @@ public class Board {
 		p.boardUpdate = true;//Tell the render there is a change to update
 		//Wait till valid move is selected
 		while(true){
-		    pieceMove =  player2.requestMove(pieceSelected);
+		    pieceMove =  player2.requestMove(pieceSelected);//Get position piece will be moved to
 		    if(p.cancelSelection){
 			break;
 		    }
 		    if(board[pieceMove[1]][pieceMove[0]].piece.isValidMove(pieceMove, board)){
-			requestMove(pieceSelected,pieceMove);
+			requestMove(pieceSelected,pieceMove);//Move piece
 			break;
 		    }
 		    System.out.println("Can't move a piece like that");
