@@ -1,6 +1,9 @@
 package chessai;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +65,11 @@ public class Board {
    
     //Set up a board from a file
     Board(File f,Passer p,Player player1, Player player2){
+	try {
+	    board = buildBoardFile(f);
+	} catch (FileNotFoundException ex) {
+	    Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+	}
 	start();
     }
     
@@ -70,7 +78,69 @@ public class Board {
 	this.board = board;
 	start();
     }
-    
+    BoardSquare[][] buildBoardFile(File f) throws FileNotFoundException{
+	FileReader fr = new FileReader(f);
+	Scanner in = new Scanner(fr);
+	String row;
+	char square;
+	board = new BoardSquare[8][8];
+	Piece p=null;
+	for(int y=0;y<8;y++){
+	    row = in.next();
+	    for(int x=0;x<8;x++){
+		square = row.charAt(x);
+		board[x][y] = new BoardSquare(x,y);
+		switch(square){
+		    case '-':
+			p =null;
+			break;
+		    case 'B':
+			p= new Bishop(false,x,y,"B");
+			break;
+		    case 'b':
+			p= new Bishop(true,x,y,"b");
+			break;
+		    case 'K':
+			p= new King(false,x,y,"K");
+			break;
+		    case 'k':
+			p= new King(true,x,y,"k");
+			break;
+		    case 'N':
+			p= new Knight(false,x,y,"N");
+			break;
+		    case 'n':
+			p= new Knight(true,x,y,"n");
+			break;
+		    case 'P':
+			p= new Pawn(false,x,y,"P");
+			break;
+		    case 'p':
+			p= new Pawn(true,x,y,"p");
+			break;
+		    case 'Q':
+			p= new Queen(false,x,y,"Q");
+			break;
+		    case 'q':
+			p= new Queen(true,x,y,"q");
+			break;
+		    case 'R':
+			p= new Rook(false,x,y,"R");
+			break;
+		    case 'r':
+			p= new Rook(true,x,y,"r");
+			break;
+		    default:
+			p=null;
+			break;
+		}
+		if(p!=null){
+		    board[x][y].setPiece(p);
+		}
+	    }
+	}
+	return board;
+     }
     void start(){
 	boolean cont=true;
 	boolean valid = false;
@@ -100,13 +170,10 @@ public class Board {
 		    if(p.cancelSelection){
 			break;
 		    }
-                    System.out.println(pieceMove[0]+"\t"+pieceMove[1]);
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-			System.out.println(2);
 			requestMove(pieceSelected,pieceMove);//move piece
 			break;
 		    }
-		    System.out.println(3);
 		    System.out.println("Can't move a piece like that");
 		}
 		if(p.cancelSelection){
