@@ -16,6 +16,47 @@ public class Pawn extends Piece {
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+        int changeInY;
+        if(this.colour){
+            changeInY = -1;
+        }
+        else{
+            changeInY = 1;
+        }
+        if((this.x-1 >=0 && (bs[this.y+changeInY][this.x-1].hasPiece)) || (this.x+1 <=7 && (bs[this.y+changeInY][this.x+1].hasPiece))){
+            if((newPos[0]==(this.y+changeInY) && newPos[1]==(this.x-1)) || (newPos[0]==(this.y+changeInY) && newPos[1]==(this.x+1))){
+                if(bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        else{
+            if(this.x!=newPos[1]){
+                return false;
+            }
+        }
+            if(this.hasMoved){
+                if(Math.abs(newPos[0]-this.y) != 1){
+                    return false;
+                }
+                if(this.y+(-changeInY)==newPos[0]){
+                    return false;
+                }
+                if(bs[newPos[0]][newPos[1]].hasPiece){
+                    return false;
+                }
+            }
+            else{
+                if(!(Math.abs(newPos[0]-this.y) == 1 || Math.abs(newPos[0]-this.y) == 2)){
+                    return false;
+                }
+                if(bs[newPos[0]][newPos[1]].hasPiece){
+                    return false;
+                }
+            }
         return true;
     }
     
