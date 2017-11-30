@@ -16,6 +16,14 @@ public class Knight extends Piece{
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+        int changeInX = Math.abs(this.x-newPos[1]);
+        int changeInY = Math.abs(this.y-newPos[0]);
+        if(!((changeInX==2 && changeInY==1)||(changeInX==1 && changeInY==2))){
+            return false;
+        }
+        if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+            return false;
+        }
         return true;
     }
     
