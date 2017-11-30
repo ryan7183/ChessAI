@@ -100,7 +100,8 @@ public class Board {
 		    if(p.cancelSelection){
 			break;
 		    }
-		    if(board[pieceMove[0]][pieceMove[1]].piece.isValidMove(pieceMove, board)){
+                    System.out.println(pieceMove[0]+"\t"+pieceMove[1]);
+		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
 			System.out.println(2);
 			requestMove(pieceSelected,pieceMove);//move piece
 			break;
@@ -146,7 +147,7 @@ public class Board {
 			break;
 		    }
 		    
-		    if(board[pieceMove[0]][pieceMove[1]].piece.isValidMove(pieceMove, board)){
+		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
 			requestMove(pieceSelected,pieceMove);//Move piece
 			break;
 		    }
