@@ -31,7 +31,7 @@ public class AIdriver extends Player{
     }
 
     @Override
-    BoardSquare[][] requestMove(int[] piece, BoardSquare[][] bs) {
+    int[] requestMove(int[] piece) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

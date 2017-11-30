@@ -1,6 +1,8 @@
 package chessai;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -75,50 +77,106 @@ public class Board {
 	int[] pieceSelected;
 	int[] pieceMove;
 	while(cont){
-	    //Ask player1
-	    valid = false;
-	    //Wait till valid piece is selected
+	    
+	    //Player1 move loop
 	    while(true){
-		pieceSelected = player1.requestPiece();
-		valid = validPiece(player1,pieceSelected);
-		
-		if(valid){
-		    p.setSelectionPosition(pieceSelected);
-		    p.drawSelection=true;
+		//Ask player1
+		valid = false;
+		//Wait till valid piece is selected
+		while(true){
+		    pieceSelected = player1.requestPiece();
+		    valid = validPiece(player1,pieceSelected);
+
+		    if(valid){
+			p.setSelectionPosition(pieceSelected);
+			p.drawSelection=true;
+			break;
+		    }
+		}
+		//Update board
+		p.boardUpdate = true;//Tell the render there is a change to update
+		//Wait till valid move is selected
+		while(true){
+		    pieceMove =  player1.requestMove(pieceSelected);
+		    if(p.cancelSelection){
+			break;
+		    }
+		    if(board[pieceMove[1]][pieceMove[0]].piece.isValidMove(pieceMove, board)){
+			requestMove(pieceSelected,pieceMove);
+			break;
+		    }
+		    System.out.println("Can't move a piece like that");
+		}
+		if(p.cancelSelection){
+		    p.cancelSelection=false;
+		    p.drawSelection=false;
+		    p.boardUpdate=true;
+		}else{
 		    break;
 		}
 	    }
-	    //Update board
-	    p.boardUpdate = true;//Tell the render there is a change to update
-	    //Wait till valid move is selected
-	    board = player1.requestMove(pieceSelected,board);
+	    
 	    p.drawSelection=false;
+	    
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
-	    //Ask player2
-	    valid = false;
-	    //Wait till valid piece is selected
-	     while(true){
-		pieceSelected = player2.requestPiece();
-		valid = validPiece(player2,pieceSelected);
-		
-		if(valid){
-		    p.setSelectionPosition(pieceSelected);
-		    p.drawSelection=true;
+	     //Player2 move loop
+	    while(true){
+		//Ask player2
+		valid = false;
+		//Wait till valid piece is selected
+		while(true){
+		    pieceSelected = player2.requestPiece();
+		    valid = validPiece(player2,pieceSelected);
+
+		    if(valid){
+			p.setSelectionPosition(pieceSelected);
+			p.drawSelection=true;
+			break;
+		    }
+		}
+		//Update board
+		p.boardUpdate = true;//Tell the render there is a change to update
+		//Wait till valid move is selected
+		while(true){
+		    pieceMove =  player2.requestMove(pieceSelected);
+		    if(p.cancelSelection){
+			break;
+		    }
+		    if(board[pieceMove[1]][pieceMove[0]].piece.isValidMove(pieceMove, board)){
+			requestMove(pieceSelected,pieceMove);
+			break;
+		    }
+		    System.out.println("Can't move a piece like that");
+		}
+		if(p.cancelSelection){
+		    p.cancelSelection=false;
+		    p.drawSelection=false;
+		    p.boardUpdate=true;
+		}else{
 		    break;
 		}
 	    }
-	     //Update board
-	     p.boardUpdate = true;//Tell the render there is a change to update
-	    //Wait till valid move is selected
-	    board = player2.requestMove(pieceSelected,board);
 	    p.drawSelection=false;
+	    
 	    //Update board
-	     p.boardUpdate = true;//Tell the render there is a change to update
+	    p.boardUpdate = true;//Tell the render there is a change to update
 	}
     }
     
+    
+    
+    BoardSquare[][] requestMove(int[] piece, int[] move){
+	int x,y;
+	board[move[1]][move[0]].piece = board[piece[1]][piece[0]].piece;
+	board[move[1]][move[0]].piece.x = move[0];
+	board[move[1]][move[0]].piece.y = move[1];
+        board[move[1]][move[0]].piece.hasMoved = true;
+	board[piece[1]][piece[0]].hasPiece=false;
+	board[move[1]][move[0]].hasPiece=true;
+	return board;
+    }
     
     boolean validPiece(Player player, int[] c){
 	boolean valid = true;

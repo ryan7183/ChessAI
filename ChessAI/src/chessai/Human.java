@@ -44,11 +44,38 @@ public class Human extends Player {
     }
     
     @Override
-    BoardSquare[][] requestMove(int[] piece,BoardSquare[][] bs) {
-	int x,y;
+    int[] requestMove(int[] piece) {
+	passer.mouseClicked=false;
+	while(!passer.mouseClicked){
+	    try {
+		if(passer.cancelSelection){
+		    return piece;
+		}else{
+		    Thread.sleep(1);
+		}
+	    } catch (InterruptedException ex) {
+		Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
+	int x = (int)((passer.mouseX-54)/73);
+	int y = (int)((passer.mouseY-60)/74);
+	int[] coords = new int[2];
+	coords[0]=x;
+	coords[1]=y;
+	return coords;
+	
+	
+	
+	
+	
+	
+	
+	
+	/*int x,y;
 	while(true){
 	    passer.mouseClicked = false;
 	    while(!passer.mouseClicked){
+		
 		try {
 		    Thread.sleep(1);
 		} catch (InterruptedException ex) {
@@ -63,8 +90,7 @@ public class Human extends Player {
 	    /*while(!bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
 		requestMove(piece,bs);
 	    }*/
-	    if(bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
-
+	    /*if(bs[piece[1]][piece[0]].piece.isValidMove(newPos, bs)){
 		break;
 	    }
 	    System.out.println("Can't move the piece like that");
@@ -75,7 +101,7 @@ public class Human extends Player {
         bs[y][x].piece.hasMoved = true;
 	bs[piece[1]][piece[0]].hasPiece=false;
 	bs[y][x].hasPiece=true;
-	return bs;
+	return bs;*/
     }
     
     boolean validMove(int x,int y){

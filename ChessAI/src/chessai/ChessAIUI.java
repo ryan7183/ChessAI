@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.color;
@@ -30,22 +31,37 @@ public class ChessAIUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 	
+	Passer p = new Passer();//Create a way to communicate with board
+	Human p1=new Human(p,true);
+	Human p2 = new Human(p,false);
 	
-	StackPane root = new StackPane();
+	Pane root = new Pane();
 	Scene scene = new Scene(root, 1920, 1080);
+	//Add canvas
 	Canvas canvas = new Canvas( 700,715 );
 	root.getChildren().add( canvas );
 	GraphicsContext gc = canvas.getGraphicsContext2D();
+	
+	//Add ui buttons
+	
+	//Undo selection button
+	Button undoSelect = new Button();
+        undoSelect.setText("Undo Selection");
+        undoSelect.setLayoutX(700);
+        undoSelect.setLayoutY(0);
+        undoSelect.setOnAction((ActionEvent event) -> {
+            //Undo Selection
+	    p.cancelSelection=true;
+        });
+        root.getChildren().add(undoSelect);
+	
 	
 	primaryStage.setTitle("Best Chess Game In The World... Maybe, Possibly Not, I Don't Know!");
 	primaryStage.setScene(scene);
 	
 	
 	
-	Passer p = new Passer();//Create a way to communicate with board
-	p.primaryStage = primaryStage;
-	Human p1=new Human(p,true);
-	Human p2 = new Human(p,false);
+	
 	
 	Task<Void> task = new Task<Void>(){
             @Override

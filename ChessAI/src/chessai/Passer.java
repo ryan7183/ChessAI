@@ -19,12 +19,13 @@ public class Passer {
     boolean mouseClicked;
     boolean playerSelect;
     boolean playerDone;
-    boolean request ;
+    boolean request;
     boolean mouseUpdate;
     boolean drawSelection;
+    boolean cancelSelection;
     int[] selectionPosition;
-    Stage primaryStage;
     Passer(){
+	cancelSelection = false;
 	playerSelect = false;
 	playerDone = false;
 	boardUpdate =true;
