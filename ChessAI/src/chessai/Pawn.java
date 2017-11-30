@@ -24,7 +24,7 @@ public class Pawn extends Piece {
             changeInY = 1;
         }
         if((this.x-1 >=0 && (bs[this.y+changeInY][this.x-1].hasPiece)) || (this.x+1 <=7 && (bs[this.y+changeInY][this.x+1].hasPiece))){
-            if((newPos[0]==(this.y+changeInY) && newPos[1]==(this.x-1)) || (newPos[0]==(this.y+changeInY) && newPos[1]==(this.x+1))){
+            if((newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)) || (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1))){
                 if(bs[newPos[0]][newPos[1]].piece.colour == this.colour){
                     return false;
                 }
@@ -34,15 +34,15 @@ public class Pawn extends Piece {
             }
         }
         else{
-            if(this.x!=newPos[1]){
+            if(this.x!=newPos[0]){
                 return false;
             }
         }
             if(this.hasMoved){
-                if(Math.abs(newPos[0]-this.y) != 1){
+                if(Math.abs(newPos[1]-this.y) != 1){
                     return false;
                 }
-                if(this.y+(-changeInY)==newPos[0]){
+                if(this.y+(-changeInY)==newPos[1]){
                     return false;
                 }
                 if(bs[newPos[0]][newPos[1]].hasPiece){
@@ -50,7 +50,7 @@ public class Pawn extends Piece {
                 }
             }
             else{
-                if(!(Math.abs(newPos[0]-this.y) == 1 || Math.abs(newPos[0]-this.y) == 2)){
+                if(!(Math.abs(newPos[1]-this.y) == 1 || Math.abs(newPos[1]-this.y) == 2)){
                     return false;
                 }
                 if(bs[newPos[0]][newPos[1]].hasPiece){
