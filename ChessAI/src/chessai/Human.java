@@ -22,7 +22,7 @@ public class Human extends Player {
     }
 
     @Override
-    int[] requestPiece() {
+    int[] requestPiece(BoardSquare[][] bs) {
 	passer.mouseClicked=false;
 	while(!passer.mouseClicked){
 	    try {
@@ -44,7 +44,7 @@ public class Human extends Player {
     }
     
     @Override
-    int[] requestMove(int[] piece) {
+    int[] requestMove(int[] piece,BoardSquare[][] bs) {
 	passer.mouseClicked=false;
 	while(!passer.mouseClicked){
 	    try {

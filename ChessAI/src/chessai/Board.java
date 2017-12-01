@@ -159,7 +159,7 @@ public class Board {
 		valid = false;
 		//Wait till valid piece is selected
 		while(true){
-		    pieceSelected = player1.requestPiece();//Get piece to be moved
+		    pieceSelected = player1.requestPiece(board);//Get piece to be moved
 		    valid = validPiece(player1,pieceSelected);
 		    if(valid){
 			p.setSelectionPosition(pieceSelected);
@@ -171,7 +171,7 @@ public class Board {
 		p.boardUpdate = true;//Tell the render there is a change to update
 		//Wait till valid move is selected
 		while(true){
-		    pieceMove =  player1.requestMove(pieceSelected);//Get postion piece will be moved to
+		    pieceMove =  player1.requestMove(pieceSelected,board);//Get postion piece will be moved to
 		    if(p.cancelSelection){
 			break;
 		    }
@@ -204,7 +204,7 @@ public class Board {
 		valid = false;
 		//Wait till valid piece is selected
 		while(true){
-		    pieceSelected = player2.requestPiece();
+		    pieceSelected = player2.requestPiece(board);
 		    valid = validPiece(player2,pieceSelected);
 
 		    if(valid){
@@ -217,7 +217,7 @@ public class Board {
 		p.boardUpdate = true;//Tell the render there is a change to update
 		//Wait till valid move is selected
 		while(true){
-		    pieceMove =  player2.requestMove(pieceSelected);//Get position piece will be moved to
+		    pieceMove =  player2.requestMove(pieceSelected,board);//Get position piece will be moved to
 		    if(p.cancelSelection){
 			break;
 		    }

@@ -5,6 +5,7 @@
  */
 package chessai;
 
+import java.io.File;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -65,6 +66,7 @@ public class ChessAIUI extends Application {
 	Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
+		//File f =new File("C:/Users/RyanS/OneDrive//School/COSC 3P71/Project/ChessAIGit/ChessAI/ChessAI/src/ChessTestFiles/Test1.txt");
                 Board b = new Board(p,p1,p2);
                 return null;
                 
