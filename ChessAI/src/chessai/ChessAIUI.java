@@ -40,7 +40,7 @@ public class ChessAIUI extends Application {
 	Scene scene = new Scene(root, 1920, 1080);
 	//Add canvas
 	Canvas canvas = new Canvas( 700,715 );
-	canvas.setLayoutX(350);
+	canvas.setLayoutX(610);
 	canvas.setLayoutY(50);
 	root.getChildren().add( canvas );
 	GraphicsContext gc = canvas.getGraphicsContext2D();
