@@ -10,8 +10,10 @@ package chessai;
  * @author Ryan and Parm
  */
 public class Pawn extends Piece {
+
     public Pawn(boolean c, int x, int y, String n) {
 	super(c, x, y, n);
+        this.pawnPromotion = false;
     }
 
     @Override
@@ -57,7 +59,11 @@ public class Pawn extends Piece {
                     return false;
                 }
             }
+            if (newPos[1] == 0 || newPos[1] ==7){
+                this.pawnPromotion = true;
+            }
         return true;
     }
+    
     
 }

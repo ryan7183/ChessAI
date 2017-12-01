@@ -14,6 +14,7 @@ public abstract class Piece {
     int x,y;//Coordinates
     public String textRepresentation;
     boolean hasMoved;
+    boolean pawnPromotion;
     Piece(boolean c,int x, int y, String n){
 	hasMoved=false;
 	colour = c;

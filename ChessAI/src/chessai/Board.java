@@ -177,6 +177,9 @@ public class Board {
 		    }
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
 			requestMove(pieceSelected,pieceMove);//move piece
+                        if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
+                            board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
+                        }
 			break;
 		    }
 		    System.out.println("Can't move a piece like that");
@@ -221,6 +224,9 @@ public class Board {
 		    
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
 			requestMove(pieceSelected,pieceMove);//Move piece
+                        if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
+                            board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
+                        }
 			break;
 		    }
 		    System.out.println("Can't move a piece like that");
