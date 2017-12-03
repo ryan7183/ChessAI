@@ -15,6 +15,8 @@ public abstract class Piece {
     public String textRepresentation;
     boolean hasMoved;
     boolean pawnPromotion;
+    boolean castleQueenSide;
+    boolean castleKingSide;
     Piece(boolean c,int x, int y, String n){
 	hasMoved=false;
 	colour = c;

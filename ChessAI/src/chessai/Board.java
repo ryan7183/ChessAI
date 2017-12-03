@@ -176,9 +176,29 @@ public class Board {
 			break;
 		    }
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-			requestMove(pieceSelected,pieceMove);//move piece
+			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour)){
+                            requestMove(pieceSelected,pieceMove);//Move piece
+                        }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
+                        }
+                        if(board[pieceMove[0]][pieceMove[1]].piece.castleKingSide){
+                            int[] rookPos = new int[2];
+                            int[] rookMove = pieceMove.clone();
+                            rookPos[0] = 7;
+                            rookPos[1] = pieceMove[1];
+                            rookMove[0]-=1;
+                            requestMove(rookPos,rookMove);
+                            board[pieceMove[0]][pieceMove[1]].piece.castleKingSide = false;
+                        }
+                        else if(board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide) {
+                            int[] rookPos = new int[2];
+                            int[] rookMove = pieceMove.clone();
+                            rookPos[0] = 0;
+                            rookPos[1] = pieceMove[1];
+                            rookMove[0]+=1;
+                            requestMove(rookPos,rookMove);
+                            board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide = false;
                         }
 			break;
 		    }
@@ -223,9 +243,29 @@ public class Board {
 		    }
 		    
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-			requestMove(pieceSelected,pieceMove);//Move piece
+                        if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour)){
+                            requestMove(pieceSelected,pieceMove);//Move piece
+                        }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
+                        }
+                        if(board[pieceMove[0]][pieceMove[1]].piece.castleKingSide){
+                            int[] rookPos = new int[2];
+                            int[] rookMove = pieceMove.clone();
+                            rookPos[0] = 7;
+                            rookPos[1] = pieceMove[1];
+                            rookMove[0]-=1;
+                            requestMove(rookPos,rookMove);
+                            board[pieceMove[0]][pieceMove[1]].piece.castleKingSide = false;
+                        }
+                        else if(board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide) {
+                            int[] rookPos = new int[2];
+                            int[] rookMove = pieceMove.clone();
+                            rookPos[0] = 0;
+                            rookPos[1] = pieceMove[1];
+                            rookMove[0]+=1;
+                            requestMove(rookPos,rookMove);
+                            board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide = false;
                         }
 			break;
 		    }
@@ -291,5 +331,40 @@ public class Board {
         board[newPos[1]][newPos[0]].setPiece(board[ogPos[1]][ogPos[0]].piece);
         board[ogPos[1]][ogPos[0]].removePiece();
         printBoard();
+    }
+    
+    int[] getKingLocation (Boolean c){
+        int[] location = new int[2];
+        for(int x=0;x<board.length;x++){
+            for(int y=0; y<board[0].length; y++){
+                if(c){
+                    if(board[x][y].hasPiece && board[x][y].piece.textRepresentation.equals("k")){
+                        location[0] = x;
+                        location[1] = y; 
+                    }
+                }
+                else {
+                    if(board[x][y].hasPiece && board[x][y].piece.textRepresentation.equals("K")){
+                        location[0] = x;
+                        location[1] = y; 
+                    }
+                }
+            }
+        }
+        return location; 
+    }
+    
+    boolean isKingInCheck(Boolean c){
+        int[] loc = getKingLocation(c);
+        for(int x=0; x<board.length; x++){
+            for(int y=0; y<board[0].length; y++){
+                if(board[x][y].hasPiece && board[x][y].piece.colour != c){
+                    if(board[x][y].piece.isValidMove(loc, board)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
