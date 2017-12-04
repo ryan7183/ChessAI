@@ -365,9 +365,22 @@ public class Board {
     boolean isCheckMate(Boolean c, BoardSquare[][] board){
 	boolean checkMate = true;
 	int[] kingPos = getKingLocation(c);
+	int[][] moves;
 	BoardSquare[][] bs=board.clone();
 	//Check if king can move
-
+	//Check each piece
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		if(bs[x][y].piece.colour==c){
+		    moves = bs[x][y].piece.generateMoves(board);
+		    checkMate = !pieceCanPreventCheck(kingPos,moves,board);
+		    
+		}
+		if(!checkMate){
+		    return checkMate;
+		}
+	    }
+	}
 	return checkMate;
 	
     }

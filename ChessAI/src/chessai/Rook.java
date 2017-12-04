@@ -54,7 +54,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public int[][] ganerateMoves(BoardSquare[][] bs) {
+    public int[][] generateMoves(BoardSquare[][] bs) {
 	int[][] moves=new int[16][];//4 is the max number of moves a knight can take
 	int[] possibleMove=new int[2];
 	int validCount =0;
