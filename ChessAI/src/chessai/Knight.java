@@ -26,5 +26,26 @@ public class Knight extends Piece{
         }
         return true;
     }
+
+    @Override
+    public int[][] ganerateMoves(BoardSquare[][] bs) {
+	int[][] moves=new int[4][];//4 is the max number of moves a knight can take
+	int[] possibleMove=new int[2];
+	int validCount =0;
+	int[][] returnMove;
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		possibleMove[0]=x;
+		possibleMove[1]=y;
+		if(isValidMove(possibleMove,bs)){
+		    moves[validCount]=possibleMove;
+		    validCount++;
+		}
+	    }
+	}
+	returnMove =new int[validCount][];//Create an array of the correct size to store the moves
+	System.arraycopy(moves, 0,returnMove , 0, validCount);//Copy the valid moves to an array of the correct size
+	return moves;
+    }
     
 }

@@ -26,4 +26,5 @@ public abstract class Piece {
     }
     
     public abstract Boolean isValidMove(int[] newPos, BoardSquare[][] bs);
+    public abstract int[][] ganerateMoves(BoardSquare[][] bs);
 }
