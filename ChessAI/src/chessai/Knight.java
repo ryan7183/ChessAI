@@ -38,7 +38,7 @@ public class Knight extends Piece{
 		possibleMove[0]=x;
 		possibleMove[1]=y;
 		if(isValidMove(possibleMove,bs)){
-		    moves[validCount]=possibleMove;
+		    moves[validCount]=possibleMove.clone();
 		    validCount++;
 		}
 	    }
