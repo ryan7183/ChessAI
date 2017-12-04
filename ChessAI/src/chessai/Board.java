@@ -176,8 +176,8 @@ public class Board {
 			break;
 		    }
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour)){
-                            requestMove(pieceSelected,pieceMove);//Move piece
+			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board)){
+                            board=requestMove(pieceSelected,pieceMove,board);//Move piece
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
@@ -188,7 +188,7 @@ public class Board {
                             rookPos[0] = 7;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]-=1;
-                            requestMove(rookPos,rookMove);
+                            board = requestMove(rookPos,rookMove,board);
                             board[pieceMove[0]][pieceMove[1]].piece.castleKingSide = false;
                         }
                         else if(board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide) {
@@ -197,7 +197,7 @@ public class Board {
                             rookPos[0] = 0;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]+=1;
-                            requestMove(rookPos,rookMove);
+                            board= requestMove(rookPos,rookMove,board);
                             board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide = false;
                         }
 			break;
@@ -243,8 +243,8 @@ public class Board {
 		    }
 		    
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-                        if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour)){
-                            requestMove(pieceSelected,pieceMove);//Move piece
+                        if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board)){
+                            board = requestMove(pieceSelected,pieceMove,board);//Move piece
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
@@ -255,7 +255,7 @@ public class Board {
                             rookPos[0] = 7;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]-=1;
-                            requestMove(rookPos,rookMove);
+                            board = requestMove(rookPos,rookMove,board);
                             board[pieceMove[0]][pieceMove[1]].piece.castleKingSide = false;
                         }
                         else if(board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide) {
@@ -264,7 +264,7 @@ public class Board {
                             rookPos[0] = 0;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]+=1;
-                            requestMove(rookPos,rookMove);
+                            board = requestMove(rookPos,rookMove,board);
                             board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide = false;
                         }
 			break;
@@ -288,7 +288,7 @@ public class Board {
     
     
     
-    BoardSquare[][] requestMove(int[] piece, int[] move){
+    BoardSquare[][] requestMove(int[] piece, int[] move, BoardSquare[][] board){
 	int x,y;
 	board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
 	board[move[0]][move[1]].piece.x = move[0];
@@ -327,12 +327,6 @@ public class Board {
 	}
     }
     
-    void movePiece (int[] ogPos, int[] newPos){
-        board[newPos[1]][newPos[0]].setPiece(board[ogPos[1]][ogPos[0]].piece);
-        board[ogPos[1]][ogPos[0]].removePiece();
-        printBoard();
-    }
-    
     int[] getKingLocation (Boolean c){
         int[] location = new int[2];
         for(int x=0;x<board.length;x++){
@@ -354,7 +348,7 @@ public class Board {
         return location; 
     }
     
-    boolean isKingInCheck(Boolean c){
+    boolean isKingInCheck(Boolean c,BoardSquare[][] board){
         int[] loc = getKingLocation(c);
         for(int x=0; x<board.length; x++){
             for(int y=0; y<board[0].length; y++){
@@ -366,5 +360,19 @@ public class Board {
             }
         }
         return false;
+    }
+    
+    boolean pieceCanPreventCheck(int[] pos,int[][] moves){
+	BoardSquare[][] bs = this.board.clone();
+	boolean preventCheck=false;
+	boolean colour = bs[pos[0]][pos[1]].piece.colour;
+	for(int[] m:moves){
+	    bs = requestMove(pos,m,bs);
+	    preventCheck = isKingInCheck(colour,bs);
+	    if(preventCheck){
+		break;
+	    }
+	}
+	return preventCheck;
     }
 }
