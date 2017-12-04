@@ -362,8 +362,18 @@ public class Board {
         return false;
     }
     
-    boolean pieceCanPreventCheck(int[] pos,int[][] moves){
-	BoardSquare[][] bs = this.board.clone();
+    boolean isCheckMate(Boolean c, BoardSquare[][] board){
+	boolean checkMate = true;
+	int[] kingPos = getKingLocation(c);
+	BoardSquare[][] bs=board.clone();
+	//Check if king can move
+
+	return checkMate;
+	
+    }
+    
+    boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board){
+	BoardSquare[][] bs = board.clone();
 	boolean preventCheck=false;
 	boolean colour = bs[pos[0]][pos[1]].piece.colour;
 	for(int[] m:moves){
