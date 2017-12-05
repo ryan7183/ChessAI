@@ -40,10 +40,10 @@ public class Board {
 	board[3][0].setPiece(new Queen(false,3,0,"Q"));
 	board[4][0].setPiece(new King(false,4,0,"K"));
 	//Black pawns
-	for(int x=0;x<8;x++){
+	/*for(int x=0;x<8;x++){
 	    board[x][1].setPiece(new Pawn(false,x,1,"P"));
 	
-	}
+	}*/
 	//White first row
 	board[0][7].setPiece(new Rook(true,0,7,"r"));
 	board[7][7].setPiece(new Rook(true,7,7,"r"));
@@ -54,10 +54,10 @@ public class Board {
 	board[3][7].setPiece(new Queen(true,3,7,"q"));
 	board[4][7].setPiece(new King(true,4,7,"k"));
 	//White pawns
-	for(int x=0;x<8;x++){
+	/*for(int x=0;x<8;x++){
 	    board[x][6].setPiece(new Pawn(true,x,6,"p"));
 	
-	}
+	}*/
 	p.setBoard(board);
 	//printBoard();
 	start();
@@ -151,6 +151,7 @@ public class Board {
 	boolean valid = false;
 	int[] pieceSelected;
 	int[] pieceMove;
+	boolean isCheckMate=false;
 	while(cont){
 	    
 	    //Player1 move loop
@@ -212,11 +213,20 @@ public class Board {
 		    break;
 		}
 	    }
-	    
 	    p.drawSelection=false;
 	    
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
+	    
+	    //Check for check mate
+	    System.out.println("1");
+	    isCheckMate = isCheckMate(false,board);
+	    System.out.println("2");
+	    if(isCheckMate){
+		System.out.println("CheckMate");
+	    }else{
+		System.out.println("I got here");
+	    }
 	    
 	     //Player2 move loop
 	    while(true){
@@ -283,6 +293,12 @@ public class Board {
 	    
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
+	    
+	    //Check for check mate
+	    isCheckMate = isCheckMate(true,board);
+	    if(isCheckMate){
+		System.out.println("CheckMate");
+	    }
 	}
     }
     
@@ -386,7 +402,11 @@ public class Board {
     }
     
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board){
-	BoardSquare[][] bs = board.clone();
+	BoardSquare[][] bs = new BoardSquare[board.length][];
+	//Make copy of array to work on
+	for(int  i=0;i<bs.length;i++){
+	    System.arraycopy(board[i], 0, bs[i], 0, bs.length);
+	}
 	boolean preventCheck=false;
 	boolean colour = bs[pos[0]][pos[1]].piece.colour;
 	for(int[] m:moves){
