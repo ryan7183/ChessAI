@@ -403,11 +403,16 @@ public class Board {
     
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board){
 	
-	BoardSquare[][] bs = new BoardSquare[board.length][];
+	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
 	//Make copy of array to work on
-	for(int  i=0;i<bs.length;i++){
+	/*for(int  i=0;i<bs.length;i++){
 	    bs[i]=Arrays.copyOf(board[i],board[i].length);
 	    //System.arraycopy(board[i], 0, bs[i], 0, bs.length);
+	}*/
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		bs[x][y] = new BoardSquare(board[x][y]);
+	    }
 	}
 	System.out.println(1);
 	boolean preventCheck=false;

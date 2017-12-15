@@ -25,6 +25,13 @@ public class BoardSquare {
 	this.y=y;
     }
     
+    BoardSquare(BoardSquare bs){
+	piece = bs.piece;
+	hasPiece = bs.hasPiece;
+	this.x=bs.x;
+	this.y=bs.y;
+    }
+    
     //Converts number location to a corresponding letter
     char convertNumToLetterLocation(int n){
 	char l;
