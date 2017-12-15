@@ -102,7 +102,7 @@ public class Queen extends Piece{
 	}
 	returnMove =new int[validCount][];//Create an array of the correct size to store the moves
 	System.arraycopy(moves, 0,returnMove , 0, validCount);//Copy the valid moves to an array of the correct size
-	return moves;
+	return returnMove;
     }
     
 }

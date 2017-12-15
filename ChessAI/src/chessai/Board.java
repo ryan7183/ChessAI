@@ -3,6 +3,8 @@ package chessai;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -219,9 +221,7 @@ public class Board {
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
 	    //Check for check mate
-	    System.out.println("1");
 	    isCheckMate = isCheckMate(false,board);
-	    System.out.println("2");
 	    if(isCheckMate){
 		System.out.println("CheckMate");
 	    }else{
@@ -402,13 +402,18 @@ public class Board {
     }
     
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board){
+	
 	BoardSquare[][] bs = new BoardSquare[board.length][];
 	//Make copy of array to work on
 	for(int  i=0;i<bs.length;i++){
-	    System.arraycopy(board[i], 0, bs[i], 0, bs.length);
+	    bs[i]=Arrays.copyOf(board[i],board[i].length);
+	    //System.arraycopy(board[i], 0, bs[i], 0, bs.length);
 	}
+	System.out.println(1);
 	boolean preventCheck=false;
+	System.out.println(2);
 	boolean colour = bs[pos[0]][pos[1]].piece.colour;
+	
 	for(int[] m:moves){
 	    bs = requestMove(pos,m,bs);
 	    preventCheck = isKingInCheck(colour,bs);
@@ -416,6 +421,7 @@ public class Board {
 		break;
 	    }
 	}
+	
 	return preventCheck;
     }
 }
