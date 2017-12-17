@@ -25,7 +25,7 @@ public class Pawn extends Piece {
         else{
             changeInY = 1;
         }
-        if((this.x-1 >=0 && (bs[this.y+changeInY][this.x-1].hasPiece)) || (this.x+1 <=7 && (bs[this.y+changeInY][this.x+1].hasPiece))){
+        if((this.x-1 >=0 && (bs[this.x-1][this.y+changeInY].hasPiece)) || (this.x+1 <=7 && (bs[this.x+1][this.y+changeInY].hasPiece))){
             if((newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)) || (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1))){
                 if(bs[newPos[0]][newPos[1]].piece.colour == this.colour){
                     return false;
