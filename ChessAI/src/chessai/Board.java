@@ -221,13 +221,12 @@ public class Board {
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
 	    //Check for check mate
-	    isCheckMate = isCheckMate(false,board);
-	    if(isCheckMate){
-		System.out.println("CheckMate");
-                break;
-	    }else{
-		System.out.println("I got here");
-	    }
+            if(isKingInCheck(false,board)){
+                isCheckMate = isCheckMate(false,board);
+                if(isCheckMate){
+                    System.out.println("CheckMate! White Wins.");
+                }
+            }
 	    
 	     //Player2 move loop
 	    while(true){
@@ -296,10 +295,12 @@ public class Board {
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
 	    //Check for check mate
-	    isCheckMate = isCheckMate(true,board);
-	    if(isCheckMate){
-		System.out.println("CheckMate");
-	    }
+            if(isKingInCheck(true,board)){
+                isCheckMate = isCheckMate(true,board);
+                if(isCheckMate){
+                    System.out.println("CheckMate! Black Wins.");
+                } 
+            }
 	}
     }
     
@@ -390,21 +391,20 @@ public class Board {
 	    for(int y=0;y<bs[0].length;y++){
 		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
 		    moves = bs[x][y].piece.generateMoves(board);
-		    checkMate = !pieceCanPreventCheck(kingPos,moves,board);
-		}
-		if(!checkMate){
-                    System.out.println(checkMate);
-                    System.out.println(bs[x][y].piece.textRepresentation);
-		    return checkMate;
+                    if(pieceCanPreventCheck(kingPos,moves,board,c)){
+                        checkMate = false;
+                    }
+                    else {
+                        checkMate = true;
+                    }
 		}
 	    }
 	}
-        System.out.println(checkMate);
 	return checkMate;
 	
     }
     
-    boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board){
+    boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board, boolean c){
 	
 	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
 	//Make copy of array to work on
@@ -417,19 +417,17 @@ public class Board {
 		bs[x][y] = new BoardSquare(board[x][y]);
 	    }
 	}
-	System.out.println(1);
 	boolean preventCheck=false;
-	System.out.println(2);
-	boolean colour = bs[pos[0]][pos[1]].piece.colour;
+	boolean colour = c;
 	
 	for(int[] m:moves){
 	    bs = requestMove(pos,m,bs);
-	    preventCheck = isKingInCheck(colour,bs);
+	    preventCheck = !isKingInCheck(colour,bs);
 	    if(preventCheck){
 		break;
 	    }
 	}
-	
+        
 	return preventCheck;
     }
 }

@@ -21,6 +21,9 @@ public class King extends Piece{
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
         int changeInX = Math.abs(this.x-newPos[0]);
         int changeInY = Math.abs(this.y-newPos[1]);
+        if(this.x==newPos[0] && this.y==newPos[1]){
+            return false;
+        }
         if(changeInY>1){
             return false;
         }
@@ -89,7 +92,7 @@ public class King extends Piece{
 
     @Override
     public int[][] generateMoves(BoardSquare[][] bs) {
-	int[][] moves=new int[10][];//4 is the max number of moves a knight can take
+	int[][] moves=new int[16][];//4 is the max number of moves a knight can take
 	int[] possibleMove=new int[2];
 	int validCount =0;
 	int[][] returnMove;

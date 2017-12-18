@@ -19,6 +19,9 @@ public class Rook extends Piece {
         if (!(this.x == newPos[0] || this.y == newPos[1])){
             return false;
         }
+        if(this.x==newPos[0] && this.y==newPos[1]){
+            return false;
+        }
         if(this.x==newPos[0]){
             int changeInY;
             if(this.y>newPos[1]){

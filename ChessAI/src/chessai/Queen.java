@@ -17,6 +17,9 @@ public class Queen extends Piece{
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+        if(this.x==newPos[0] && this.y==newPos[1]){
+            return false;
+        }
         if (this.x == newPos[0] || this.y == newPos[1]){
             if(this.x==newPos[0]){
                 int changeInY;
