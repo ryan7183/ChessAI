@@ -21,9 +21,6 @@ public class King extends Piece{
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
         int changeInX = Math.abs(this.x-newPos[0]);
         int changeInY = Math.abs(this.y-newPos[1]);
-        if(this.x==newPos[0] && this.y==newPos[1]){
-            return false;
-        }
         if(changeInY>1){
             return false;
         }
@@ -82,6 +79,9 @@ public class King extends Piece{
                         return false;
                     }
                 }
+            }
+            else if (changeInX ==2){
+                return false;
             }
         }
         if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){

@@ -25,15 +25,15 @@ public class Pawn extends Piece {
         else{
             changeInY = 1;
         }
-        if((this.x-1 >=0 && (bs[this.x-1][this.y+changeInY].hasPiece)) || (this.x+1 <=7 && (bs[this.x+1][this.y+changeInY].hasPiece))){
-            if((newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)) || (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1))){
-                if(bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+        if(((this.x-1 >=0 && (bs[this.x-1][this.y+changeInY].hasPiece)) && 
+                (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1))) || ((this.x+1 <=7 && (bs[this.x+1][this.y+changeInY].hasPiece))
+                && (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1)))){
+                if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
                     return false;
                 }
                 else{
                     return true;
                 }
-            }
         }
         else{
             if(this.x!=newPos[0]){
@@ -69,9 +69,9 @@ public class Pawn extends Piece {
     public int[][] generateMoves(BoardSquare[][] bs) {
 	int[][] moves=new int[4][];//4 is the max number of moves a knight can take
 	int[] possibleMove=new int[2];
-	int validCount =0;
+	int validCount = 0;
 	int[][] returnMove;
-	for(int x=0;x<bs.length;x++){
+	for(int x=this.x-1;x<this.y+2;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
