@@ -11,14 +11,12 @@ package chessai;
  */
 public class AIdriver extends Player{
     Passer passer;
-    int depth;
     int[] move;
     int[] pieceChosen;
-    final int Max_Depth=3; 
+    final int Max_Depth=2; 
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;
 	passer=p;
-	depth=4;
 	move = new int[2];
 	pieceChosen = new int[2];
     }
@@ -26,7 +24,8 @@ public class AIdriver extends Player{
     //GEts piece to move and the position to move it
     @Override
     int[] requestPiece(BoardSquare[][] bs) {
-	return null;
+	double value=alphaBeta(bs,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
+	return pieceChosen;
     }
     
     boolean getColour(){
@@ -40,7 +39,7 @@ public class AIdriver extends Player{
     Piece[] getPieces(BoardSquare[][] bs,boolean c){
 	Piece[] p;
 	int numPieces=0;
-	//Count the number of pieces still in playfor this player
+	//Count the number of pieces still in play for the given player
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs.length;y++){
 		if(bs[x][y].hasPiece&&bs[x][y].piece.colour==c){
@@ -70,8 +69,7 @@ public class AIdriver extends Player{
     //Returns the new positon of the piece being moved
     @Override
     int[] requestMove(int[] piece, BoardSquare[][] bs) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	//return move;
+	return move;
     }
     /**
      * @param bs the board state
@@ -80,56 +78,77 @@ public class AIdriver extends Player{
      * @param b the beta score
      * @param maximize if maximizing score or not
      */
-    double alphaBeta(BoardSquare[][] bs,int depth,double a, double b, boolean maximize){
-	Piece[] pieces;
-	int[][] possibleMoves;
+    
+    double alphaBeta(BoardSquare[][] bs,int depth,double a, double b){
+	Piece[] p=getPieces(bs,colour);
+	int[][] moves;
 	int[] piecePos=new int[2];
+	double best=Double.NEGATIVE_INFINITY;
+	double value=Double.NEGATIVE_INFINITY;
 	BoardSquare[][] newBoard;
-	Piece p;
-	double value;
-	if(depth >= Max_Depth){
-	    return scoreFromNumPieces(bs);
-	}
-	if(maximize){
-	    value = Double.NEGATIVE_INFINITY;
-	    //check child nodes
-	    pieces=getPieces(bs,false);
-	    for(int i=0;i<pieces.length;i++){
-		p=pieces[i];
-		possibleMoves = p.generateMoves(bs);
-		for(int j=0;j<possibleMoves.length;j++){
-		    newBoard = copyBoard(bs);
-		    piecePos[0]=p.x;
-		    piecePos[1]=p.y;
-		    newBoard = requestMove(piecePos,possibleMoves[j],newBoard);//Get board for the next child node
-		    value = max(value,alphaBeta(newBoard,depth+1,a,b,false));
-		    a=max(a,value);
-		    if(b<=a){
-			return value;
-		    }
+	for(int i=0;i<p.length;i++){
+	    moves = p[i].generateMoves(bs);
+	    for(int j=0;j<moves.length;j++){
+		newBoard = copyBoard(bs);
+		value =  minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
+		if(value>best){
+		    best =value;
+		    move = moves[j];
+		    piecePos[0]=p[i].x;
+		    piecePos[1]=p[i].y;
+		    pieceChosen = piecePos;
 		}
 	    }
-	}else{
-	    value = Double.POSITIVE_INFINITY;
-	    pieces=getPieces(bs,true);
-	    for(int i=0;i<pieces.length;i++){
-		p=pieces[i];
-		possibleMoves = p.generateMoves(bs);
-		for(int j=0;j<possibleMoves.length;j++){
-		    newBoard = copyBoard(bs);
-		    piecePos[0]=p.x;
-		    piecePos[1]=p.y;
-		    newBoard = requestMove(piecePos,possibleMoves[j],newBoard);//Get board for the next child node
-		    value = min(value,alphaBeta(newBoard,depth+1,a,b,false));
-		    a=min(a,value);
-		    if(b<=a){
-			return value;
-		    }
-		}
-	    }
-	    
 	}
-	return value;
+	return best;
+    }
+    
+    double maxValue(BoardSquare[][] bs,int depth,double a, double b){
+	double v;
+	Piece[] p=getPieces(bs,colour);
+	int[][] moves;
+	BoardSquare[][] newBoard;
+	int[] piecePos=new int[2];
+	if(depth >= Max_Depth||isCheckMate(!colour,bs)){
+	    return boardEvaluation(bs);
+	}
+	v=Double.NEGATIVE_INFINITY;
+	for(int i=0;i<p.length;i++){
+	    moves = p[i].generateMoves(bs);
+	    for(int j=0;j<moves.length;j++){
+		newBoard = copyBoard(bs);
+		v = max(v,minValue(newBoard,depth+1,a,b));
+		if(v<b){
+		    return v;
+		}
+		a = min(a,v);
+	    }
+	}
+	return v;
+    }
+    
+    double minValue(BoardSquare[][] bs,int depth,double a, double b){
+	double v;
+	Piece[] p=getPieces(bs,!colour);
+	int[][] moves;
+	BoardSquare[][] newBoard;
+	int[] piecePos=new int[2];
+	if(depth >= Max_Depth||isCheckMate(colour,bs)){
+	    return boardEvaluation(bs);
+	}
+	v=Double.POSITIVE_INFINITY;
+	for(int i=0;i<p.length;i++){
+	    moves = p[i].generateMoves(bs);
+	    for(int j=0;j<moves.length;j++){
+		newBoard = copyBoard(bs);
+		v = min(v,maxValue(newBoard,depth+1,a,b));
+		if(v<a){
+		    return v;
+		}
+		b = min(b,v);
+	    }
+	}
+	return v;
     }
     
     double max(double a, double b){
@@ -148,7 +167,7 @@ public class AIdriver extends Player{
     
     double boardEvaluation(BoardSquare[][] bs){
 	double score=0;//Greater value beter for this player
-	score = scoreFromNumPieces(bs);
+	score = scoreFromNumPieces(bs)+scoreFromPawnDistanceToEnd(bs);
 	return score;
     }
     
@@ -178,6 +197,27 @@ public class AIdriver extends Player{
 	return score;
     }
     
+    double scoreFromPawnDistanceToEnd(BoardSquare[][] bs){
+	double score=0;
+	if(colour/*white*/){
+	    for(int x=0;x<bs.length;x++){
+		for(int y=0;y<bs[0].length;y++){
+		    if(bs[x][y].hasPiece&&bs[x][y].piece.colour&&bs[x][y].piece.textRepresentation.equals("p")){
+			score = score+(8-bs[x][y].piece.y);
+		    }
+		}
+	    }
+	}else{
+	    for(int x=0;x<bs.length;x++){
+		for(int y=0;y<bs[0].length;y++){
+		    if(bs[x][y].hasPiece&&!bs[x][y].piece.colour&&bs[x][y].piece.textRepresentation.equals("P")){
+			score = score+(bs[x][y].piece.y);
+		    }
+		}
+	    }
+	}
+	return score;
+    }
     
     BoardSquare[][] copyBoard(BoardSquare[][] board){
 	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
@@ -199,4 +239,90 @@ public class AIdriver extends Player{
 	board[move[0]][move[1]].hasPiece=true;
 	return board;
     }
+    
+    boolean isCheckMate(Boolean c, BoardSquare[][] board){
+	boolean checkMate = true;
+	int[] kingPos = getKingLocation(c,board);
+	int[][] moves;
+	BoardSquare[][] bs=board.clone();
+	//Check if king can move
+	//Check each piece
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
+		    moves = bs[x][y].piece.generateMoves(board);
+                    if(pieceCanPreventCheck(kingPos,moves,board,c)){
+                        checkMate = false;
+                    }
+		}
+	    }
+	}
+	return checkMate;
+	
+    }
+    
+    int[] getKingLocation (Boolean c, BoardSquare[][] bs){
+        int[] location = new int[2];
+        for(int x=0;x<bs.length;x++){
+            for(int y=0; y<bs[0].length; y++){
+                if(c){
+                    if(bs[x][y].hasPiece && bs[x][y].piece.textRepresentation.equals("k")){
+                        location[0] = x;
+                        location[1] = y; 
+                    }
+                }
+                else {
+                    if(bs[x][y].hasPiece && bs[x][y].piece.textRepresentation.equals("K")){
+                        location[0] = x;
+                        location[1] = y; 
+                    }
+                }
+            }
+        }
+        return location; 
+    }
+    
+    boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board, boolean c){
+	
+	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+	//Make copy of array to work on
+	/*for(int  i=0;i<bs.length;i++){
+	    bs[i]=Arrays.copyOf(board[i],board[i].length);
+	    //System.arraycopy(board[i], 0, bs[i], 0, bs.length);
+	}*/
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		bs[x][y] = new BoardSquare(board[x][y]);
+	    }
+	}
+        bs[pos[0]][pos[1]].piece.x = pos[0];
+        bs[pos[0]][pos[1]].piece.y = pos[1];
+	boolean preventCheck=false;
+	boolean colour = c;
+	
+	for(int[] m:moves){
+	    bs = requestMove(pos,m,bs);
+            int[] kingPos = getKingLocation(c,bs);
+	    preventCheck = !isKingInCheck(colour,bs);
+	    if(preventCheck){
+		break;
+	    }
+	}
+	return preventCheck;
+    }
+    
+    boolean isKingInCheck(Boolean c,BoardSquare[][] board){
+        int[] loc = getKingLocation(c,board);
+        for(int x=0; x<board.length; x++){
+            for(int y=0; y<board[0].length; y++){
+                if(board[x][y].hasPiece && board[x][y].piece.colour != c){
+                    if(board[x][y].piece.isValidMove(loc, board)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
+
