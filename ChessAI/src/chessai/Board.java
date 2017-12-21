@@ -183,6 +183,7 @@ public class Board {
 		    }
                     outerloop:
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
+                        ArrayList<Piece> temp = new ArrayList<Piece>();
 			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board, moveList)){
                             //board=requestMove(pieceSelected,pieceMove,board);//Move piece
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
@@ -191,7 +192,7 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            bs = requestMove(pieceSelected,pieceMove,bs,temp);
                             if(!isKingInCheck(true, bs, moveList)){
                                 board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
@@ -206,7 +207,7 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            bs = requestMove(pieceSelected,pieceMove,bs,temp);
                             if(!isKingInCheck(true, bs, moveList)){
                                 board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
@@ -216,6 +217,16 @@ public class Board {
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
+                        }
+                        if(board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft){
+                            board[pieceMove[0]][pieceMove[1]+1].removePiece();
+                            board = requestMove(pieceSelected,pieceMove,board,moveList);
+                            board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft = false;
+                        }
+                        else if(board[pieceMove[0]][pieceMove[1]].piece.enpassantRight){
+                            board[pieceMove[0]][pieceMove[1]+1].removePiece();
+                            board = requestMove(pieceSelected,pieceMove,board,moveList);
+                            board[pieceMove[0]][pieceMove[1]].piece.enpassantRight = false;
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.castleKingSide){
                             int[] rookPos = new int[2];
@@ -257,6 +268,9 @@ public class Board {
                 isCheckMate = isCheckMate(false,board, moveList);
                 System.out.println(isCheckMate);
                 if(isCheckMate){
+                    for(int i=0; i<moveList.size(); i++){
+                        System.out.println(moveList.get(i).colour+" "+moveList.get(i).textRepresentation+" "+moveList.get(i).x+","+moveList.get(i).y+" "+moveList.get(i).prevX+","+moveList.get(i).prevY);
+                    }
                     System.out.println("CheckMate! White Wins.");
                 }
             }
@@ -292,6 +306,7 @@ public class Board {
 		    }
                     outerloop:
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
+                        ArrayList<Piece> temp = new ArrayList<Piece>();
                         if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board, moveList)){
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
@@ -299,7 +314,7 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            bs = requestMove(pieceSelected,pieceMove,bs,temp);
                             if(!isKingInCheck(false, bs, moveList)){
                                 board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
@@ -314,7 +329,7 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            bs = requestMove(pieceSelected,pieceMove,bs,temp);
                             if(!isKingInCheck(false, bs, moveList)){
                                 board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
@@ -324,6 +339,16 @@ public class Board {
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
+                        }
+                        if(board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft){
+                            board[pieceMove[0]][pieceMove[1]-1].removePiece();
+                            board = requestMove(pieceSelected,pieceMove,board,moveList);
+                            board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft = false;
+                        }
+                        else if(board[pieceMove[0]][pieceMove[1]].piece.enpassantRight){
+                            board[pieceMove[0]][pieceMove[1]-1].removePiece();
+                            board = requestMove(pieceSelected,pieceMove,board,moveList);
+                            board[pieceMove[0]][pieceMove[1]].piece.enpassantRight = false;
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.castleKingSide){
                             int[] rookPos = new int[2];

@@ -21,6 +21,8 @@ public abstract class Piece {
     boolean pawnPromotion;
     boolean castleQueenSide;
     boolean castleKingSide;
+    boolean enpassantLeft ;
+    boolean enpassantRight;
     Piece(boolean c,int x, int y, String n){
 	hasMoved=false;
         prevHasMoved=false;

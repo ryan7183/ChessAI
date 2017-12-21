@@ -16,6 +16,8 @@ public class Pawn extends Piece {
     public Pawn(boolean c, int x, int y, String n) {
 	super(c, x, y, n);
         this.pawnPromotion = false;
+        this.enpassantLeft = false;
+        this.enpassantRight = false;
     }
 
     @Override
@@ -37,33 +39,87 @@ public class Pawn extends Piece {
                     return true;
                 }
         }
+        else if(((this.x-1>=0 && (bs[this.x-1][this.y].hasPiece)) && (newPos[1]==(this.y+changeInY) && newPos[0]==this.x-1))){
+            if(bs[newPos[0]][newPos[1]].hasPiece && bs[this.x-1][this.y+changeInY].piece.colour == this.colour){
+                return false;
+            }
+            else{
+                if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+                    return false;
+                }
+                else if(!bs[newPos[0]][newPos[1]].hasPiece){
+                    if(moveList.size()>2){
+                        int pos = moveList.size()-1;
+                        while(moveList.get(pos).colour==this.colour){
+                            pos--;
+                        }
+                        if((moveList.get(pos).textRepresentation.equals("P") || moveList.get(pos).textRepresentation.equals("p"))
+                                &&(this.y==moveList.get(pos).y && Math.abs(moveList.get(pos).prevY-moveList.get(pos).y)==2
+                                && this.x-1==moveList.get(pos).x)){
+                            this.enpassantLeft = true;
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        else if(((this.x+1<=7 && (bs[this.x+1][this.y].hasPiece)) && (newPos[1]==(this.y+changeInY) && newPos[0]==this.x+1))){
+            if(bs[newPos[0]][newPos[1]].hasPiece && bs[this.x+1][this.y+changeInY].piece.colour == this.colour){
+                return false;
+            }
+            else{
+                if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+                    return false;
+                }
+                else if(!bs[newPos[0]][newPos[1]].hasPiece){
+                    if(moveList.size()>2){
+                        int pos = moveList.size()-1;
+                        while(moveList.get(pos).colour==this.colour){
+                            pos--;
+                        }
+                        if((moveList.get(pos).textRepresentation.equals("P") || moveList.get(pos).textRepresentation.equals("p"))
+                                &&(this.y==moveList.get(pos).y && Math.abs(moveList.get(pos).prevY-moveList.get(pos).y)==2
+                                && this.x+1==moveList.get(pos).x)){
+                            this.enpassantRight = true;
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                }
+            }    
+        }
         else{
             if(this.x!=newPos[0]){
                 return false;
             }
         }
-            if(this.hasMoved){
-                if(Math.abs(newPos[1]-this.y) != 1){
-                    return false;
-                }
-                if(this.y+(-changeInY)==newPos[1]){
-                    return false;
-                }
-                if(bs[newPos[0]][newPos[1]].hasPiece){
-                    return false;
-                }
+        if(this.hasMoved){
+            if(Math.abs(newPos[1]-this.y) != 1){
+                return false;
             }
-            else{
-                if(!(Math.abs(newPos[1]-this.y) == 1 || Math.abs(newPos[1]-this.y) == 2)){
-                    return false;
-                }
-                if(bs[newPos[0]][newPos[1]].hasPiece){
-                    return false;
-                }
+            if(this.y+(-changeInY)==newPos[1]){
+                return false;
             }
-            if (newPos[1] == 0 || newPos[1] ==7){
-                this.pawnPromotion = true;
+            if(bs[newPos[0]][newPos[1]].hasPiece){
+                return false;
             }
+        }
+        else{
+            if(!(Math.abs(newPos[1]-this.y) == 1 || Math.abs(newPos[1]-this.y) == 2)){
+                return false;
+            }
+            if(bs[newPos[0]][newPos[1]].hasPiece){
+                return false;
+            }
+        }
+        if (newPos[1] == 0 || newPos[1] ==7){
+            this.pawnPromotion = true;
+        }
         return true;
     }
 
