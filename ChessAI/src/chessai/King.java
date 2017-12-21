@@ -5,6 +5,8 @@
  */
 package chessai;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Ryan and Parm
@@ -18,7 +20,7 @@ public class King extends Piece{
     }
 
     @Override
-    public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+    public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         int changeInX = Math.abs(this.x-newPos[0]);
         int changeInY = Math.abs(this.y-newPos[1]);
         if(changeInY>1){
@@ -41,7 +43,7 @@ public class King extends Piece{
                             for(int x=0; x<8; x++){
                                 for(int y=0; y<8; y++){
                                     if(bs[x][y].hasPiece && bs[x][y].piece.colour != this.colour){
-                                        if(bs[x][y].piece.isValidMove(loc, bs)){
+                                        if(bs[x][y].piece.isValidMove(loc, bs, moveList)){
                                             return false;
                                         }
                                     }
@@ -66,7 +68,7 @@ public class King extends Piece{
                             for(int x=0; x<8; x++){
                                 for(int y=0; y<8; y++){
                                     if(bs[x][y].hasPiece && bs[x][y].piece.colour != this.colour){
-                                        if(bs[x][y].piece.isValidMove(loc, bs)){
+                                        if(bs[x][y].piece.isValidMove(loc, bs, moveList)){
                                             return false;
                                         }
                                     }
@@ -91,7 +93,7 @@ public class King extends Piece{
     }
 
     @Override
-    public int[][] generateMoves(BoardSquare[][] bs) {
+    public int[][] generateMoves(BoardSquare[][] bs, ArrayList<Piece> moveList) {
 	int[][] moves=new int[16][];//4 is the max number of moves a knight can take
 	int[] possibleMove=new int[2];
 	int validCount =0;
@@ -100,7 +102,7 @@ public class King extends Piece{
 	    for(int y=0;y<bs[0].length;y++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
-		if(isValidMove(possibleMove,bs)){
+		if(isValidMove(possibleMove,bs, moveList)){
 		    moves[validCount]=possibleMove.clone();
 		    validCount++;
 		}

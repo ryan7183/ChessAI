@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -153,6 +154,7 @@ public class Board {
 	boolean valid = false;
 	int[] pieceSelected;
 	int[] pieceMove;
+        ArrayList<Piece> moveList = new ArrayList<Piece>();
 	boolean isCheckMate=false;
         boolean stalemate=false;
 	while(cont){
@@ -180,8 +182,8 @@ public class Board {
 			break;
 		    }
                     outerloop:
-		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board)){
+		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
+			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board, moveList)){
                             //board=requestMove(pieceSelected,pieceMove,board);//Move piece
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
@@ -189,9 +191,9 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs);
-                            if(!isKingInCheck(true, bs)){
-                                board = requestMove(pieceSelected,pieceMove,board);
+                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            if(!isKingInCheck(true, bs, moveList)){
+                                board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
                             else{
                                 break outerloop;
@@ -204,11 +206,13 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs);
-                            if(!isKingInCheck(true, bs)){
-                                board = requestMove(pieceSelected,pieceMove,board);
+                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            if(!isKingInCheck(true, bs, moveList)){
+                                board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
-                            
+                            else{
+                                break outerloop;
+                            }
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
@@ -219,7 +223,7 @@ public class Board {
                             rookPos[0] = 7;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]-=1;
-                            board = requestMove(rookPos,rookMove,board);
+                            board = requestMove(rookPos,rookMove,board,moveList);
                             board[pieceMove[0]][pieceMove[1]].piece.castleKingSide = false;
                         }
                         else if(board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide) {
@@ -228,7 +232,7 @@ public class Board {
                             rookPos[0] = 0;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]+=1;
-                            board= requestMove(rookPos,rookMove,board);
+                            board= requestMove(rookPos,rookMove,board,moveList);
                             board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide = false;
                         }
 			break;
@@ -249,14 +253,15 @@ public class Board {
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
 	    //Check for check mate
-            if(isKingInCheck(false,board)){
-                isCheckMate = isCheckMate(false,board);
+            if(isKingInCheck(false,board,moveList)){
+                isCheckMate = isCheckMate(false,board, moveList);
+                System.out.println(isCheckMate);
                 if(isCheckMate){
                     System.out.println("CheckMate! White Wins.");
                 }
             }
             else{
-                stalemate = isCheckMate(false,board);
+                stalemate = isCheckMate(false,board, moveList);
                 if(stalemate){
                     System.out.println("Stalemate. The game is a draw.");
                 }
@@ -286,17 +291,17 @@ public class Board {
 			break;
 		    }
                     outerloop:
-		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board)){
-                        if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board)){
+		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
+                        if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board, moveList)){
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
                                 for(int y=0;y<bs[0].length;y++){
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs);
-                            if(!isKingInCheck(false, bs)){
-                                board = requestMove(pieceSelected,pieceMove,board);
+                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            if(!isKingInCheck(false, bs, moveList)){
+                                board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
                             else{
                                 break outerloop;
@@ -309,11 +314,13 @@ public class Board {
                                     bs[x][y] = new BoardSquare(board[x][y]);
                                 }
                             }
-                            bs = requestMove(pieceSelected,pieceMove,bs);
-                            if(!isKingInCheck(false, bs)){
-                                board = requestMove(pieceSelected,pieceMove,board);
+                            bs = requestMove(pieceSelected,pieceMove,bs,moveList);
+                            if(!isKingInCheck(false, bs, moveList)){
+                                board = requestMove(pieceSelected,pieceMove,board,moveList);
                             }
-                            
+                            else{
+                                break outerloop;
+                            }
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
@@ -324,7 +331,7 @@ public class Board {
                             rookPos[0] = 7;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]-=1;
-                            board = requestMove(rookPos,rookMove,board);
+                            board = requestMove(rookPos,rookMove,board,moveList);
                             board[pieceMove[0]][pieceMove[1]].piece.castleKingSide = false;
                         }
                         else if(board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide) {
@@ -333,7 +340,7 @@ public class Board {
                             rookPos[0] = 0;
                             rookPos[1] = pieceMove[1];
                             rookMove[0]+=1;
-                            board = requestMove(rookPos,rookMove,board);
+                            board = requestMove(rookPos,rookMove,board, moveList);
                             board[pieceMove[0]][pieceMove[1]].piece.castleQueenSide = false;
                         }
 			break;
@@ -354,14 +361,14 @@ public class Board {
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
 	    //Check for check mate
-            if(isKingInCheck(true,board)){
-                isCheckMate = isCheckMate(true,board);
+            if(isKingInCheck(true,board,moveList)){
+                isCheckMate = isCheckMate(true,board,moveList);
                 if(isCheckMate){
                     System.out.println("CheckMate! Black Wins.");
                 } 
             }
             else{
-                stalemate = isCheckMate(true,board);
+                stalemate = isCheckMate(true,board,moveList);
                 if(stalemate){
                     System.out.println("Stalemate. The game is a draw.");
                 }
@@ -371,14 +378,18 @@ public class Board {
     
     
     
-    BoardSquare[][] requestMove(int[] piece, int[] move, BoardSquare[][] board){
+    BoardSquare[][] requestMove(int[] piece, int[] move, BoardSquare[][] board, ArrayList<Piece> moveList){
 	int x,y;
 	board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
 	board[move[0]][move[1]].piece.x = move[0];
 	board[move[0]][move[1]].piece.y = move[1];
+        board[move[0]][move[1]].piece.prevX = piece[0];
+        board[move[0]][move[1]].piece.prevY = piece[1];
+        board[move[0]][move[1]].piece.prevHasMoved = board[piece[0]][piece[1]].piece.hasMoved;
         board[move[0]][move[1]].piece.hasMoved = true;
 	board[piece[0]][piece[1]].hasPiece=false;
 	board[move[0]][move[1]].hasPiece=true;
+        moveList.add(board[move[0]][move[1]].piece);
 	return board;
     }
     
@@ -431,12 +442,12 @@ public class Board {
         return location; 
     }
     
-    boolean isKingInCheck(Boolean c,BoardSquare[][] board){
+    boolean isKingInCheck(Boolean c,BoardSquare[][] board, ArrayList<Piece> moveList){
         int[] loc = getKingLocation(c,board);
         for(int x=0; x<board.length; x++){
             for(int y=0; y<board[0].length; y++){
                 if(board[x][y].hasPiece && board[x][y].piece.colour != c){
-                    if(board[x][y].piece.isValidMove(loc, board)){
+                    if(board[x][y].piece.isValidMove(loc, board, moveList)){
                         return true;
                     }
                 }
@@ -445,17 +456,20 @@ public class Board {
         return false;
     }
     
-    boolean isCheckMate(Boolean c, BoardSquare[][] board){
+    boolean isCheckMate(Boolean c, BoardSquare[][] board, ArrayList<Piece> moveList){
 	boolean checkMate = true;
 	int[] kingPos = getKingLocation(c,board);
 	int[][] moves;
+        int[] pos = new int[2];
 	BoardSquare[][] bs=board.clone();
 	//Check if king can move
 	//Check each piece
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
-		    moves = bs[x][y].piece.generateMoves(board);
+		    moves = bs[x][y].piece.generateMoves(board, moveList);
+                    pos[0]=x;
+                    pos[1]=y;
                     if(pieceCanPreventCheck(kingPos,moves,board,c)){
                         checkMate = false;
                     }
@@ -469,6 +483,7 @@ public class Board {
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board, boolean c){
 	
 	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+        ArrayList<Piece> temp = new ArrayList<Piece>();
 	//Make copy of array to work on
 	/*for(int  i=0;i<bs.length;i++){
 	    bs[i]=Arrays.copyOf(board[i],board[i].length);
@@ -485,12 +500,17 @@ public class Board {
 	boolean colour = c;
 	
 	for(int[] m:moves){
-	    bs = requestMove(pos,m,bs);
+            boolean possibleMove = false;
+            possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
+	    bs = requestMove(pos,m,bs,temp);
             int[] kingPos = getKingLocation(c,bs);
-	    preventCheck = !isKingInCheck(colour,bs);
-	    if(preventCheck){
+	    preventCheck = !isKingInCheck(colour,bs, temp);
+	    if(preventCheck && possibleMove){
 		break;
 	    }
+            else{
+                preventCheck = false;
+            }
 	}
 	return preventCheck;
     }

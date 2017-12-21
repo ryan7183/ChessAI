@@ -5,6 +5,8 @@
  */
 package chessai;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Ryan and Parm
@@ -15,7 +17,7 @@ public class Bishop extends Piece{
     }
 
     @Override
-    public Boolean isValidMove(int[] newPos, BoardSquare[][] bs) {
+    public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         if(this.x == newPos[0] || this.y == newPos[1]){
             return false;
         }
@@ -52,7 +54,7 @@ public class Bishop extends Piece{
     }
 
     @Override
-    public int[][] generateMoves(BoardSquare[][] bs) {
+    public int[][] generateMoves(BoardSquare[][] bs, ArrayList<Piece> moveList) {
 	int[][] moves=new int[16][];//4 is the max number of moves a knight can take
 	int[] possibleMove=new int[2];
 	int validCount =0;
@@ -61,7 +63,7 @@ public class Bishop extends Piece{
 	    for(int y=0;y<bs[0].length;y++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
-		if(isValidMove(possibleMove,bs)){
+		if(isValidMove(possibleMove,bs, moveList)){
 		    moves[validCount]=possibleMove.clone();
 		    validCount++;
 		}
