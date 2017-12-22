@@ -248,7 +248,7 @@ public class Board {
                         }
 			break;
 		    }
-                    //p.isInvalid = true;
+                    p.isInvalid = true;
 		    System.out.println("Can't move a piece like that");
 		}
 		if(p.cancelSelection){
@@ -267,14 +267,15 @@ public class Board {
 	    //Check for check mate
             if(isKingInCheck(false,board,moveList)){
                 isCheckMate = isCheckMate(false,board, moveList);
-                System.out.println(isCheckMate);
                 if(isCheckMate){
+                    p.blackCheckmate = true;
                     System.out.println("CheckMate! White Wins.");
                 }
             }
             else{
                 stalemate = isCheckMate(false,board, moveList);
                 if(stalemate){
+                    p.stalemate = true;
                     System.out.println("Stalemate. The game is a draw.");
                 }
             }
@@ -368,6 +369,7 @@ public class Board {
                         }
 			break;
 		    }
+                    p.isInvalid = true;
 		    System.out.println("Can't move a piece like that");
 		}
 		if(p.cancelSelection){
@@ -385,18 +387,16 @@ public class Board {
 	    
 	    //Check for check mate
             if(isKingInCheck(true,board,moveList)){
-                System.out.println(1);
                 isCheckMate = isCheckMate(true,board,moveList);
-                System.out.println(2);
                 if(isCheckMate){
+                    p.whiteCheckmate = true;
                     System.out.println("CheckMate! Black Wins.");
                 } 
             }
             else{
-                System.out.println(3);
                 stalemate = isCheckMate(true,board,moveList);
-                System.out.println(4);
                 if(stalemate){
+                    p.stalemate = true;
                     System.out.println("Stalemate. The game is a draw.");
                 }
             }

@@ -14,6 +14,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -33,8 +35,8 @@ public class ChessAIUI extends Application {
     public void start(Stage primaryStage) {
 	
 	Passer p = new Passer();//Create a way to communicate with board
-	Human p1=new Human(p,true);//White
-	Human p2 = new Human(p,false);//Black
+	Human p1=new Human(p,true);
+	Human p2 = new Human(p,false);
 	
 	Pane root = new Pane();
 	Scene scene = new Scene(root, 1920, 1080);
@@ -100,6 +102,38 @@ public class ChessAIUI extends Application {
 		    renderBoard(p.board);
 		    p.boardUpdate = false;
 		}
+                if(p.isInvalid){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Invalid Move!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("The move that you have chosen is invalid. Please choose a valid move.");
+                    alert.show();
+                    p.isInvalid=false;
+                }
+                if(p.stalemate){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Stalemate!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("There is a stalemate, the game is a draw.");
+                    alert.show();
+                    p.stalemate=false;
+                }
+                if(p.blackCheckmate){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Checkmate!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Checkmate! White wins the game!");
+                    alert.show();
+                    p.blackCheckmate = false;
+                }
+                if(p.whiteCheckmate){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Checkmate!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Checkmate! Black wins the game!");
+                    alert.show();
+                    p.whiteCheckmate = false;
+                }
 	    }
 	    public void renderBoard(BoardSquare[][] b){
 		Image i = new Image("img/board.png");

@@ -23,6 +23,10 @@ public class Passer {
     boolean mouseUpdate;
     boolean drawSelection;
     boolean cancelSelection;
+    boolean isInvalid;
+    boolean whiteCheckmate;
+    boolean blackCheckmate;
+    boolean stalemate;
     int[] selectionPosition;
     Passer(){
 	cancelSelection = false;
@@ -33,6 +37,10 @@ public class Passer {
 	mouseX=0;
 	mouseY = 0;
 	drawSelection=false;
+        isInvalid = false;
+        whiteCheckmate = false;
+        blackCheckmate = false;
+        stalemate = false;
 	selectionPosition = new int[2];
     }
     public void setSelectionPosition(int[] p){
