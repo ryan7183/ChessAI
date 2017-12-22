@@ -37,7 +37,7 @@ public class Knight extends Piece{
 
     @Override
     public int[][] generateMoves(BoardSquare[][] bs, ArrayList<Piece> moveList) {
-	int[][] moves=new int[8][];//4 is the max number of moves a knight can take
+	int[][] moves=new int[16][];//4 is the max number of moves a knight can take
 	int[] possibleMove=new int[2];
 	int validCount =0;
 	int[][] returnMove;
