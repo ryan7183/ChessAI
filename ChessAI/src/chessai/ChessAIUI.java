@@ -17,12 +17,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import static javafx.scene.paint.Color.color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -60,11 +62,30 @@ public class ChessAIUI extends Application {
         });
         root.getChildren().add(undoSelect);
 	
+        //Lets user choose piece for promotion
+        Button promotionSelect = new Button();
+        promotionSelect.setText("Slect New Piece");
+        ChoiceBox<String> pieces = new ChoiceBox<String>();
+        pieces.getItems().addAll("Bishop","Knight","Queen","Rook");
+        pieces.setValue("Queen");
+        Text promotionHelp = new Text();
+        promotionHelp.setText("For promotion, choose the piece you want the pawn to become before moving the pawn. If this is not done, the pawn will turn into a queen.");
+        promotionHelp.setLayoutX(canvas.getLayoutX());
+        promotionHelp.setLayoutY(825);
+        pieces.setLayoutX(canvas.getLayoutX()+150);
+        pieces.setLayoutY(765);
+        promotionSelect.setLayoutX(canvas.getLayoutX()+250);
+        promotionSelect.setLayoutY(765);
+        promotionSelect.setOnAction((ActionEvent event) -> {
+            p.newPiece = pieces.getValue();
+            p.promotion = false;
+        });
+        root.getChildren().addAll(promotionSelect, pieces,promotionHelp);
 	
 	primaryStage.setTitle("Best Chess Game In The World... Maybe, Possibly Not, I Don't Know!");
 	primaryStage.setScene(scene);
 	
-	
+        
 	Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
@@ -133,6 +154,16 @@ public class ChessAIUI extends Application {
                     alert.setContentText("Checkmate! Black wins the game!");
                     alert.show();
                     p.whiteCheckmate = false;
+                }
+                if(p.promotion){
+                    p.newPiece="Queen";
+                    /*for(int x=0; x<p.board.length; x++){
+                        for(int y=0; y<p.board[0].length; y++){
+                            if(p.board[x][y].hasPiece && p.board[x][y].piece.textRepresentation.equals("p") && p.board[x][y].piece.pawnPromotion){
+                                
+                            }
+                        }
+                    }*/
                 }
 	    }
 	    public void renderBoard(BoardSquare[][] b){

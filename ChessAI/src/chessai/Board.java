@@ -216,7 +216,28 @@ public class Board {
                             }
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
-                            board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
+                            p.promotion = true;
+                            String piece = p.newPiece;
+                            switch(piece){
+                                case "Bishop":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Bishop(true,pieceMove[0],pieceMove[1],"b");
+                                    break;
+                                case "Knight":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Knight(true,pieceMove[0],pieceMove[1],"n");
+                                    break;
+                                case "Queens":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
+                                    break;
+                                case "Rook":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Rook(true,pieceMove[0],pieceMove[1],"r");
+                                    break;
+                                default: piece.equals("");
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
+                                    break;
+                                        
+                            }
+                            System.out.println(p.newPiece);
+                            //board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft){
                             board[pieceMove[0]][pieceMove[1]+1].removePiece();
@@ -337,7 +358,27 @@ public class Board {
                             }
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
-                            board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
+                            p.promotion = true;
+                            String piece = p.newPiece;
+                            switch(piece){
+                                case "Bishop":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Bishop(false,pieceMove[0],pieceMove[1],"B");
+                                    break;
+                                case "Knight":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Knight(false,pieceMove[0],pieceMove[1],"N");
+                                    break;
+                                case "Queens":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
+                                    break;
+                                case "Rook":
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Rook(false,pieceMove[0],pieceMove[1],"R");
+                                    break;
+                                default: piece.equals("");
+                                    board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
+                                    break;
+                                        
+                            }
+                            //board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft){
                             board[pieceMove[0]][pieceMove[1]-1].removePiece();

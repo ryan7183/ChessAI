@@ -27,6 +27,8 @@ public class Passer {
     boolean whiteCheckmate;
     boolean blackCheckmate;
     boolean stalemate;
+    boolean promotion;
+    String newPiece;
     int[] selectionPosition;
     Passer(){
 	cancelSelection = false;
@@ -41,6 +43,8 @@ public class Passer {
         whiteCheckmate = false;
         blackCheckmate = false;
         stalemate = false;
+        promotion = false;
+        newPiece = "";
 	selectionPosition = new int[2];
     }
     public void setSelectionPosition(int[] p){
