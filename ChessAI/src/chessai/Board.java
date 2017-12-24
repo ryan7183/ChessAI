@@ -294,7 +294,8 @@ public class Board {
                 }
             }
             else{
-                stalemate = isCheckMate(false,board, moveList);
+                stalemate = isStalemate(false,board, moveList);
+                System.out.println(stalemate);
                 if(stalemate){
                     p.stalemate = true;
                     System.out.println("Stalemate. The game is a draw.");
@@ -435,7 +436,7 @@ public class Board {
                 } 
             }
             else{
-                stalemate = isCheckMate(true,board,moveList);
+                stalemate = isStalemate(true,board,moveList);
                 if(stalemate){
                     p.stalemate = true;
                     System.out.println("Stalemate. The game is a draw.");
@@ -548,15 +549,33 @@ public class Board {
 	
     }
     
+    boolean isStalemate(Boolean c, BoardSquare[][] board, ArrayList<Piece> moveList){
+        boolean staleMate = true;
+	int[] kingPos = getKingLocation(c,board);
+	int[][] moves;
+        int[] pos = new int[2];
+	BoardSquare[][] bs=board.clone();
+	//Check if king can move
+	//Check each piece
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
+		    moves = bs[x][y].piece.generateMoves(board, moveList);
+                    pos[0]=x;
+                    pos[1]=y;
+                    if(canMove(kingPos,pos,moves,board,c)){
+                        staleMate = false;
+                    }
+		}
+	    }
+	}
+	return staleMate;
+    }
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board, boolean c){
 	
 	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
         ArrayList<Piece> temp = new ArrayList<Piece>();
 	//Make copy of array to work on
-	/*for(int  i=0;i<bs.length;i++){
-	    bs[i]=Arrays.copyOf(board[i],board[i].length);
-	    //System.arraycopy(board[i], 0, bs[i], 0, bs.length);
-	}*/
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		bs[x][y] = new BoardSquare(board[x][y]);
@@ -581,6 +600,34 @@ public class Board {
             }
 	}
 	return preventCheck;
+    }
+    
+    public boolean canMove(int[] pos,int[] piecePos,int[][] moves, BoardSquare[][] board, boolean c){
+        BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+        ArrayList<Piece> temp = new ArrayList<Piece>();
+	//Make copy of array to work on
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		bs[x][y] = new BoardSquare(board[x][y]);
+	    }
+	}
+        bs[pos[0]][pos[1]].piece.x = pos[0];
+        bs[pos[0]][pos[1]].piece.y = pos[1]; 
+        boolean preventCheck=false;
+	boolean colour = c;
+        
+        for(int[] m:moves){
+            boolean possibleMove = false;
+            possibleMove = bs[piecePos[0]][piecePos[1]].piece.isValidMove(m, bs, temp);
+            if(possibleMove){
+                bs = requestMove(pos,m,bs,temp);
+                preventCheck = !isKingInCheck(colour,bs,temp);
+                if(preventCheck){
+                    break;
+                }
+            }
+        }
+        return preventCheck;
     }
     
 }

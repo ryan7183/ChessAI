@@ -23,6 +23,12 @@ public class King extends Piece{
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         int changeInX = Math.abs(this.x-newPos[0]);
         int changeInY = Math.abs(this.y-newPos[1]);
+        if(newPos[0] > 7 || newPos[0] < 0){
+            return false;
+        }
+        if(newPos[1] > 7 || newPos[1] < 0){
+            return false;
+        }
         if(changeInY>1){
             return false;
         }
@@ -98,8 +104,8 @@ public class King extends Piece{
 	int[] possibleMove=new int[2];
 	int validCount =0;
 	int[][] returnMove;
-	for(int x=0;x<bs.length;x++){
-	    for(int y=0;y<bs[0].length;y++){
+	for(int x=this.x-1;x<this.x+2;x++){
+	    for(int y=this.y-1;y<this.y+2;y++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
 		if(isValidMove(possibleMove,bs, moveList)){
