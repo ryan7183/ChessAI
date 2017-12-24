@@ -159,17 +159,6 @@ public class ChessAIUI extends Application {
                     alert.show();
                     
                 }
-                if(p.promotion){
-                    p.newPiece="Queen";
-                    /*for(int x=0; x<p.board.length; x++){
-                        for(int y=0; y<p.board[0].length; y++){
-                            if(p.board[x][y].hasPiece && p.board[x][y].piece.textRepresentation.equals("p") && p.board[x][y].piece.pawnPromotion){
-                                
-                            }
-                        }
-                    }*/
-                }
-	    }
 	    public void renderBoard(BoardSquare[][] b){
 		Image i = new Image("img/board.png");
 		gc.drawImage(i,0,0,canvas.getWidth(),canvas.getHeight());
