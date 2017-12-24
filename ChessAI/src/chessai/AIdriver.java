@@ -21,6 +21,7 @@ public class AIdriver extends Player{
     ArrayList<Piece> randList= new ArrayList();
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;
+	this.isHuman = false;
 	passer=p;
 	move = new int[2];
 	pieceChosen = new int[2];
