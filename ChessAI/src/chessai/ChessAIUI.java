@@ -124,36 +124,40 @@ public class ChessAIUI extends Application {
 		    p.boardUpdate = false;
 		}
                 if(p.isInvalid){
+		    p.isInvalid=false;
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Invalid Move!");
                     alert.setHeaderText(null);
                     alert.setContentText("The move that you have chosen is invalid. Please choose a valid move.");
                     alert.show();
-                    p.isInvalid=false;
+                    
                 }
                 if(p.stalemate){
+		    p.stalemate=false;
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Stalemate!");
                     alert.setHeaderText(null);
                     alert.setContentText("There is a stalemate, the game is a draw.");
                     alert.show();
-                    p.stalemate=false;
+                    
                 }
                 if(p.blackCheckmate){
+		    p.blackCheckmate = false;
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Checkmate!");
                     alert.setHeaderText(null);
                     alert.setContentText("Checkmate! White wins the game!");
                     alert.show();
-                    p.blackCheckmate = false;
+                    
                 }
                 if(p.whiteCheckmate){
+		    p.whiteCheckmate = false;
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Checkmate!");
                     alert.setHeaderText(null);
                     alert.setContentText("Checkmate! Black wins the game!");
                     alert.show();
-                    p.whiteCheckmate = false;
+                    
                 }
                 if(p.promotion){
                     p.newPiece="Queen";
