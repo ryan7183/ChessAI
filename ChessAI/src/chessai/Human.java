@@ -19,6 +19,7 @@ public class Human extends Player {
     Human(Passer p, boolean c){
 	this.colour = c;
 	passer=p;
+        this.isHuman = true;
     }
 
     @Override

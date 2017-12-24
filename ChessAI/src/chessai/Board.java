@@ -269,7 +269,9 @@ public class Board {
                         }
 			break;
 		    }
-                    p.isInvalid = true;
+                    if(this.player1.isHuman){
+                        p.isInvalid = true;
+                    }
 		    System.out.println("Can't move a piece like that");
 		}
 		if(p.cancelSelection){
@@ -410,7 +412,9 @@ public class Board {
                         }
 			break;
 		    }
-                    p.isInvalid = true;
+                    if(this.player2.isHuman){
+                        p.isInvalid = true;
+                    }
 		    System.out.println("Can't move a piece like that");
 		}
 		if(p.cancelSelection){
