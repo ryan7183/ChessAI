@@ -295,7 +295,6 @@ public class Board {
             }
             else{
                 stalemate = isStalemate(false,board, moveList);
-                System.out.println(stalemate);
                 if(stalemate){
                     p.stalemate = true;
                     System.out.println("Stalemate. The game is a draw.");
