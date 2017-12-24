@@ -159,6 +159,7 @@ public class ChessAIUI extends Application {
                     alert.show();
                     
                 }
+	    }
 	    public void renderBoard(BoardSquare[][] b){
 		Image i = new Image("img/board.png");
 		gc.drawImage(i,0,0,canvas.getWidth(),canvas.getHeight());
