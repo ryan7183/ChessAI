@@ -23,6 +23,9 @@ public class Pawn extends Piece {
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         int changeInY;
+        if(x<0||x>7){
+            return false;
+        }
         if(this.colour){
             changeInY = -1;
         }
@@ -131,7 +134,7 @@ public class Pawn extends Piece {
 	int[] possibleMove=new int[2];
 	int validCount = 0;
 	int[][] returnMove;
-	for(int x=this.x-1;x<this.y+2;x++){
+	for(int x=this.x-1;x<this.x+2;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
