@@ -34,24 +34,24 @@ public class BoardSquare {
 	    switch(str){
 		case "B":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Bishop(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "K":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		   // System.out.println(p.textRepresentation);
 		    piece = new King(p.colour,p.x,p.y,p.textRepresentation);
 		    piece.castleKingSide=p.castleKingSide;
 		    piece.castleQueenSide=p.castleQueenSide;
 		    break;
 		case "N":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		   // System.out.println(p.textRepresentation);
 		    piece = new Knight(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "P":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Pawn(p.colour,p.x,p.y,p.textRepresentation);
 		    piece.pawnPromotion=p.pawnPromotion;
 		    piece.enpassantLeft=p.enpassantLeft;
@@ -59,34 +59,34 @@ public class BoardSquare {
 		    break;
 		case "Q":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Queen(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "R":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Rook(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "b":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Bishop(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "k":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new King(p.colour,p.x,p.y,p.textRepresentation);
 		    piece.castleKingSide=p.castleKingSide;
 		    piece.castleQueenSide=p.castleQueenSide;
 		    break;
 		case "n":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Knight(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "p":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Pawn(p.colour,p.x,p.y,p.textRepresentation);
 		    piece.pawnPromotion=p.pawnPromotion;
 		    piece.enpassantLeft=p.enpassantLeft;
@@ -94,12 +94,12 @@ public class BoardSquare {
 		    break;
 		case "q":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Queen(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		case "r":
 		    p=bs.piece;
-		    System.out.println(p.textRepresentation);
+		    //System.out.println(p.textRepresentation);
 		    piece = new Rook(p.colour,p.x,p.y,p.textRepresentation);
 		    break;
 		default:
