@@ -36,71 +36,203 @@ public class BoardSquare {
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Bishop(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.pawnPromotion){
+                        p.pawnPromotion = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "K":
 		    p=bs.piece;
 		   // System.out.println(p.textRepresentation);
 		    piece = new King(p.colour,p.x,p.y,p.textRepresentation);
-		    piece.castleKingSide=p.castleKingSide;
-		    piece.castleQueenSide=p.castleQueenSide;
+		    //piece.castleKingSide=p.castleKingSide;
+		    //piece.castleQueenSide=p.castleQueenSide;
+                    if(p.castleKingSide){
+                        piece.castleKingSide = true;
+                    }
+                    if(p.castleQueenSide){
+                        piece.castleQueenSide = true;
+                    }
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "N":
 		    p=bs.piece;
 		   // System.out.println(p.textRepresentation);
 		    piece = new Knight(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "P":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Pawn(p.colour,p.x,p.y,p.textRepresentation);
-		    piece.pawnPromotion=p.pawnPromotion;
-		    piece.enpassantLeft=p.enpassantLeft;
-		    piece.enpassantRight=p.enpassantRight;
+		    //piece.pawnPromotion=p.pawnPromotion;
+		    //piece.enpassantLeft=p.enpassantLeft;
+		    //piece.enpassantRight=p.enpassantRight;
+                    if(p.enpassantLeft){
+                        piece.enpassantLeft = true;
+                    }
+                    if(p.enpassantRight){
+                        piece.enpassantRight = true;
+                    }
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.pawnPromotion){
+                        p.pawnPromotion = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "Q":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Queen(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "R":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Rook(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "b":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Bishop(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.pawnPromotion){
+                        p.pawnPromotion = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "k":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new King(p.colour,p.x,p.y,p.textRepresentation);
-		    piece.castleKingSide=p.castleKingSide;
-		    piece.castleQueenSide=p.castleQueenSide;
+		    //piece.castleKingSide=p.castleKingSide;
+		    //piece.castleQueenSide=p.castleQueenSide;
+                    if(p.castleKingSide){
+                        piece.castleKingSide = true;
+                    }
+                    if(p.castleQueenSide){
+                        piece.castleQueenSide = true;
+                    }
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "n":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Knight(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "p":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Pawn(p.colour,p.x,p.y,p.textRepresentation);
-		    piece.pawnPromotion=p.pawnPromotion;
-		    piece.enpassantLeft=p.enpassantLeft;
-		    piece.enpassantRight=p.enpassantRight;
+		    //piece.pawnPromotion=p.pawnPromotion;
+		    //piece.enpassantLeft=p.enpassantLeft;
+		    //piece.enpassantRight=p.enpassantRight;
+                                        if(p.enpassantLeft){
+                        piece.enpassantLeft = true;
+                    }
+                    if(p.enpassantRight){
+                        piece.enpassantRight = true;
+                    }
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.pawnPromotion){
+                        p.pawnPromotion = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "q":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Queen(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		case "r":
 		    p=bs.piece;
 		    //System.out.println(p.textRepresentation);
 		    piece = new Rook(p.colour,p.x,p.y,p.textRepresentation);
+                    if(p.hasMoved){
+                        piece.hasMoved = true;
+                    }
+                    if(p.prevHasMoved){
+                        p.prevHasMoved = true;
+                    }
+                    piece.prevX = p.prevX;
+                    piece.prevY = p.prevY;
 		    break;
 		default:
 		    break;
