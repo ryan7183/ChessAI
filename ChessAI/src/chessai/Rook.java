@@ -16,6 +16,9 @@ public class Rook extends Piece {
 	super(c, x, y, n);
     }
 
+    public Rook(Rook r){
+	super(r.colour,r.x,r.y,r.textRepresentation);
+    }
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         if (!(this.x == newPos[0] || this.y == newPos[1])){

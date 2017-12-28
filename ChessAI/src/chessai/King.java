@@ -18,6 +18,12 @@ public class King extends Piece{
         this.castleKingSide = false;
         this.castleQueenSide = false;
     }
+    
+    public King(King k){
+	super(k.colour,k.x,k.y,k.textRepresentation);
+	this.castleKingSide=k.castleKingSide;
+	this.castleQueenSide=k.castleQueenSide;
+    }
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {

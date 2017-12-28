@@ -15,6 +15,11 @@ public class Knight extends Piece{
     public Knight(boolean c, int x, int y, String n) {
 	super(c, x, y, n);
     }
+    
+    public Knight(Knight k){
+	super(k.colour,k.x,k.y,k.textRepresentation);
+	
+    }
 
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {

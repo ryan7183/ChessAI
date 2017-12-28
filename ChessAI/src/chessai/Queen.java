@@ -17,6 +17,9 @@ public class Queen extends Piece{
 	
     }
 
+    public Queen(Queen q){
+	super(q.colour,q.x,q.y,	q.textRepresentation);
+    }
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         if(this.x==newPos[0] && this.y==newPos[1]){

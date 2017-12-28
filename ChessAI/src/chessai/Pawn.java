@@ -20,6 +20,13 @@ public class Pawn extends Piece {
         this.enpassantRight = false;
     }
 
+    public Pawn(Pawn p){
+	super(p.colour,p.x,p.y,p.textRepresentation);
+	this.pawnPromotion=p.pawnPromotion;
+	this.enpassantLeft=p.enpassantLeft;
+	this.enpassantRight=p.enpassantRight;
+    }
+    
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         int changeInY;

@@ -16,6 +16,9 @@ public class Bishop extends Piece{
 	super(c, x, y, n);
     }
 
+    public Bishop(Bishop b){
+	super(b.colour,b.x,b.y,b.textRepresentation);
+    }
     @Override
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         if(this.x == newPos[0] || this.y == newPos[1]){
