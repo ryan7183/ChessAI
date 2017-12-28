@@ -39,6 +39,12 @@ public class Pawn extends Piece {
         else{
             changeInY = 1;
         }
+        if(this.colour && newPos[1]>this.y){
+            return false;
+        }
+        if(!this.colour && newPos[1]<this.y){
+            return false;
+        }
         if(((this.x-1 >=0 && (bs[this.x-1][this.y+changeInY].hasPiece)) && 
                 (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1))) || ((this.x+1 <=7 && (bs[this.x+1][this.y+changeInY].hasPiece))
                 && (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1)))){
@@ -129,7 +135,10 @@ public class Pawn extends Piece {
                 return false;
             }
         }
-        if (newPos[1] == 0 || newPos[1] ==7){
+        if(newPos[1]==0 && this.colour){
+            this.pawnPromotion = true;
+        }
+        if (newPos[1] ==7 && !this.colour){
             this.pawnPromotion = true;
         }
         return true;
