@@ -111,7 +111,9 @@ public class AIdriver extends Player{
                     for(int j=0;j<moves.length;j++){
                         newBoard = copyBoard(bs);
                         newBoard = requestMove(tempPos,moves[j],newBoard);
-                        value =  maxValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
+                        if(!isKingInCheck(colour,newBoard)){
+                            value =  maxValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
+                        }
                         if(value>best){
                             best =value;
                             move = moves[j];
@@ -147,7 +149,9 @@ public class AIdriver extends Player{
                     for(int j=0;j<moves.length;j++){
                         newBoard = copyBoard(bs);
                         newBoard = requestMove(tempPos,moves[j],newBoard);
-                        v = max(v,minValue(newBoard,depth+1,a,b));
+                        if(!isKingInCheck(colour,newBoard)){
+                            v = max(v,minValue(newBoard,depth+1,a,b));
+                        }
                         if(v>=b){
                             return v;
                         }
@@ -180,7 +184,9 @@ public class AIdriver extends Player{
                     for(int j=0;j<moves.length;j++){
                         newBoard = copyBoard(bs);
                         newBoard = requestMove(tempPos,moves[j],newBoard);
-                        v = min(v,maxValue(newBoard,depth+1,a,b));
+                        if(!isKingInCheck(colour,newBoard)){
+                            v = min(v,maxValue(newBoard,depth+1,a,b));
+                        }
                         if(v<=a){
                             return v;
                         }
