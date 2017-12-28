@@ -31,7 +31,7 @@ public class AIdriver extends Player{
     @Override
     int[] requestPiece(BoardSquare[][] bs) {
 	double value=alphaBeta(bs,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
-	System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]);
+	//System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]);
 	return pieceChosen;
     }
     
@@ -60,6 +60,11 @@ public class AIdriver extends Player{
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs.length;y++){
 		if(bs[x][y].hasPiece&&bs[x][y].piece.colour==c){
+                    bs[x][y].piece.x=x;
+                    bs[x][y].piece.y=y;
+                    /*if(x==7){
+                        System.out.println(x+"\t"+y);
+                    }*/
 		    p[count]=bs[x][y].piece;
 		    count++;
 		}
@@ -95,24 +100,29 @@ public class AIdriver extends Player{
 	double best=Double.NEGATIVE_INFINITY;
 	double value=Double.NEGATIVE_INFINITY;
 	BoardSquare[][] newBoard;
-	for(int i=0;i<p.length;i++){
-	    moves = p[i].generateMoves(bs,randList);
-	    for(int j=0;j<moves.length;j++){
-		newBoard = copyBoard(bs);
-		/*tempPos[0] = p[i].x;
-		tempPos[1] =p[i].y;
-		newBoard = requestMove(tempPos,moves[j],newBoard);*/
-		value =  minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
-		if(value>best){
-		    best =value;
-		    move = moves[j];
-		    piecePos[0]=p[i].x;
-		    piecePos[1]=p[i].y;
-		    pieceChosen = piecePos;
-		}
-	    }
+	for(int x=0;x<bs.length;x++){
+            for(int y=0;y<bs[0].length;y++){
+                if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
+                    moves = bs[x][y].piece.generateMoves(bs,randList);
+                    bs[x][y].piece.x=x;
+                    bs[x][y].piece.y=y;
+                    tempPos[0] = x;
+                    tempPos[1] = y;
+                    for(int j=0;j<moves.length;j++){
+                        newBoard = copyBoard(bs);
+                        newBoard = requestMove(tempPos,moves[j],newBoard);
+                        value =  maxValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
+                        if(value>best){
+                            best =value;
+                            move = moves[j];
+                            piecePos[0]=x;
+                            piecePos[1]=y;
+                            pieceChosen = piecePos;
+                        }
+                    }
+                }
+            }
 	}
-	
 	return best;
     }
     
@@ -128,19 +138,23 @@ public class AIdriver extends Player{
 	    return boardEvaluation(bs);
 	}
 	v=Double.NEGATIVE_INFINITY;
-	for(int i=0;i<p.length;i++){
-	    moves = p[i].generateMoves(bs,randList);
-	    for(int j=0;j<moves.length;j++){
-		newBoard = copyBoard(bs);
-		/*tempPos[0] = p[i].x;
-		tempPos[1] =p[i].y;
-		newBoard = requestMove(tempPos,moves[j],newBoard);*/
-		v = max(v,minValue(newBoard,depth+1,a,b));
-		if(v<b){
-		    return v;
-		}
-		a = min(a,v);
-	    }
+	for(int x=0;x<bs.length;x++){
+            for(int y=0;y<bs[0].length;y++){
+                if(bs[x][y].hasPiece && bs[x][y].piece.colour == colour){
+                    moves = bs[x][y].piece.generateMoves(bs,randList);
+                    tempPos[0] = x;
+                    tempPos[1] = y;
+                    for(int j=0;j<moves.length;j++){
+                        newBoard = copyBoard(bs);
+                        newBoard = requestMove(tempPos,moves[j],newBoard);
+                        v = max(v,minValue(newBoard,depth+1,a,b));
+                        if(v>=b){
+                            return v;
+                        }
+                        a = min(a,v);
+                    }
+                }
+            }
 	}
 	return v;
     }
@@ -157,19 +171,23 @@ public class AIdriver extends Player{
 	    return boardEvaluation(bs);
 	}
 	v=Double.POSITIVE_INFINITY;
-	for(int i=0;i<p.length;i++){
-	    moves = p[i].generateMoves(bs,randList);
-	    for(int j=0;j<moves.length;j++){
-		newBoard = copyBoard(bs);
-		/*tempPos[0] = p[i].x;
-		tempPos[1] =p[i].y;
-		newBoard = requestMove(tempPos,moves[j],newBoard);*/
-		v = min(v,maxValue(newBoard,depth+1,a,b));
-		if(v<a){
-		    return v;
-		}
-		b = min(b,v);
-	    }
+	for(int x=0;x<bs.length;x++){
+            for(int y=0; y<bs[0].length; y++){
+                if(bs[x][y].hasPiece && bs[x][y].piece.colour){
+                    moves = bs[x][y].piece.generateMoves(bs,randList);
+                    tempPos[0] = x;
+                    tempPos[1] = y;
+                    for(int j=0;j<moves.length;j++){
+                        newBoard = copyBoard(bs);
+                        newBoard = requestMove(tempPos,moves[j],newBoard);
+                        v = min(v,maxValue(newBoard,depth+1,a,b));
+                        if(v<=a){
+                            return v;
+                        }
+                        b = min(b,v);
+                    }
+                }
+            }
 	}
 	return v;
     }
@@ -220,23 +238,34 @@ public class AIdriver extends Player{
     
     BoardSquare[][] requestMove(int[] piece, int[] move, BoardSquare[][] board){
 	int x,y;
-	board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
+	/*board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
 	board[move[0]][move[1]].piece.x = move[0];
 	board[move[0]][move[1]].piece.y = move[1];
         board[move[0]][move[1]].piece.hasMoved = true;
 	board[piece[0]][piece[1]].hasPiece=false;
 	board[move[0]][move[1]].hasPiece=true;
+	return board;*/
+        board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
+	board[move[0]][move[1]].piece.x = move[0];
+	board[move[0]][move[1]].piece.y = move[1];
+        board[move[0]][move[1]].piece.prevX = piece[0];
+        board[move[0]][move[1]].piece.prevY = piece[1];
+        board[move[0]][move[1]].piece.prevHasMoved = board[piece[0]][piece[1]].piece.hasMoved;
+        board[move[0]][move[1]].piece.hasMoved = true;
+	board[piece[0]][piece[1]].hasPiece=false;
+	board[move[0]][move[1]].hasPiece=true;
+        randList.add(board[move[0]][move[1]].piece);
 	return board;
     }
     
     boolean isCheckMate(Boolean c, BoardSquare[][] board){
-	boolean checkMate = true;
+	/*boolean checkMate = true;
 	int[] kingPos = getKingLocation(c,board);
 	int[][] moves;
-	BoardSquare[][] bs=board.clone();
+	BoardSquare[][] bs=board.clone();*/
 	//Check if king can move
 	//Check each piece
-	for(int x=0;x<bs.length;x++){
+	/*for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
 		    moves = bs[x][y].piece.generateMoves(board,randList);
@@ -246,8 +275,27 @@ public class AIdriver extends Player{
 		}
 	    }
 	}
+	return checkMate;*/
+	boolean checkMate = true;
+	int[] kingPos = getKingLocation(c,board);
+	int[][] moves;
+        int[] pos = new int[2];
+	BoardSquare[][] bs=board.clone();
+	//Check if king can move
+	//Check each piece
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
+		    moves = bs[x][y].piece.generateMoves(board, randList);
+                    pos[0]=x;
+                    pos[1]=y;
+                    if(pieceCanPreventCheck(kingPos,moves,board,c)){
+                        checkMate = false;
+                    }
+		}
+	    }
+	}
 	return checkMate;
-	
     }
     
     int[] getKingLocation (Boolean c, BoardSquare[][] bs){
@@ -273,7 +321,7 @@ public class AIdriver extends Player{
     
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board, boolean c){
 	
-	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+	/*BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		bs[x][y] = new BoardSquare(board[x][y]);
@@ -291,6 +339,33 @@ public class AIdriver extends Player{
 	    if(preventCheck){
 		break;
 	    }
+	}
+	return preventCheck;*/
+        BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+        ArrayList<Piece> temp = new ArrayList<Piece>();
+	//Make copy of array to work on
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		bs[x][y] = new BoardSquare(board[x][y]);
+	    }
+	}
+        bs[pos[0]][pos[1]].piece.x = pos[0];
+        bs[pos[0]][pos[1]].piece.y = pos[1];
+	boolean preventCheck=false;
+	boolean colour = c;
+	
+	for(int[] m:moves){
+            boolean possibleMove = false;
+            possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
+	    bs = requestMove(pos,m,bs);
+            int[] kingPos = getKingLocation(c,bs);
+	    preventCheck = !isKingInCheck(colour,bs);
+	    if(preventCheck && possibleMove){
+		break;
+	    }
+            else{
+                preventCheck = false;
+            }
 	}
 	return preventCheck;
     }

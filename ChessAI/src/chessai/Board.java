@@ -158,7 +158,6 @@ public class Board {
 	boolean isCheckMate=false;
         boolean stalemate=false;
 	while(cont){
-	    
 	    //Player1 move loop
 	    while(true){
 		//Ask player1
@@ -181,6 +180,9 @@ public class Board {
 		    if(p.cancelSelection){
 			break;
 		    }
+                    board[pieceSelected[0]][pieceSelected[1]].piece.x = pieceSelected[0];
+                    board[pieceSelected[0]][pieceSelected[1]].piece.y = pieceSelected[1];
+                    System.out.println(board[pieceSelected[0]][pieceSelected[1]].piece.hasMoved);
                     outerloop:
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
                         ArrayList<Piece> temp = new ArrayList<Piece>();
@@ -302,7 +304,6 @@ public class Board {
                     System.out.println("Stalemate. The game is a draw.");
                 }
             }
-	    
 	     //Player2 move loop
 	    while(true){
 		//Ask player2
