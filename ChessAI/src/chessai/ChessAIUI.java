@@ -8,6 +8,7 @@ package chessai;
 import java.io.File;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -138,6 +139,7 @@ public class ChessAIUI extends Application {
                     alert.setTitle("Stalemate!");
                     alert.setHeaderText(null);
                     alert.setContentText("There is a stalemate, the game is a draw.");
+                    alert.setOnHidden(e -> Platform.exit());
                     alert.show();
                     
                 }
@@ -147,6 +149,7 @@ public class ChessAIUI extends Application {
                     alert.setTitle("Checkmate!");
                     alert.setHeaderText(null);
                     alert.setContentText("Checkmate! White wins the game!");
+                    alert.setOnHidden(e -> Platform.exit());
                     alert.show();
                     
                 }
@@ -156,6 +159,7 @@ public class ChessAIUI extends Application {
                     alert.setTitle("Checkmate!");
                     alert.setHeaderText(null);
                     alert.setContentText("Checkmate! Black wins the game!");
+                    alert.setOnHidden(e -> Platform.exit());
                     alert.show();
                     
                 }
