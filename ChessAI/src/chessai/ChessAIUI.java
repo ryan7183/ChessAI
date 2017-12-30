@@ -371,9 +371,11 @@ public class ChessAIUI extends Application {
 
     private void printBoardToFile(BoardSquare[][] board,Stage primaryStage) {
 	File f = new File("ChessBoard.txt");
-	/*FileChooser fileChooser = new FileChooser();
+	FileChooser fileChooser = new FileChooser();
 	fileChooser.setTitle("Save chess state");
-	f =fileChooser.showSaveDialog(primaryStage);*/
+	 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                fileChooser.getExtensionFilters().add(extFilter);
+	f =fileChooser.showSaveDialog(primaryStage);
 	try {
 	    PrintWriter out = new PrintWriter(f);
 	    for(int x=0;x<board.length;x++){
