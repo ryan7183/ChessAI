@@ -32,7 +32,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -64,19 +66,9 @@ public class ChessAIUI extends Application {
 	saveBoard.setOnAction((ActionEvent event) -> {
             //Save the board
 	    BoardSquare[][] board  = p.board;
-	    printBoardToFile(board);
+	    printBoardToFile(board,primaryStage);
         });
 	root.getChildren().add(saveBoard);
-	
-	//Text box for file location
-	TextField textField = new TextField ();
-	textField.setLayoutX(80);
-	textField.setLayoutY(30);
-	Label label1 = new Label("Insert location of file to load in text box");
-	label1.setLayoutX(80);
-	label1.setLayoutY(10);
-	root.getChildren().add(label1);
-	root.getChildren().add(textField);
 	
 	//Load Board Button
 	Button loadBoard = new Button();
@@ -85,8 +77,10 @@ public class ChessAIUI extends Application {
 	loadBoard.setLayoutY(30);
 	loadBoard.setOnAction((ActionEvent event) -> {
             //Load the board
-	    File f = new File(textField.getText());
 	    //File f = new File("C:/Users/Ryan/OneDrive/School/COSC 3P71/Project/ChessAI/ChessAI/ChessAI/ChessBoard.txt");
+	    FileChooser fileChooser = new FileChooser();
+	    fileChooser.setTitle("Open chess state");
+	    File f =fileChooser.showOpenDialog(primaryStage);
 	    BoardSquare[][] b;
 	    System.out.println(1);
 	    try {
@@ -375,8 +369,11 @@ public class ChessAIUI extends Application {
 	launch(args);
     }
 
-    private void printBoardToFile(BoardSquare[][] board) {
+    private void printBoardToFile(BoardSquare[][] board,Stage primaryStage) {
 	File f = new File("ChessBoard.txt");
+	/*FileChooser fileChooser = new FileChooser();
+	fileChooser.setTitle("Save chess state");
+	f =fileChooser.showSaveDialog(primaryStage);*/
 	try {
 	    PrintWriter out = new PrintWriter(f);
 	    for(int x=0;x<board.length;x++){
