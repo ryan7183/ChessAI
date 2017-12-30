@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -71,6 +72,10 @@ public class ChessAIUI extends Application {
 	TextField textField = new TextField ();
 	textField.setLayoutX(80);
 	textField.setLayoutY(30);
+	Label label1 = new Label("Insert location of file to load in text box");
+	label1.setLayoutX(80);
+	label1.setLayoutY(10);
+	root.getChildren().add(label1);
 	root.getChildren().add(textField);
 	
 	//Load Board Button
@@ -328,9 +333,15 @@ public class ChessAIUI extends Application {
 			break;
 		    case 'P':
 			p= new Pawn(false,x,y,"P");
+			if(y!=1){
+			    p.hasMoved=true;
+			}
 			break;
 		    case 'p':
 			p= new Pawn(true,x,y,"p");
+			if(y!=6){
+			    p.hasMoved=true;
+			}
 			break;
 		    case 'Q':
 			p= new Queen(false,x,y,"Q");

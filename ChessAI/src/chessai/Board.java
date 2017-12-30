@@ -160,7 +160,6 @@ public class Board {
 	while(cont){
 	    //Player1 move loop
 	    while(true){
-		printBoard();
 		//Ask player1
 		valid = false;
 		//Wait till valid piece is selected
@@ -322,7 +321,6 @@ public class Board {
             }
 	     //Player2 move loop
 	    while(true){
-		printBoard();
 		//Ask player2
 		valid = false;
 		//Wait till valid piece is selected
