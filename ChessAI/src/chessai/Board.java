@@ -158,6 +158,7 @@ public class Board {
 	boolean isCheckMate=false;
         boolean stalemate=false;
 	while(cont){
+	while(cont){
 	    //Player1 move loop
 	    while(true){
 		//Ask player1
@@ -298,6 +299,7 @@ public class Board {
 		board=p.board;
 		p.newBoardAvailable=false;
 		p.boardUpdate=true;
+		break;
 	    }
 	    p.drawSelection=false;
 	    
@@ -456,6 +458,7 @@ public class Board {
 		board=p.board;
 		p.newBoardAvailable=false;
 		p.boardUpdate=true;
+		break;
 	    }
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
@@ -475,6 +478,7 @@ public class Board {
                     System.out.println("Stalemate. The game is a draw.");
                 }
             }
+	}
 	}
     }
     
