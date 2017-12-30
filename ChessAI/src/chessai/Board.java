@@ -160,11 +160,15 @@ public class Board {
 	while(cont){
 	    //Player1 move loop
 	    while(true){
+		printBoard();
 		//Ask player1
 		valid = false;
 		//Wait till valid piece is selected
 		while(true){
 		    pieceSelected = player1.requestPiece(board);//Get piece to be moved
+		    if(p.newBoardAvailable){
+			break;
+		    }
 		    valid = validPiece(player1,pieceSelected);
 		    if(valid){
 			p.setSelectionPosition(pieceSelected);
@@ -177,6 +181,9 @@ public class Board {
 		//Wait till valid move is selected
 		while(true){
 		    pieceMove =  player1.requestMove(pieceSelected,board);//Get postion piece will be moved to
+		    if(p.newBoardAvailable){
+			break;
+		    }
 		    if(p.cancelSelection){
 			break;
 		    }
@@ -276,6 +283,9 @@ public class Board {
                     }
 		    System.out.println("Can't move a piece like that");
 		}
+		if(p.newBoardAvailable){
+			break;
+		    }
 		if(p.cancelSelection){
 		    p.cancelSelection=false;
 		    p.drawSelection=false;
@@ -283,6 +293,12 @@ public class Board {
 		}else{
 		    break;
 		}
+	    }//End of Player1 turn
+	    if(p.newBoardAvailable){
+		p.board=p.newBoard;
+		board=p.board;
+		p.newBoardAvailable=false;
+		p.boardUpdate=true;
 	    }
 	    p.drawSelection=false;
 	    
@@ -306,11 +322,15 @@ public class Board {
             }
 	     //Player2 move loop
 	    while(true){
+		printBoard();
 		//Ask player2
 		valid = false;
 		//Wait till valid piece is selected
 		while(true){
 		    pieceSelected = player2.requestPiece(board);
+		    if(p.newBoardAvailable){
+			break;
+		    }
 		    valid = validPiece(player2,pieceSelected);
 
 		    if(valid){
@@ -324,6 +344,9 @@ public class Board {
 		//Wait till valid move is selected
 		while(true){
 		    pieceMove =  player2.requestMove(pieceSelected,board);//Get position piece will be moved to
+		    if(p.newBoardAvailable){
+			break;
+		    }
 		    if(p.cancelSelection){
 			break;
 		    }
@@ -418,6 +441,9 @@ public class Board {
                     }
 		    System.out.println("Can't move a piece like that");
 		}
+		if(p.newBoardAvailable){
+			break;
+		    }
 		if(p.cancelSelection){
 		    p.cancelSelection=false;
 		    p.drawSelection=false;
@@ -425,9 +451,14 @@ public class Board {
 		}else{
 		    break;
 		}
-	    }
+	    }//End of player 2 turn
 	    p.drawSelection=false;
-	    
+	    if(p.newBoardAvailable){
+		p.board=p.newBoard;
+		board=p.board;
+		p.newBoardAvailable=false;
+		p.boardUpdate=true;
+	    }
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    

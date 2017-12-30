@@ -15,7 +15,7 @@ import javafx.scene.control.Alert.AlertType;
  * @author Ryan and Parm
  */
 public class Human extends Player {
-    Passer passer;
+    volatile Passer passer;
     Human(Passer p, boolean c){
 	this.colour = c;
 	passer=p;
@@ -26,11 +26,17 @@ public class Human extends Player {
     int[] requestPiece(BoardSquare[][] bs) {
 	passer.mouseClicked=false;
 	while(!passer.mouseClicked){
+	    if(passer.newBoardAvailable){
+		return null;
+	    }
 	    try {
 		Thread.sleep(1);
 	    } catch (InterruptedException ex) {
 		Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
 	    }
+	}
+	if(passer.newBoardAvailable){
+	    return null;
 	}
 	int x = (int)((passer.mouseX-54)/73);
 	int y = (int)((passer.mouseY-60)/74);
@@ -48,6 +54,9 @@ public class Human extends Player {
     int[] requestMove(int[] piece,BoardSquare[][] bs) {
 	passer.mouseClicked=false;
 	while(!passer.mouseClicked){
+	    if(passer.newBoardAvailable){
+		return null;
+	    }
 	    try {
 		if(passer.cancelSelection){
 		    return piece;
@@ -57,6 +66,9 @@ public class Human extends Player {
 	    } catch (InterruptedException ex) {
 		Logger.getLogger(Human.class.getName()).log(Level.SEVERE, null, ex);
 	    }
+	}
+	if(passer.newBoardAvailable){
+	    return null;
 	}
 	int x = (int)((passer.mouseX-54)/73);
 	int y = (int)((passer.mouseY-60)/74);

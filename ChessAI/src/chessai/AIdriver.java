@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author Ryan and Parm
  */
 public class AIdriver extends Player{
-    Passer passer;
+    volatile Passer passer;
     int[] move;
     int[] pieceChosen;
     final int Max_Depth=2; 
@@ -32,6 +32,9 @@ public class AIdriver extends Player{
     int[] requestPiece(BoardSquare[][] bs) {
 	double value=alphaBeta(bs,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
 	//System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]);
+	if(passer.newBoardAvailable){
+	    return null;
+	}
 	return pieceChosen;
     }
     
@@ -81,6 +84,9 @@ public class AIdriver extends Player{
     //Returns the new positon of the piece being moved
     @Override
     int[] requestMove(int[] piece, BoardSquare[][] bs) {
+	if(passer.newBoardAvailable){
+	    return null;
+	}
 	return move;
     }
     /**

@@ -12,24 +12,26 @@ import javafx.stage.Stage;
  * @author RyanS
  */
 public class Passer {
-    boolean boardUpdate;
-    BoardSquare[][] board;
-    double mouseX;
-    double mouseY;
-    boolean mouseClicked;
-    boolean playerSelect;
-    boolean playerDone;
-    boolean request;
-    boolean mouseUpdate;
-    boolean drawSelection;
-    boolean cancelSelection;
-    boolean isInvalid;
-    boolean whiteCheckmate;
-    boolean blackCheckmate;
-    boolean stalemate;
-    boolean promotion;
-    String newPiece;
-    int[] selectionPosition;
+    volatile boolean boardUpdate;
+    volatile BoardSquare[][] board;
+    volatile double mouseX;
+    volatile double mouseY;
+    volatile boolean mouseClicked;
+    volatile boolean playerSelect;
+    volatile boolean playerDone;
+    volatile boolean request;
+    volatile boolean mouseUpdate;
+    volatile boolean drawSelection;
+    volatile boolean cancelSelection;
+    volatile boolean isInvalid;
+    volatile boolean whiteCheckmate;
+    volatile boolean blackCheckmate;
+    volatile boolean stalemate;
+    volatile boolean promotion;
+    volatile boolean newBoardAvailable;
+    volatile BoardSquare[][] newBoard;
+    volatile String newPiece;
+    volatile int[] selectionPosition;
     Passer(){
 	cancelSelection = false;
 	playerSelect = false;
@@ -46,6 +48,8 @@ public class Passer {
         promotion = false;
         newPiece = "";
 	selectionPosition = new int[2];
+	newBoard = null;
+	newBoardAvailable=false;
     }
     public void setSelectionPosition(int[] p){
 	selectionPosition[0] =54+( p[0]*73);
@@ -62,5 +66,12 @@ public class Passer {
     
     public void playerDoneSet(Boolean b){
 	playerDone = b;
+    }
+    
+    public void setNewBoard(BoardSquare[][] bs){
+	this.newBoard=bs;
+	board=bs;
+	boardUpdate=true;
+	newBoardAvailable = true;
     }
 }

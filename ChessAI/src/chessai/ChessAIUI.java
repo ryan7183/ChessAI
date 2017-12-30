@@ -6,6 +6,12 @@
 package chessai;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -19,12 +25,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import static javafx.scene.paint.Color.color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -36,7 +41,6 @@ public class ChessAIUI extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-	
 	Passer p = new Passer();//Create a way to communicate with board
 	Human p1=new Human(p,true);
 	AIdriver p2 = new AIdriver(p,false);
@@ -51,6 +55,43 @@ public class ChessAIUI extends Application {
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 	
 	//Add ui buttons
+	//Save Board Button
+	Button saveBoard = new Button();
+	saveBoard.setText("Save Board");
+	saveBoard.setLayoutX(0);
+	saveBoard.setLayoutY(0);
+	saveBoard.setOnAction((ActionEvent event) -> {
+            //Save the board
+	    BoardSquare[][] board  = p.board;
+	    printBoardToFile(board);
+        });
+	root.getChildren().add(saveBoard);
+	
+	//Text box for file location
+	TextField textField = new TextField ();
+	textField.setLayoutX(80);
+	textField.setLayoutY(30);
+	root.getChildren().add(textField);
+	
+	//Load Board Button
+	Button loadBoard = new Button();
+	loadBoard.setText("Load Board");
+	loadBoard.setLayoutX(0);
+	loadBoard.setLayoutY(30);
+	loadBoard.setOnAction((ActionEvent event) -> {
+            //Load the board
+	    File f = new File(textField.getText());
+	    //File f = new File("C:/Users/Ryan/OneDrive/School/COSC 3P71/Project/ChessAI/ChessAI/ChessAI/ChessBoard.txt");
+	    BoardSquare[][] b;
+	    System.out.println(1);
+	    try {
+		b = buildBoardFile(f);
+		p.setNewBoard(b);
+		
+		System.out.println("Got here");
+	    } catch (FileNotFoundException ex) {
+	    }
+        });
 	
 	//Undo selection button
 	Button undoSelect = new Button();
@@ -90,8 +131,8 @@ public class ChessAIUI extends Application {
 	Task<Void> task = new Task<Void>(){
             @Override
             protected Void call() throws Exception{
-		//File f =new File("C:/Users/RyanS/OneDrive//School/COSC 3P71/Project/ChessAIGit/ChessAI/ChessAI/src/ChessTestFiles/Test1.txt");
-                Board b = new Board(p,p1,p2);
+		//File f =new File("C:/Users/Ryan/OneDrive/School/COSC 3P71/Project/ChessAI/ChessAI/ChessAI/ChessBoard.txt");
+		Board b = new Board(p,p1,p2);
                 return null;
                 
             }
@@ -100,6 +141,8 @@ public class ChessAIUI extends Application {
         th.setDaemon(true);
         th.start();
 	
+	
+	root.getChildren().add(loadBoard);
 	//Event handlers
 	EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
          @Override 
@@ -248,6 +291,71 @@ public class ChessAIUI extends Application {
 	primaryStage.show();
     }
     
+    BoardSquare[][] buildBoardFile(File f) throws FileNotFoundException{
+	BoardSquare[][] board;
+	FileReader fr = new FileReader(f);
+	Scanner in = new Scanner(fr);
+	String row;
+	char square;
+	board = new BoardSquare[8][8];
+	Piece p=null;
+	for(int y=0;y<8;y++){
+	    row = in.next();
+	    for(int x=0;x<8;x++){
+		square = row.charAt(x);
+		board[x][y] = new BoardSquare(x,y);
+		switch(square){
+		    case '-':
+			p =null;
+			break;
+		    case 'B':
+			p= new Bishop(false,x,y,"B");
+			break;
+		    case 'b':
+			p= new Bishop(true,x,y,"b");
+			break;
+		    case 'K':
+			p= new King(false,x,y,"K");
+			break;
+		    case 'k':
+			p= new King(true,x,y,"k");
+			break;
+		    case 'N':
+			p= new Knight(false,x,y,"N");
+			break;
+		    case 'n':
+			p= new Knight(true,x,y,"n");
+			break;
+		    case 'P':
+			p= new Pawn(false,x,y,"P");
+			break;
+		    case 'p':
+			p= new Pawn(true,x,y,"p");
+			break;
+		    case 'Q':
+			p= new Queen(false,x,y,"Q");
+			break;
+		    case 'q':
+			p= new Queen(true,x,y,"q");
+			break;
+		    case 'R':
+			p= new Rook(false,x,y,"R");
+			break;
+		    case 'r':
+			p= new Rook(true,x,y,"r");
+			break;
+		    default:
+			p=null;
+			break;
+		}
+		if(p!=null){
+		    board[x][y].setPiece(p);
+		}
+	    }
+	}
+	return board;
+     }
+    
     
     /**
      * @param args the command line arguments
@@ -255,5 +363,27 @@ public class ChessAIUI extends Application {
     public static void main(String[] args) {
 	launch(args);
     }
-    
+
+    private void printBoardToFile(BoardSquare[][] board) {
+	File f = new File("ChessBoard.txt");
+	try {
+	    PrintWriter out = new PrintWriter(f);
+	    for(int x=0;x<board.length;x++){
+		for(int y=0;y<board[0].length;y++){
+		    if(board[y][x].hasPiece){
+			out.print(board[y][x].piece.textRepresentation);
+		    }else{
+			out.print("-");
+		    }
+		}
+		out.println();
+	    }
+	    out.flush();
+	out.close();
+	} catch (FileNotFoundException ex) {
+	    Logger.getLogger(ChessAIUI.class.getName()).log(Level.SEVERE, null, ex);
+	}
+	
+	
+    }
 }
