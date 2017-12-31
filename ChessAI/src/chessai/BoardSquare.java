@@ -1,4 +1,3 @@
-
 package chessai;
 
 /**
@@ -30,11 +29,10 @@ public class BoardSquare {
 	//Determine which type of piece is being copied
 
 	if(bs.hasPiece){
-	    	String str = bs.piece.textRepresentation;
+	    String str = bs.piece.textRepresentation;
 	    switch(str){
 		case "B":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Bishop(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -50,10 +48,7 @@ public class BoardSquare {
 		    break;
 		case "K":
 		    p=bs.piece;
-		   // System.out.println(p.textRepresentation);
 		    piece = new King(p.colour,p.x,p.y,p.textRepresentation);
-		    //piece.castleKingSide=p.castleKingSide;
-		    //piece.castleQueenSide=p.castleQueenSide;
                     if(p.castleKingSide){
                         piece.castleKingSide = true;
                     }
@@ -71,7 +66,6 @@ public class BoardSquare {
 		    break;
 		case "N":
 		    p=bs.piece;
-		   // System.out.println(p.textRepresentation);
 		    piece = new Knight(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -84,11 +78,7 @@ public class BoardSquare {
 		    break;
 		case "P":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Pawn(p.colour,p.x,p.y,p.textRepresentation);
-		    //piece.pawnPromotion=p.pawnPromotion;
-		    //piece.enpassantLeft=p.enpassantLeft;
-		    //piece.enpassantRight=p.enpassantRight;
                     if(p.enpassantLeft){
                         piece.enpassantLeft = true;
                     }
@@ -109,7 +99,6 @@ public class BoardSquare {
 		    break;
 		case "Q":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Queen(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -122,7 +111,6 @@ public class BoardSquare {
 		    break;
 		case "R":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Rook(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -135,7 +123,6 @@ public class BoardSquare {
 		    break;
 		case "b":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Bishop(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -151,10 +138,7 @@ public class BoardSquare {
 		    break;
 		case "k":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new King(p.colour,p.x,p.y,p.textRepresentation);
-		    //piece.castleKingSide=p.castleKingSide;
-		    //piece.castleQueenSide=p.castleQueenSide;
                     if(p.castleKingSide){
                         piece.castleKingSide = true;
                     }
@@ -172,7 +156,6 @@ public class BoardSquare {
 		    break;
 		case "n":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Knight(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -185,12 +168,8 @@ public class BoardSquare {
 		    break;
 		case "p":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Pawn(p.colour,p.x,p.y,p.textRepresentation);
-		    //piece.pawnPromotion=p.pawnPromotion;
-		    //piece.enpassantLeft=p.enpassantLeft;
-		    //piece.enpassantRight=p.enpassantRight;
-                                        if(p.enpassantLeft){
+                    if(p.enpassantLeft){
                         piece.enpassantLeft = true;
                     }
                     if(p.enpassantRight){
@@ -210,7 +189,6 @@ public class BoardSquare {
 		    break;
 		case "q":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Queen(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -223,7 +201,6 @@ public class BoardSquare {
 		    break;
 		case "r":
 		    p=bs.piece;
-		    //System.out.println(p.textRepresentation);
 		    piece = new Rook(p.colour,p.x,p.y,p.textRepresentation);
                     if(p.hasMoved){
                         piece.hasMoved = true;
@@ -240,7 +217,6 @@ public class BoardSquare {
 	}else{
 	    bs.piece=null;
 	}
-	//this.piece = bs.piece;
 	this.hasPiece = bs.hasPiece;
 	this.x=bs.x;
 	this.y=bs.y;
@@ -260,6 +236,10 @@ public class BoardSquare {
 	hasPiece=false;
     }
     
+    /**
+     * Sets a piece at the board square
+     * @param p The piece that is going to be set on the board square
+     */
     void setPiece(Piece p){
 	piece = p;
 	hasPiece = true;
