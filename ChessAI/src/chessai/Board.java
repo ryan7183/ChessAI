@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * 
  */
 public class Board {
-    BoardSquare[][] board;//[y][x]
+    BoardSquare[][] board;//[x][y]
     Passer p;
     Player player1;
     Player player2;
@@ -84,6 +84,12 @@ public class Board {
 	this.board = board;
 	start();
     }
+    /**
+     * Builds board from file provided
+     * @param f The text file for the board configuration
+     * @return A 2d array of the chess board
+     * @throws FileNotFoundException 
+     */
     BoardSquare[][] buildBoardFile(File f) throws FileNotFoundException{
 	
 	FileReader fr = new FileReader(f);
@@ -189,10 +195,11 @@ public class Board {
                     board[pieceSelected[0]][pieceSelected[1]].piece.x = pieceSelected[0];
                     board[pieceSelected[0]][pieceSelected[1]].piece.y = pieceSelected[1];
                     outerloop:
+                    //Checks if move selected is valid
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
                         ArrayList<Piece> temp = new ArrayList<Piece>();
+                        //If king is not in check, move piece unless it results in a check. Otherwise break out of the loop
 			if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board, moveList)){
-                            //board=requestMove(pieceSelected,pieceMove,board);//Move piece
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
                                 for(int y=0;y<bs[0].length;y++){
@@ -207,6 +214,7 @@ public class Board {
                                 break outerloop;
                             }
                         }
+                        //If moves does not prevent check, break. Otherwise make the move.
                         else{
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
@@ -222,6 +230,7 @@ public class Board {
                                 break outerloop;
                             }
                         }
+                        //Changes pawn to a new piece selected by the user when pawn promotion is true
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("p") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             p.promotion = true;
                             String piece = p.newPiece;
@@ -310,6 +319,7 @@ public class Board {
                     System.out.println("CheckMate! White Wins.");
                 }
             }
+            //Check for stalemate
             else{
                 stalemate = isStalemate(false,board, moveList);
                 if(stalemate){
@@ -347,8 +357,10 @@ public class Board {
 			break;
 		    }
                     outerloop:
+                    //Checks if move selected is valid
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
                         ArrayList<Piece> temp = new ArrayList<Piece>();
+                        //If king is not in check, move piece unless it results in a check. Otherwise break out of the loop
                         if(!isKingInCheck(board[pieceSelected[0]][pieceSelected[1]].piece.colour,this.board, moveList)){
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
@@ -364,6 +376,7 @@ public class Board {
                                 break outerloop;
                             }
                         }
+                        //If moves does not prevent check, break. Otherwise make the move.
                         else{
                             BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
                             for(int x=0;x<bs.length;x++){
@@ -379,6 +392,7 @@ public class Board {
                                 break outerloop;
                             }
                         }
+                        //Changes pawn to a new piece selected by the user when pawn promotion is true
                         if(board[pieceMove[0]][pieceMove[1]].piece.textRepresentation.equals("P") && board[pieceMove[0]][pieceMove[1]].piece.pawnPromotion){
                             p.promotion = true;
                             String piece = p.newPiece;
@@ -400,7 +414,6 @@ public class Board {
                                     break;
                                         
                             }
-                            //board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft){
                             board[pieceMove[0]][pieceMove[1]-1].removePiece();
@@ -467,6 +480,7 @@ public class Board {
                     System.out.println("CheckMate! Black Wins.");
                 } 
             }
+            //Check for stalemate
             else{
                 stalemate = isStalemate(true,board,moveList);
                 if(stalemate){
@@ -478,8 +492,14 @@ public class Board {
 	}
     }
     
-    
-    
+    /**
+     * Moves the piece to the new position. Also adds the move to the move list
+     * @param piece The x and y position of the piece
+     * @param move the x and y position of where the piece is being moved
+     * @param board The chess board
+     * @param moveList List of all the moves that have been made
+     * @return The chess board with the piece being moved to its new location
+     */
     BoardSquare[][] requestMove(int[] piece, int[] move, BoardSquare[][] board, ArrayList<Piece> moveList){
 	int x,y;
 	board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
@@ -495,6 +515,12 @@ public class Board {
 	return board;
     }
     
+    /**
+     * Checks if the player has selected a valid piece
+     * @param player The player that selected a piece 
+     * @param c The x and y position of the piece selected
+     * @return True if the player selected a valid piece or false if they did not
+     */
     boolean validPiece(Player player, int[] c){
 	boolean valid = true;
 	
@@ -504,6 +530,12 @@ public class Board {
 	return valid;
     }
     
+    /**
+     * Gets the king location for the specified colour 
+     * @param c The colour of the king
+     * @param bs The chess board
+     * @return An array of the x and y position of the king
+     */
     int[] getKingLocation (Boolean c, BoardSquare[][] bs){
         int[] location = new int[2];
         for(int x=0;x<bs.length;x++){
@@ -525,6 +557,13 @@ public class Board {
         return location; 
     }
     
+    /**
+     * Checks if the king is in check
+     * @param c The colour of the king
+     * @param board The chess board
+     * @param moveList List of moves that have been made
+     * @return True if the king is in check or false if it is not in check.
+     */
     boolean isKingInCheck(Boolean c,BoardSquare[][] board, ArrayList<Piece> moveList){
         int[] loc = getKingLocation(c,board);
         for(int x=0; x<board.length; x++){
@@ -539,6 +578,13 @@ public class Board {
         return false;
     }
     
+    /**
+     * Check to see if the player is in checkmate
+     * @param c The colour of the player 
+     * @param board The chess board
+     * @param moveList List of all the moves made
+     * @return Return true if the player is in checkmate
+     */
     boolean isCheckMate(Boolean c, BoardSquare[][] board, ArrayList<Piece> moveList){
 	boolean checkMate = true;
 	int[] kingPos = getKingLocation(c,board);
@@ -563,6 +609,14 @@ public class Board {
 	
     }
     
+    /**
+     * Check to see if the player is at a stalemate
+     * @param c The colour of the player
+     * @param board The chess board
+     * @param moveList List of all of the moves made
+     * @return True if the player is at a stalemate or false if the player is 
+     * not at a stalemate
+     */
     boolean isStalemate(Boolean c, BoardSquare[][] board, ArrayList<Piece> moveList){
         boolean staleMate = true;
 	int[] kingPos = getKingLocation(c,board);
@@ -585,6 +639,16 @@ public class Board {
 	}
 	return staleMate;
     }
+    
+    /**
+     * Checks if there is a piece that can make a move that prevents a check
+     * @param pos Position of the piece
+     * @param moves All the possible moves for the piece
+     * @param board The chess board
+     * @param c The colour of the piece
+     * @return True if there is a piece that can prevent a check or false if 
+     * there is not a piece that can prevent a check.
+     */
     boolean pieceCanPreventCheck(int[] pos,int[][] moves, BoardSquare[][] board, boolean c){
 	
 	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
@@ -616,6 +680,17 @@ public class Board {
 	return preventCheck;
     }
     
+    /**
+     * Checks to see if there is a piece that can make a move. Is used to see
+     * if the players are at a stalemate
+     * @param pos The position of the king
+     * @param piecePos The position of the piece
+     * @param moves All possible moves for the piece
+     * @param board The chess board 
+     * @param c The colour of the player
+     * @return True if a piece can move or false if there is not a piece that 
+     * can move
+     */
     public boolean canMove(int[] pos,int[] piecePos,int[][] moves, BoardSquare[][] board, boolean c){
         BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
         ArrayList<Piece> temp = new ArrayList<Piece>();
