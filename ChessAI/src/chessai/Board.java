@@ -62,7 +62,6 @@ public class Board {
 	
 	}
 	p.setBoard(board);
-	//printBoard();
 	start();
 	}
    
@@ -189,7 +188,6 @@ public class Board {
 		    }
                     board[pieceSelected[0]][pieceSelected[1]].piece.x = pieceSelected[0];
                     board[pieceSelected[0]][pieceSelected[1]].piece.y = pieceSelected[1];
-                    System.out.println(board[pieceSelected[0]][pieceSelected[1]].piece.hasMoved);
                     outerloop:
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
                         ArrayList<Piece> temp = new ArrayList<Piece>();
@@ -245,8 +243,6 @@ public class Board {
                                     break;
                                         
                             }
-                            System.out.println(p.newPiece);
-                            //board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
                         }
                         if(board[pieceMove[0]][pieceMove[1]].piece.enpassantLeft){
                             board[pieceMove[0]][pieceMove[1]+1].removePiece();
@@ -506,25 +502,6 @@ public class Board {
 	    valid = false;
 	}
 	return valid;
-    }
-    void printBoard(){
-        System.out.print(" ");
-        for (int i=0; i<board[0].length; i++){
-            System.out.print(" "+(char)(i+65)+" ");
-        }
-        System.out.println();
-	for(int x=0;x<board[0].length;x++){
-            System.out.print(x);
-	    for(int y=0;y<board.length;y++){
-		if(board[x][y].hasPiece){
-		    System.out.print("["+board[x][y].piece.textRepresentation+"]");
-		}else{
-		System.out.print("[ ]");
-		}
-		
-	    }
-	    System.out.println();
-	}
     }
     
     int[] getKingLocation (Boolean c, BoardSquare[][] bs){
