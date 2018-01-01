@@ -1,7 +1,5 @@
 package chessai;
 
-import javafx.stage.Stage;
-
 /**
  *
  * @author RyanS

@@ -3,17 +3,18 @@ package chessai;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class takes care of all the moves that care made by the players.
+ * After the player makes a move, the class will check if the other player is 
+ * in checkmate or if there is a stalemate. If one of these will occur the game
+ * is over, if not, the other player will make a move. This will continue until
+ * there is a checkmate or a stalemate.
  * @author Ryan and Parm
- * 
  */
 public class Board {
     BoardSquare[][] board;//[x][y]

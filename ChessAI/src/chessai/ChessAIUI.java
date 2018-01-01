@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package chessai;
 
 import java.io.File;
@@ -25,8 +20,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -34,11 +27,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javax.swing.JFileChooser;
 
 /**
- *
- * @author RyanS
+ * This class takes care of the GUI for the program. 
+ * @author Ryan and Parm
  */
 public class ChessAIUI extends Application {
     
@@ -161,11 +153,12 @@ public class ChessAIUI extends Application {
 
 	    @Override
 	    public void handle(long now) {
-		
+		//Will update the board if boardUpdate is true
 		if(p.boardUpdate){
 		    renderBoard(p.board);
 		    p.boardUpdate = false;
 		}
+                //Lets the user know that the move selected was invalid
                 if(p.isInvalid){
 		    p.isInvalid=false;
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -175,6 +168,7 @@ public class ChessAIUI extends Application {
                     alert.show();
                     
                 }
+                //Lets the user know that there is a stalemate and closes the game when the user closes the alert box
                 if(p.stalemate){
 		    p.stalemate=false;
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -185,6 +179,7 @@ public class ChessAIUI extends Application {
                     alert.show();
                     
                 }
+                //Lets the user know that they won by checkmate. Will also close the game after user closes the alert box
                 if(p.blackCheckmate){
 		    p.blackCheckmate = false;
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -195,6 +190,7 @@ public class ChessAIUI extends Application {
                     alert.show();
                     
                 }
+                //Lets the user know that the AI won by checkmate. Will also close the game after user closes alert box.
                 if(p.whiteCheckmate){
 		    p.whiteCheckmate = false;
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -206,6 +202,11 @@ public class ChessAIUI extends Application {
                     
                 }
 	    }
+            
+            /**
+             *Renders the board  
+             * @param b The chess board
+             */
 	    public void renderBoard(BoardSquare[][] b){
 		Image i = new Image("img/board.png");
 		gc.drawImage(i,0,0,canvas.getWidth(),canvas.getHeight());
@@ -218,6 +219,11 @@ public class ChessAIUI extends Application {
 		    }
 		}
 	    }
+            /**
+             * Will add images of the pieces based on their text representation
+             * value
+             * @param bs The Chess board
+             */
 	    public void drawPiece(BoardSquare bs){
 		String piece = bs.piece.textRepresentation;
 		Image i;
@@ -290,6 +296,13 @@ public class ChessAIUI extends Application {
 	primaryStage.show();
     }
     
+    /**
+     * Builds the board based on the board configuration in the text file 
+     * provided.
+     * @param f The text file of the board configuration
+     * @return The chess board 
+     * @throws FileNotFoundException 
+     */
     BoardSquare[][] buildBoardFile(File f) throws FileNotFoundException{
 	BoardSquare[][] board;
 	FileReader fr = new FileReader(f);
@@ -369,6 +382,11 @@ public class ChessAIUI extends Application {
 	launch(args);
     }
 
+    /**
+     * Makes a text file of the board configuration.
+     * @param board The chess board 
+     * @param primaryStage The stage of the GUI
+     */
     private void printBoardToFile(BoardSquare[][] board,Stage primaryStage) {
 	File f = new File("ChessBoard.txt");
 	FileChooser fileChooser = new FileChooser();

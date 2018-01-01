@@ -2,8 +2,6 @@ package chessai;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 /**The logic for a human player making a move
  *
