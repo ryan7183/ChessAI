@@ -21,12 +21,14 @@ public class Board {
     Passer p;
     Player player1;
     Player player2;
+    boolean skipTurn;
     //Set up a regular board
     Board(Passer p,Player player1, Player player2){
 	this.player1 = player1;
 	this.player2 =player2;
 	board = new BoardSquare[8][8];
 	this.p =p;
+	skipTurn=false;
 	//Make board
 	for(int y=0;y<8;y++){
 	    for(int x=0;x<8;x++){
@@ -166,6 +168,9 @@ public class Board {
 	while(cont){
 	while(cont){
 	    //Player1 move loop
+	    if(skipTurn){
+		skipTurn=false;
+	    }else{
 	    while(true){
 		//Ask player1
 		valid = false;
@@ -300,11 +305,13 @@ public class Board {
 		    break;
 		}
 	    }//End of Player1 turn
+	    }
 	    if(p.newBoardAvailable){
 		p.board=p.newBoard;
 		board=p.board;
 		p.newBoardAvailable=false;
 		p.boardUpdate=true;
+		skipTurn = false;
 		break;
 	    }
 	    p.drawSelection=false;
@@ -328,6 +335,9 @@ public class Board {
                     System.out.println("Stalemate. The game is a draw.");
                 }
             }
+	    if(skipTurn){
+		skipTurn=false;
+	    }else{
 	     //Player2 move loop
 	    while(true){
 		//Ask player2
@@ -462,12 +472,14 @@ public class Board {
 		    break;
 		}
 	    }//End of player 2 turn
+	    }
 	    p.drawSelection=false;
 	    if(p.newBoardAvailable){
 		p.board=p.newBoard;
 		board=p.board;
 		p.newBoardAvailable=false;
 		p.boardUpdate=true;
+		skipTurn=true;
 		break;
 	    }
 	    //Update board
