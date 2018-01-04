@@ -161,6 +161,18 @@ public class Pawn extends Piece {
             if(bs[newPos[0]][newPos[1]].hasPiece){
                 return false;
             }
+            if(Math.abs(newPos[1]-this.y) == 2){
+                if(this.colour){
+                    if(bs[newPos[0]][newPos[1]+1].hasPiece){
+                        return false;
+                    }
+                }
+                else{
+                    if(bs[newPos[0]][newPos[1]-1].hasPiece){
+                        return false;
+                    }
+                }
+            }
         }
         //Sets pawnPromotion to true if the white pawn has made it to the other end of the board
         if(newPos[1]==0 && this.colour){
