@@ -36,26 +36,66 @@ public class Pawn extends Piece {
     public Boolean isValidMove(int[] newPos, BoardSquare[][] bs, ArrayList<Piece> moveList) {
         int changeInY;
         //Return false if the new x position is out of bounds
+        //System.out.println(100);
         if(newPos[0]<0||newPos[0]>7){
             return false;
         }
+        //System.out.println(200);
         if(this.colour){
             changeInY = -1;
         }
         else{
             changeInY = 1;
         }
+        //System.out.println(300);
         //Returns false if the move selected moves the white pawn backwards
         if(this.colour && newPos[1]>this.y){
             return false;
         }
+        //System.out.println(400);
         //Returns false if the move selected moves the black pawn backwards
         if(!this.colour && newPos[1]<this.y){
             return false;
         }
+        //System.out.println(500);
+        //System.out.println(this.y+changeInY);
         //Checks to see if there is a piece that the pawn can capture at the new position
-        if(((this.x-1 >=0 && (bs[this.x-1][this.y+changeInY].hasPiece)) && 
-                (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1))) || ((this.x+1 <=7 && (bs[this.x+1][this.y+changeInY].hasPiece))
+        /*if(this.x-1 >=0 && (this.y+changeInY <=7 && this.y+changeInY >=0)){
+            if(bs[this.x-1][this.y+changeInY].hasPiece && newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)){
+                System.out.println(Math.abs(this.y - newPos[1])+"\t"+this.y+"\t"+newPos[1]);
+                if(Math.abs(this.y - newPos[1])>1){
+                    return false;
+                }
+                else{
+                    //Returns false if the piece that the pawn can attack is the same colour as the pawn
+                    if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+                        System.out.println(1);
+                        return false;
+                    }
+                    //Returns true if the piece at the new position is not the same colour as the pawn
+                    else{
+                        System.out.println(2);
+                        return true;
+                    }
+                }
+            }
+        }
+        else if(this.x+1 >=7 && (this.y+changeInY <=7 && this.y+changeInY >=0)){
+            if(bs[this.x+1][this.y+changeInY].hasPiece && newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)){
+                //Returns false if the piece that the pawn can attack is the same colour as the pawn
+                if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
+                    System.out.println(3);
+                    return false;
+                }
+                //Returns true if the piece at the new position is not the same colour as the pawn
+                else{
+                    System.out.println(4);
+                    return true;
+                }
+            }
+        }*/
+        if((((this.x-1 >=0 && (this.y+changeInY <=7 && this.y+changeInY >=0)) && (bs[this.x-1][this.y+changeInY].hasPiece)) && 
+                (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1))) || (((this.x+1 <=7 && (this.y+changeInY <=7 && this.y+changeInY >=0))&& (bs[this.x+1][this.y+changeInY].hasPiece))
                 && (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1)))){
                 //Returns false if the piece that the pawn can attack is the same colour as the pawn
                 if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
@@ -67,8 +107,9 @@ public class Pawn extends Piece {
                 }
         }
         //Checks to see if en passant is possible for the left side of the pawn
-        else if(((this.x-1>=0 && (bs[this.x-1][this.y].hasPiece && bs[this.x-1][this.y].piece.colour!=this.colour)) 
+        else if(((this.x-1>=0 && this.y+changeInY <= 7 && (bs[this.x-1][this.y].hasPiece && bs[this.x-1][this.y].piece.colour!=this.colour)) 
                 && (newPos[1]==(this.y+changeInY) && newPos[0]==this.x-1))){
+            //System.out.println(600);
             if(bs[newPos[0]][newPos[1]].hasPiece && bs[this.x-1][this.y+changeInY].piece.colour == this.colour){
                 return false;
             }
@@ -78,6 +119,7 @@ public class Pawn extends Piece {
                     return false;
                 }
                 else if(!bs[newPos[0]][newPos[1]].hasPiece){
+                    //System.out.println(700);
                     if(moveList.size()>2){
                         int pos = moveList.size()-1;
                         //Finds the last move made by the opponent 
@@ -88,10 +130,12 @@ public class Pawn extends Piece {
                         if((moveList.get(pos).textRepresentation.equals("P") || moveList.get(pos).textRepresentation.equals("p"))
                                 &&(this.y==moveList.get(pos).y && Math.abs(moveList.get(pos).prevY-moveList.get(pos).y)==2
                                 && this.x-1==moveList.get(pos).x)){
+                            //System.out.println(800);
                             this.enpassantLeft = true;
                             return true;
                         }
                         else{
+                            //System.out.println(900);
                             return false;
                         }
                     }
@@ -99,17 +143,20 @@ public class Pawn extends Piece {
             }
         }
         //Checks to see if en passant on the right side is possible
-        else if(((this.x+1<=7 && (bs[this.x+1][this.y].hasPiece) && bs[this.x+1][this.y].piece.colour!=this.colour) 
+        else if(((this.x+1<=7 && this.y+changeInY >=0 && (bs[this.x+1][this.y].hasPiece) && bs[this.x+1][this.y].piece.colour!=this.colour) 
                 && (newPos[1]==(this.y+changeInY) && newPos[0]==this.x+1))){
+            //System.out.println(1000);
             if(bs[newPos[0]][newPos[1]].hasPiece && bs[this.x+1][this.y+changeInY].piece.colour == this.colour){
                 return false;
             }
             else{
                 //Return false if there is a piece with the same colour as the pawn at the new position
+                //System.out.println(2000);
                 if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
                     return false;
                 }
                 else if(!bs[newPos[0]][newPos[1]].hasPiece){
+                    //System.out.println(3000);
                     if(moveList.size()>2){
                         int pos = moveList.size()-1;
                         //Finds the last move made by the opponent 
@@ -120,6 +167,7 @@ public class Pawn extends Piece {
                         if((moveList.get(pos).textRepresentation.equals("P") || moveList.get(pos).textRepresentation.equals("p"))
                                 &&(this.y==moveList.get(pos).y && Math.abs(moveList.get(pos).prevY-moveList.get(pos).y)==2
                                 && this.x+1==moveList.get(pos).x)){
+                            //System.out.println(4000);
                             this.enpassantRight = true;
                             return true;
                         }
@@ -133,19 +181,24 @@ public class Pawn extends Piece {
         else{
             //returns false if the current x position is not the same as the new x position
             if(this.x!=newPos[0]){
+                //System.out.println(5000);
                 return false;
             }
         }
+        //System.out.println(6000);
         //Only allows the pawn to move one space if the pawn has been moved from its initial position
         if(this.hasMoved){
             //Returns false if the change in y does not equal 1
+            //System.out.println(7000);
             if(Math.abs(newPos[1]-this.y) != 1){
                 return false;
             }
+            //System.out.println(8000);
             //Returns false if the new y position does not equal the current y plus the negative of the change in y
             if(this.y+(-changeInY)==newPos[1]){
                 return false;
             }
+            //System.out.println(9000);
             //Returns false if the new position has a piece located on it
             if(bs[newPos[0]][newPos[1]].hasPiece){
                 return false;
@@ -153,14 +206,17 @@ public class Pawn extends Piece {
         }
         //Allows the piece to move 1 or 2 spaces if it hasn't moved from its inital position
         else{
+            //System.out.println(10000);
             //Returns false if the chanfe in y doesn't equal 1 or if the change in y doesn't equal 2
             if(!(Math.abs(newPos[1]-this.y) == 1 || Math.abs(newPos[1]-this.y) == 2)){
                 return false;
             }
+            //System.out.println(20000);
             //Returns false if the new position has a piece
             if(bs[newPos[0]][newPos[1]].hasPiece){
                 return false;
             }
+            //System.out.println(30000);
             if(Math.abs(newPos[1]-this.y) == 2){
                 if(this.colour){
                     if(bs[newPos[0]][newPos[1]+1].hasPiece){
@@ -168,6 +224,7 @@ public class Pawn extends Piece {
                     }
                 }
                 else{
+                    //System.out.println(40000);
                     if(bs[newPos[0]][newPos[1]-1].hasPiece){
                         return false;
                     }
@@ -175,13 +232,17 @@ public class Pawn extends Piece {
             }
         }
         //Sets pawnPromotion to true if the white pawn has made it to the other end of the board
+        //System.out.println(50000);
         if(newPos[1]==0 && this.colour){
             this.pawnPromotion = true;
         }
+        //System.out.println(60000);
         //Sets pawnPromotion to true if the black pawn has made it to the other end of the board
         if (newPos[1] ==7 && !this.colour){
+            //System.out.println(70000);
             this.pawnPromotion = true;
         }
+        //System.out.println(80000);
         return true;
     }
 
@@ -194,22 +255,33 @@ public class Pawn extends Piece {
      */
     @Override
     public int[][] generateMoves(BoardSquare[][] bs, ArrayList<Piece> moveList) {
-	int[][] moves=new int[4][];
+	int[][] moves=new int[16][];
 	int[] possibleMove=new int[2];
 	int validCount = 0;
 	int[][] returnMove;
+        //System.out.println(10);
 	for(int x=this.x-1;x<this.x+2;x++){
+            //System.out.println(20);
 	    for(int y=0;y<bs[0].length;y++){
+                //System.out.println(30);
 		possibleMove[0]=x;
 		possibleMove[1]=y;
+                //System.out.println(40);
 		if(isValidMove(possibleMove,bs, moveList)){
+                    //System.out.println(666);
+                    //System.out.println(validCount);
 		    moves[validCount]=possibleMove.clone();
+                    //System.out.println(777);
 		    validCount++;
+                    //System.out.println(888);
 		}
+                //System.out.println(50);
 	    }
 	}
+        //System.out.println(60);
 	returnMove =new int[validCount][];//Create an array of the correct size to store the moves
 	System.arraycopy(moves, 0,returnMove , 0, validCount);//Copy the valid moves to an array of the correct size
+        //System.out.println("fdsdsgds");
 	return returnMove;
     }
     
