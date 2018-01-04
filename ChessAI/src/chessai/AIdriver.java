@@ -31,7 +31,7 @@ public class AIdriver extends Player{
     @Override
     int[] requestPiece(BoardSquare[][] bs) {
 	double value=alphaBeta(bs,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
-	//System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]);
+	System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]);
 	if(passer.newBoardAvailable){
 	    return null;
 	}
@@ -116,30 +116,35 @@ public class AIdriver extends Player{
             for(int y=0;y<bs[0].length;y++){
                 if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
                     moves = bs[x][y].piece.generateMoves(bs,randList);//Generate each move the piece can make
-                    bs[x][y].piece.x=x;
-                    bs[x][y].piece.y=y;
                     tempPos[0] = x;
                     tempPos[1] = y;
-		    //Explore each move the puece can make
+		    System.out.println("Looking at "+bs[x][y].piece.textRepresentation+" num moves:"+moves.length);
+		    //Explore each move the piece can make
                     for(int j=0;j<moves.length;j++){
-                        newBoard = copyBoard(bs);//Make a copy of the board to make the next move
-                        newBoard = requestMove(tempPos,moves[j],newBoard);
-			//if the game is not in a end state explore further
-                        if(!isKingInCheck(colour,newBoard)){
-                            value =  maxValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);//dEtermine if a previously explored path or the new path is better
-                        }
-			//If the new value is better than the previous best make the new move the best found
-                        if(value>best){
-                            best =value;
-                            move = moves[j];
-                            piecePos[0]=x;
-                            piecePos[1]=y;
-                            pieceChosen = piecePos;
-                        }
+			if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(getKingLocation(colour,bs),moves,bs,colour)){
+			
+			}else{
+			    newBoard = copyBoard(bs);//Make a copy of the board to make the next move
+			    newBoard = requestMove(tempPos,moves[j],newBoard);
+			    //if the game is not in a end state explore further
+			    if(!isCheckMate(colour,newBoard)){
+				value = minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);//Determine if a previously explored path or the new path is better
+				//System.out.println(value);
+			    }
+			    //If the new value is better than the previous best make the new move the best found
+			    if(value>=best){
+				best =value;
+				move = moves[j];
+				piecePos[0]=x;
+				piecePos[1]=y;
+				pieceChosen = piecePos;
+			    }
+			}
                     }
                 }
             }
 	}
+	//System.out.print(colour+""+bs[piecePos[0]][piecePos[1]].piece.textRepresentation+""+bs[piecePos[0]][piecePos[1]].piece.colour);
 	return best;
     }
     
@@ -157,8 +162,9 @@ public class AIdriver extends Player{
 	BoardSquare[][] newBoard;
 	int[] piecePos=new int[2];
 	int[] tempPos = new int[2];
-	//If the algoriuthm is at its max depth or reached an end state returnt he current value of the board
+	//If the algorithm is at its max depth or reached an end state returnt he current value of the board
 	if(depth >= Max_Depth||isCheckMate(!colour,bs)){
+	    //System.out.println(isCheckMate(!colour,bs)+" "+isKingInCheck(!colour,bs));
 	    return boardEvaluation(bs);
 	}
 	v=Double.NEGATIVE_INFINITY;
@@ -170,16 +176,19 @@ public class AIdriver extends Player{
                     tempPos[0] = x;
                     tempPos[1] = y;
                     for(int j=0;j<moves.length;j++){
-                        newBoard = copyBoard(bs);
-                        newBoard = requestMove(tempPos,moves[j],newBoard);
-                        if(!isKingInCheck(colour,newBoard)){
-                            v = max(v,minValue(newBoard,depth+1,a,b));
-                        }
-			//if score is greater than the value of beta don't look any further on this path
-                        if(v>=b){
-                            return v;
-                        }
-                        a = min(a,v);
+			if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(getKingLocation(colour,bs),moves,bs,colour)){
+			}else{
+			    newBoard = copyBoard(bs);
+			    newBoard = requestMove(tempPos,moves[j],newBoard);
+			    if(!isCheckMate(colour,newBoard)){
+				v = max(v,minValue(newBoard,depth+1,a,b));
+			    }
+			    //if score is greater than the value of beta don't look any further on this path
+			    if(v>=b){
+				return v;
+			    }
+			    a = min(a,v);
+			}
                     }
                 }
             }
@@ -202,6 +211,7 @@ public class AIdriver extends Player{
 	int[] piecePos=new int[2];
 	int[] tempPos = new int[2];
 	if(depth >= Max_Depth||isCheckMate(colour,bs)){
+	    //System.out.println(isCheckMate(colour,bs)+" "+isKingInCheck(colour,bs));
 	    return boardEvaluation(bs);
 	}
 	v=Double.POSITIVE_INFINITY;
@@ -213,9 +223,12 @@ public class AIdriver extends Player{
                     tempPos[0] = x;
                     tempPos[1] = y;
                     for(int j=0;j<moves.length;j++){
+			if(isKingInCheck(!colour,bs)&&!pieceCanPreventCheck(getKingLocation(!colour,bs),moves,bs,colour)){
+			}else{
+			
                         newBoard = copyBoard(bs);
                         newBoard = requestMove(tempPos,moves[j],newBoard);
-                        if(!isKingInCheck(colour,newBoard)){
+                        if(!isCheckMate(!colour,newBoard)){
                             v = min(v,maxValue(newBoard,depth+1,a,b));
                         }
 			//If score is less than alpha don't look at path any further
@@ -223,7 +236,8 @@ public class AIdriver extends Player{
                             return v;
                         }
                         b = min(b,v);
-                    }
+			}
+		    }
                 }
             }
 	}
@@ -474,10 +488,21 @@ public class AIdriver extends Player{
 		}
 	    }
 	    if(colour/*white*/){
-		score = score + whitePieceCount+(16-blackPieceCount);//White pieces currently in play plus pieces black lost
+		score = score + (whitePieceCount+(16-blackPieceCount)*10);//White pieces currently in play plus pieces black lost
+		if(whitePieceCount>blackPieceCount){
+		    score = score+100;
+		}else{
+		    score = score-100;
+		}
 	    }else{
-		score = score+ blackPieceCount+(16-whitePieceCount);//Black pieces currently in play plus pieces white lost
+		score = score+ (blackPieceCount+(16-whitePieceCount)*10);//Black pieces currently in play plus pieces white lost
+		if(blackPieceCount>whitePieceCount){
+		    score = score+100;
+		}else{
+		    score = score-100;
+		}
 	    }
+	    
 	}
     }
     
@@ -501,7 +526,7 @@ public class AIdriver extends Player{
 		for(int x=0;x<bs.length;x++){
 		    for(int y=0;y<bs[0].length;y++){
 			if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour&&bs[x][y].piece.textRepresentation.equals("p")){
-			    score = score+(8-bs[x][y].piece.y);
+			    score = score+((8-bs[x][y].piece.y)*10);
 			}
 		    }
 		}
@@ -509,7 +534,7 @@ public class AIdriver extends Player{
 		for(int x=0;x<bs.length;x++){
 		    for(int y=0;y<bs[0].length;y++){
 			if(bs[x][y].hasPiece&&!bs[x][y].piece.colour==colour&&bs[x][y].piece.textRepresentation.equals("P")){
-			    score = score+(bs[x][y].piece.y);
+			    score = score+((bs[x][y].piece.y)*10);
 			}
 		    }
 		}
@@ -518,6 +543,7 @@ public class AIdriver extends Player{
     }
     
     //Class that evaulates the score from the value of each piece still in play
+    //Reference http://chessprogramming.wikispaces.com/Point+Value for values
     class ScoreFromPieceValue extends Thread{
 	double score;
 	BoardSquare[][] bs;
@@ -540,24 +566,26 @@ public class AIdriver extends Player{
 			    switch(bs[x][y].piece.textRepresentation){
 				case "r":
 				    //Rook
-				    score = score+5;
+				    score = score+525;
 				    break;
 				case "n":
 				    //Knight
-				    score = score +3;
+				    score = score +350;
 				    break;
 				case "b":
 				    //Bishop
-				    score = score +3;
+				    score = score +350;
 				    break;
 				case "k":
 				    //King
-				    score = score +100;
+				    score = score +10000;
 				    break;
 				case "p":
-				    score = score +1;
+				    score = score +100;
 				    //Pawn
 				    break;
+				case "q":
+				    score = score =1000;
 				default:
 				    break;
 			    }
@@ -571,23 +599,26 @@ public class AIdriver extends Player{
 			    switch(bs[x][y].piece.textRepresentation){
 				case "R":
 				    //Rook
-				    score = score+5;
+				    score = score+525;
 				    break;
 				case "N":
 				    //Knight
-				    score = score +3;
+				    score = score +350;
 				    break;
 				case "B":
 				    //Bishop
-				    score = score +3;
+				    score = score +350;
 				    break;
 				case "K":
 				    //King
-				    score = score +100;
+				    score = score +10000;
 				    break;
 				case "P":
-				    score = score +1;
+				    score = score +100;
 				    //Pawn
+				    break;
+				case "Q":
+				    score = score +1000;
 				    break;
 				default:
 				    break;
