@@ -527,6 +527,9 @@ public class AIdriver extends Player{
 		    for(int y=0;y<bs[0].length;y++){
 			if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour&&bs[x][y].piece.textRepresentation.equals("p")){
 			    score = score+((8-bs[x][y].piece.y)*10);
+			    if(bs[x][y].piece.y==0){
+				score += 50;
+			    }
 			}
 		    }
 		}
@@ -535,6 +538,9 @@ public class AIdriver extends Player{
 		    for(int y=0;y<bs[0].length;y++){
 			if(bs[x][y].hasPiece&&!bs[x][y].piece.colour==colour&&bs[x][y].piece.textRepresentation.equals("P")){
 			    score = score+((bs[x][y].piece.y)*10);
+			    if(bs[x][y].piece.y==7){
+				score += 50;
+			    }
 			}
 		    }
 		}
