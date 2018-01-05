@@ -202,6 +202,7 @@ public class Board {
                     board[pieceSelected[0]][pieceSelected[1]].piece.y = pieceSelected[1];
                     outerloop:
                     //Checks if move selected is valid
+		    System.out.println("Board class piece moving:"+pieceSelected[0]+","+pieceSelected[1]);
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
                         ArrayList<Piece> temp = new ArrayList<Piece>();
                         //If king is not in check, move piece unless it results in a check. Otherwise break out of the loop
@@ -742,4 +743,19 @@ public class Board {
         return preventCheck;
     }
     
+    /**Prints the board state to console
+     */
+    void printBoard(BoardSquare[][] bs){
+	for(int y=0;y<bs.length;y++){
+	    for(int x=0;x<bs[0].length;x++){
+		if(bs[x][y].hasPiece){
+		    System.out.print("["+bs[x][y].piece.textRepresentation+"]");
+		}else{
+		    System.out.print("[ ]");
+		}
+	    }
+	    System.out.println();
+	}
+	System.out.println();
+    }
 }

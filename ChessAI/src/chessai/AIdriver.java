@@ -119,6 +119,7 @@ public class AIdriver extends Player{
                     tempPos[1] = y;
 		    System.out.println("Looking at "+bs[x][y].piece.textRepresentation+" num moves:"+moves.length);
 		    if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(tempPos,moves,bs,colour)){
+			System.out.println("Skipped Piece:"+ x+","+y);
 		    }else{
 		    		    
 		    //Explore each move the piece can make
@@ -293,7 +294,7 @@ public class AIdriver extends Player{
 	ScoreFromNumPieces one = new ScoreFromNumPieces(bs,colour);//Determines the score for the number of pieces each team has
 	ScoreFromPawnDistanceToEnd two = new ScoreFromPawnDistanceToEnd(bs,colour);//Determines the score for how far each pawn has moved
 	ScoreFromPieceValue three = new ScoreFromPieceValue(bs,colour);//Determines the score from the value of pieces each team still has in play
-	ControlMiddle four = new ControlMiddle(bs,colour);
+	ControlMiddle four = new ControlMiddle(bs,colour,getKingLocation(colour,bs));
 	one.start();
 	two.start();
 	three.start();
@@ -371,6 +372,7 @@ public class AIdriver extends Player{
 		}
 	    }
 	}
+	
 	return checkMate;
     }
     
@@ -423,6 +425,7 @@ public class AIdriver extends Player{
 	boolean colour = c;
 	
 	for(int[] m:moves){
+	    bs =copyBoard(board);
             boolean possibleMove = false;
             possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
 	    bs = requestMove(pos,m,bs);
@@ -516,21 +519,20 @@ public class AIdriver extends Player{
 		}
 	    }
 	    if(colour/*white*/){
-		score = score + (whitePieceCount+(16-blackPieceCount)*10);//White pieces currently in play plus pieces black lost
+		score = score + ((whitePieceCount+(16-blackPieceCount))*10);//White pieces currently in play plus pieces black lost
 		if(whitePieceCount>blackPieceCount){
-		    score = score+100;
+		    score = score+200;
 		}else{
-		    score = score-100;
+		    
 		}
 	    }else{
-		score = score+ (blackPieceCount+(16-whitePieceCount)*10);//Black pieces currently in play plus pieces white lost
+		score = score+ ((blackPieceCount+(16-whitePieceCount))*10);//Black pieces currently in play plus pieces white lost
 		if(blackPieceCount>whitePieceCount){
-		    score = score+100;
+		    score = score+200;
 		}else{
-		    score = score-100;
+		    
 		}
 	    }
-	    
 	}
     }
     
@@ -668,24 +670,102 @@ public class AIdriver extends Player{
 	double score;
 	BoardSquare[][] bs;
 	Boolean colour;
-	
-	ControlMiddle(BoardSquare[][] bs,Boolean colour){
+	int[] kingPos;
+	ControlMiddle(BoardSquare[][] bs,Boolean colour,int[] kingPos){
 	    score = 0 ; 
 	    this.bs = bs;
 	    this.colour = colour;
-	    
+	    this.kingPos = kingPos;
 	    
 	}
 	
 	@Override
 	public void run(){
-	    for(int x=3;x<5;x++){
-		for(int y=3;y<5;y++){
+	    for(int x=2;x<6;x++){
+		for(int y=2;y<6;y++){
 		    if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
-			score+=100;
+			score+=10;
 		    }
 		}
 	    }
+	    score+=kingsGaurds();
+	    //score += pawnsInFile();
+	}
+	
+	public double pawnsInFile(){
+	    int fileScore=0;
+	    int fileCount=0;
+	    for(int x=0;x<bs.length;x++){
+		for(int y=0;y<bs[0].length;y++){
+		    if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour&&(bs[x][y].piece.textRepresentation.equals("p")||bs[x][y].piece.textRepresentation.equals("P"))){
+			fileCount++;
+		    }
+		}
+		fileScore += (-1)*(fileCount*2);
+	    }
+	    
+	    return fileScore;
+	}
+	
+	public double kingsGaurds(){
+	    int gaurdScore=0;
+	    //Left
+	   if(kingPos[0]>0&&bs[kingPos[0]-1][kingPos[1]].hasPiece&&bs[kingPos[0]-1][kingPos[1]].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]-1][kingPos[1]].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //UpperLeft
+	   if(kingPos[0]>0&&kingPos[1]>0&&bs[kingPos[0]-1][kingPos[1]-1].hasPiece&&bs[kingPos[0]-1][kingPos[1]-1].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]-1][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]-1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Upper
+	   if(kingPos[1]>0&&bs[kingPos[0]][kingPos[1]-1].hasPiece&&bs[kingPos[0]][kingPos[1]-1].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]][kingPos[1]-1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //upper Right
+	   if(kingPos[0]<7&&kingPos[1]>0&&bs[kingPos[0]+1][kingPos[1]-1].hasPiece&&bs[kingPos[0]+1][kingPos[1]-1].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]+1][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]-1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Right
+	   if(kingPos[0]<7&&bs[kingPos[0]+1][kingPos[1]].hasPiece&&bs[kingPos[0]+1][kingPos[1]].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]+1][kingPos[1]].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //LowerRight
+	   if(kingPos[0]<7&&kingPos[1]<7&&bs[kingPos[0]+1][kingPos[1]+1].hasPiece&&bs[kingPos[0]+1][kingPos[1]+1].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]+1][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]+1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Lower
+	   if(kingPos[1]<7&&bs[kingPos[0]][kingPos[1]+1].hasPiece&&bs[kingPos[0]][kingPos[1]+1].piece.colour==colour){
+	       gaurdScore += 50;
+	       if(bs[kingPos[0]][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]][kingPos[1]+1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   //LowerLeft
+	   if(kingPos[0]>0&&kingPos[1]<7&&bs[kingPos[0]-1][kingPos[1]+1].hasPiece&&bs[kingPos[0]-1][kingPos[1]+1].piece.colour==colour){
+	       gaurdScore += 100;
+	       if(bs[kingPos[0]-1][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]+1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=20;
+	       }else{gaurdScore-=20;}
+	   }
+	   return gaurdScore;
 	}
     }
     

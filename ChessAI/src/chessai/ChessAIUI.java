@@ -37,8 +37,8 @@ public class ChessAIUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 	Passer p = new Passer();//Create a way to communicate with board
-	AIdriver p1=new AIdriver(p,true);
-	AIdriver p2 = new AIdriver(p,false);
+	AIdriver p1=new AIdriver(p,!true);
+	AIdriver p2 = new AIdriver(p,!false);
 	
 	Pane root = new Pane();
 	Scene scene = new Scene(root, 1920, 1080);
