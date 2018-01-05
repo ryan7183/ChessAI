@@ -50,6 +50,9 @@ public class Knight extends Piece{
         if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
             return false;
         }
+	/*if(bs[newPos[0]][newPos[1]].hasPiece&&(bs[newPos[0]][newPos[1]].piece.textRepresentation.equals("K")||bs[newPos[0]][newPos[1]].piece.textRepresentation.equals("k"))){
+	   return false; 
+	}*/
         return true;
     }
 

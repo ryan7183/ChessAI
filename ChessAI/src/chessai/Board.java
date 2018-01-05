@@ -603,16 +603,21 @@ public class Board {
 	int[] kingPos = getKingLocation(c,board);
 	int[][] moves;
         int[] pos = new int[2];
-	BoardSquare[][] bs=board.clone();
+	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		bs[x][y] = new BoardSquare(board[x][y]);
+	    }
+	}
 	//Check if king can move
 	//Check each piece
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
-		    moves = bs[x][y].piece.generateMoves(board, moveList);
+		    moves = bs[x][y].piece.generateMoves(bs, moveList);
                     pos[0]=x;
                     pos[1]=y;
-                    if(pieceCanPreventCheck(kingPos,moves,board,c)){
+                    if(pieceCanPreventCheck(kingPos,moves,bs,c)){
                         checkMate = false;
                     }
 		}
@@ -635,16 +640,21 @@ public class Board {
 	int[] kingPos = getKingLocation(c,board);
 	int[][] moves;
         int[] pos = new int[2];
-	BoardSquare[][] bs=board.clone();
+	BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs[0].length;y++){
+		bs[x][y] = new BoardSquare(board[x][y]);
+	    }
+	}
 	//Check if king can move
 	//Check each piece
 	for(int x=0;x<bs.length;x++){
 	    for(int y=0;y<bs[0].length;y++){
 		if(bs[x][y].hasPiece && bs[x][y].piece.colour==c){
-		    moves = bs[x][y].piece.generateMoves(board, moveList);
+		    moves = bs[x][y].piece.generateMoves(bs, moveList);
                     pos[0]=x;
                     pos[1]=y;
-                    if(canMove(kingPos,pos,moves,board,c)){
+                    if(canMove(kingPos,pos,moves,bs,c)){
                         staleMate = false;
                     }
 		}

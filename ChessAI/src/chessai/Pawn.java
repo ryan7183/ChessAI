@@ -243,6 +243,9 @@ public class Pawn extends Piece {
             this.pawnPromotion = true;
         }
         //System.out.println(80000);
+	/*if(bs[newPos[0]][newPos[1]].hasPiece&&(bs[newPos[0]][newPos[1]].piece.textRepresentation.equals("K")||bs[newPos[0]][newPos[1]].piece.textRepresentation.equals("k"))){
+	   return false; 
+	}*/
         return true;
     }
 
@@ -267,14 +270,17 @@ public class Pawn extends Piece {
 		possibleMove[0]=x;
 		possibleMove[1]=y;
                 //System.out.println(40);
+		//System.out.println(1);
 		if(isValidMove(possibleMove,bs, moveList)){
                     //System.out.println(666);
                     //System.out.println(validCount);
 		    moves[validCount]=possibleMove.clone();
+		    //System.out.println(2);
                     //System.out.println(777);
 		    validCount++;
                     //System.out.println(888);
 		}
+		//System.out.println(3);
                 //System.out.println(50);
 	    }
 	}
