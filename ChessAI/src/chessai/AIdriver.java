@@ -1,6 +1,7 @@
 package chessai;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -13,7 +14,7 @@ public class AIdriver extends Player{
     volatile Passer passer;//A class used to pass values between threads
     int[] move;//The position the ai will move the selected piece to 
     int[] pieceChosen;//Th epiece the ai is moving
-    final int Max_Depth=2;//The number of moves the ai looks ahead for
+    int Max_Depth=3;//The number of moves the ai looks ahead for
     ArrayList<Piece> randList= new ArrayList();
     
     AIdriver(Passer p, boolean colour){
@@ -103,6 +104,8 @@ public class AIdriver extends Player{
      * @return the score for the move selected
      */
     double alphaBeta(BoardSquare[][] bs,int depth,double a, double b){
+	long startTime = System.nanoTime();      
+
 	Piece[] p=getPieces(bs,colour);//Get the pieces for the current team
 	int[][] moves;
 	int[] piecePos=new int[2];
@@ -111,15 +114,14 @@ public class AIdriver extends Player{
 	double value=Double.NEGATIVE_INFINITY;
 	BoardSquare[][] newBoard;
 	//Find each piece
-	for(int x=0;x<bs.length;x++){
-            for(int y=0;y<bs[0].length;y++){
+	for(int y=0;y<bs.length;y++){
+            for(int x=0;x<bs[0].length;x++){
                 if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
                     moves = bs[x][y].piece.generateMoves(bs,randList);//Generate each move the piece can make
                     tempPos[0] = x;
                     tempPos[1] = y;
 		    System.out.println("Looking at "+bs[x][y].piece.textRepresentation+" num moves:"+moves.length);
 		    if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(tempPos,moves,bs,colour)){
-			System.out.println("Skipped Piece:"+ x+","+y);
 		    }else{
 		    		    
 		    //Explore each move the piece can make
@@ -136,7 +138,6 @@ public class AIdriver extends Player{
 			    //if the game is not in a end state explore further
 			    if(!isCheckMate(colour,newBoard)){
 				value = minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);//Determine if a previously explored path or the new path is better
-				//System.out.println(value);
 			    }
 			    //If the new value is better than the previous best make the new move the best found
 			    if(value>=best){
@@ -153,7 +154,8 @@ public class AIdriver extends Player{
                 }
             }
 	}
-	//System.out.print(colour+""+bs[piecePos[0]][piecePos[1]].piece.textRepresentation+""+bs[piecePos[0]][piecePos[1]].piece.colour);
+	long estimatedTime = System.nanoTime() - startTime;
+	System.out.println("Turn took "+(double)estimatedTime/1000000000.0+" sceonds.");
 	return best;
     }
     
@@ -176,7 +178,6 @@ public class AIdriver extends Player{
 	    return Double.NEGATIVE_INFINITY;
 	}
 	if(depth >= Max_Depth||isCheckMate(!colour,bs)||isKingInCheck(!colour,bs)){
-	    //System.out.println(isCheckMate(!colour,bs)+" "+isKingInCheck(!colour,bs));
 	    return boardEvaluation(bs);
 	}
 	v=Double.NEGATIVE_INFINITY;
@@ -227,7 +228,6 @@ public class AIdriver extends Player{
 	    return Double.POSITIVE_INFINITY;
 	}
 	if(depth >= Max_Depth||isCheckMate(colour,bs)||isKingInCheck(colour,bs)){
-	    //System.out.println(isCheckMate(colour,bs)+" "+isKingInCheck(colour,bs));
 	    return boardEvaluation(bs);
 	}
 	v=Double.POSITIVE_INFINITY;
