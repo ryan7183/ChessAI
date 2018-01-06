@@ -149,7 +149,6 @@ public class AIdriver extends Player{
 	
 	
             for(Piece piece:p){
-                if(piece.colour==colour){
                     moves = piece.generateMoves(bs,randList);//Generate each move the piece can make
                     tempPos[0] = piece.x;
                     tempPos[1] = piece.y;
@@ -184,7 +183,7 @@ public class AIdriver extends Player{
 			
                     }
 		    }
-                }
+                
             }
 	
 	
@@ -249,7 +248,7 @@ public class AIdriver extends Player{
 	int[] tempPos = new int[2];
 	//If the algorithm is at its max depth or reached an end state returnt he current value of the board
 	if(isKingInCheck(colour,bs)){
-	    return Double.NEGATIVE_INFINITY;
+	    return boardEvaluation(bs);//Double.NEGATIVE_INFINITY;
 	}
 	if(depth >= Max_Depth||isCheckMate(!colour,bs)||isKingInCheck(!colour,bs)){
 	    return boardEvaluation(bs);
@@ -257,7 +256,7 @@ public class AIdriver extends Player{
 	v=Double.NEGATIVE_INFINITY;
 	//Explore all moves of each piece
             for(Piece piece:p){
-                if(piece.colour == colour){
+           
                     moves = piece.generateMoves(bs,randList);
                     tempPos[0] = piece.x;
                     tempPos[1] = piece.y;
@@ -277,7 +276,7 @@ public class AIdriver extends Player{
 			
                     }
                 }
-		}
+		
             }
 	
 	return v;
@@ -298,7 +297,7 @@ public class AIdriver extends Player{
 	int[] piecePos=new int[2];
 	int[] tempPos = new int[2];
 	if(isKingInCheck(!colour,bs)){
-	    return Double.POSITIVE_INFINITY;
+	    return boardEvaluation(bs);//Double.POSITIVE_INFINITY;
 	}
 	if(depth >= Max_Depth||isCheckMate(colour,bs)||isKingInCheck(colour,bs)){
 	    return boardEvaluation(bs);
@@ -306,7 +305,6 @@ public class AIdriver extends Player{
 	v=Double.POSITIVE_INFINITY;
 	//Look at each move of all pieces
             for(Piece piece:p){
-                if(piece.colour){
                     moves = piece.generateMoves(bs,randList);
                     tempPos[0] = piece.x;
                     tempPos[1] = piece.y;
@@ -326,7 +324,7 @@ public class AIdriver extends Player{
                         b = min(b,v);
 		    }
 		    }
-                }
+              
             }
 	
 	return v;
