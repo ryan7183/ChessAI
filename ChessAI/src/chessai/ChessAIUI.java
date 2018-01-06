@@ -33,9 +33,23 @@ import javafx.stage.Stage;
  * @author Ryan and Parm
  */
 public class ChessAIUI extends Application {
-    
     @Override
     public void start(Stage primaryStage) {
+	//Get Images
+	Image boardImg = new Image("img/board.png");
+	Image blackBishopImg =new Image("img/BlackPieces/BlackBishop.png");
+	Image whiteBishopImg = new Image("img/WhitePieces/WhiteBishop.png");
+	Image blackKingImg = new Image("img/BlackPieces/BlackKing.png");
+	Image whiteKingImg = new Image("img/WhitePieces/WhiteKing.png"); 
+	Image blackKnightImg = new Image("img/BlackPieces/BlackKnight.png");
+	Image whiteKnightImg = new Image("img/WhitePieces/WhiteKnight.png");
+	Image blackPawnImg=new Image("img/BlackPieces/BlackPawn.png");
+	Image whitePawnImg =new Image("img/WhitePieces/WhitePawn.png");
+	Image blackQueenImg = new Image("img/BlackPieces/BlackQueen.png");
+	Image whiteQueenImg = new Image("img/WhitePieces/WhiteQueen.png");
+	Image blackRookImg = new Image("img/BlackPieces/BlackRook.png");;
+	Image whiteRookImg = new Image("img/WhitePieces/WhiteRook.png");
+	
 	Passer p = new Passer();//Create a way to communicate with board
 	AIdriver p1=new AIdriver(p,true);
 	AIdriver p2 = new AIdriver(p,false);
@@ -206,8 +220,7 @@ public class ChessAIUI extends Application {
              * @param b The chess board
              */
 	    public void renderBoard(BoardSquare[][] b){
-		Image i = new Image("img/board.png");
-		gc.drawImage(i,0,0,canvas.getWidth(),canvas.getHeight());
+		gc.drawImage(boardImg,0,0,canvas.getWidth(),canvas.getHeight());
 		//Draw pieces
 		for(int x=0;x<b.length;x++){
 		    for(int y=0;y<b[0].length;y++){
@@ -224,60 +237,46 @@ public class ChessAIUI extends Application {
              */
 	    public void drawPiece(BoardSquare bs){
 		String piece = bs.piece.textRepresentation;
-		Image i;
 		int pieceWidth = 73;
 		int pieceHeight = 74;
 		int x = 54+ (pieceWidth*bs.x);
 		int y = 60+(pieceHeight*bs.y);
-		
 		switch(piece){
 		    case "B":
-			i = new Image("img/BlackPieces/BlackBishop.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(blackBishopImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "b":
-			i = new Image("img/WhitePieces/WhiteBishop.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(whiteBishopImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "K":
-			i = new Image("img/BlackPieces/BlackKing.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(blackKingImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "k":
-			i = new Image("img/WhitePieces/WhiteKing.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(whiteKingImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "N":
-			i = new Image("img/BlackPieces/BlackKnight.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(blackKnightImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "n":
-			i = new Image("img/WhitePieces/WhiteKnight.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(whiteKnightImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "P":
-			i = new Image("img/BlackPieces/BlackPawn.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(blackPawnImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "p":
-			i = new Image("img/WhitePieces/WhitePawn.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(whitePawnImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "Q":
-			i = new Image("img/BlackPieces/BlackQueen.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(blackQueenImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "q":
-			i = new Image("img/WhitePieces/WhiteQueen.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(whiteQueenImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "R":
-			i = new Image("img/BlackPieces/BlackRook.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(blackRookImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    case "r":
-			i = new Image("img/WhitePieces/WhiteRook.png");
-			gc.drawImage(i,x,y,pieceWidth,pieceHeight);
+			gc.drawImage(whiteRookImg,x,y,pieceWidth,pieceHeight);
 			break;
 		    default:
 			break;
