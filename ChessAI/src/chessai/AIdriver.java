@@ -32,7 +32,7 @@ public class AIdriver extends Player{
     @Override
     int[] requestPiece(BoardSquare[][] bs) {
 	double value=alphaBeta(bs,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);
-	System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]);
+	System.out.println(pieceChosen[0]+","+pieceChosen[1]+" to "+move[0]+","+move[1]+" final board score "+value);
 	if(passer.newBoardAvailable){
 	    return null;
 	}
@@ -146,7 +146,49 @@ public class AIdriver extends Player{
 	double value=Double.NEGATIVE_INFINITY;
 	BoardSquare[][] newBoard;
 	//Find each piece
-	for(int y=0;y<bs.length;y++){
+	
+	
+            for(Piece piece:p){
+                if(piece.colour==colour){
+                    moves = piece.generateMoves(bs,randList);//Generate each move the piece can make
+                    tempPos[0] = piece.x;
+                    tempPos[1] = piece.y;
+		    System.out.println("Looking at "+piece.textRepresentation+" num moves:"+moves.length);
+		    if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(tempPos,moves,bs,colour)){
+		    }else{
+		    		    
+		    //Explore each move the piece can make
+                    for(int j=0;j<moves.length;j++){
+			    int[] mCC=new int[2];
+			    mCC[0] = piece.x;
+			    mCC[1] = piece.y;
+			    int[] mCCMove = moves[j].clone();
+			    if(!moveCanPreventCheck(mCC,moves[j],bs,colour)){
+				
+			    }else{
+			    newBoard = copyBoard(bs);//Make a copy of the board to make the next move
+			    newBoard = requestMove(tempPos,moves[j],newBoard);
+			    //if the game is not in a end state explore further
+			    if(!isCheckMate(colour,newBoard)){
+				value = minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);//Determine if a previously explored path or the new path is better
+			    }
+			    //If the new value is better than the previous best make the new move the best found
+			    if(value>=best){
+				best =value;
+				move = moves[j];
+				piecePos[0]=piece.x;
+				piecePos[1]=piece.y;
+				pieceChosen = piecePos;
+			    }
+			    }
+			
+                    }
+		    }
+                }
+            }
+	
+	
+	/*for(int y=0;y<bs.length;y++){
             for(int x=0;x<bs[0].length;x++){
                 if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
                     moves = bs[x][y].piece.generateMoves(bs,randList);//Generate each move the piece can make
@@ -185,7 +227,7 @@ public class AIdriver extends Player{
 		    }
                 }
             }
-	}
+	}*/
 	long estimatedTime = System.nanoTime() - startTime;
 	System.out.println("Turn took "+(double)estimatedTime/1000000000.0+" sceonds.");
 	return best;
@@ -214,12 +256,11 @@ public class AIdriver extends Player{
 	}
 	v=Double.NEGATIVE_INFINITY;
 	//Explore all moves of each piece
-	for(int x=0;x<bs.length;x++){
-            for(int y=0;y<bs[0].length;y++){
-                if(bs[x][y].hasPiece && bs[x][y].piece.colour == colour){
-                    moves = bs[x][y].piece.generateMoves(bs,randList);
-                    tempPos[0] = x;
-                    tempPos[1] = y;
+            for(Piece piece:p){
+                if(piece.colour == colour){
+                    moves = piece.generateMoves(bs,randList);
+                    tempPos[0] = piece.x;
+                    tempPos[1] = piece.y;
 		    if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(tempPos,moves,bs,colour)){}else{
                     for(int j=0;j<moves.length;j++){
 		
@@ -238,7 +279,7 @@ public class AIdriver extends Player{
                 }
 		}
             }
-	}
+	
 	return v;
     }
     /**The min portion of the alpha beta algorithm. Determines the path with a 
@@ -264,12 +305,11 @@ public class AIdriver extends Player{
 	}
 	v=Double.POSITIVE_INFINITY;
 	//Look at each move of all pieces
-	for(int x=0;x<bs.length;x++){
-            for(int y=0; y<bs[0].length; y++){
-                if(bs[x][y].hasPiece && bs[x][y].piece.colour){
-                    moves = bs[x][y].piece.generateMoves(bs,randList);
-                    tempPos[0] = x;
-                    tempPos[1] = y;
+            for(Piece piece:p){
+                if(piece.colour){
+                    moves = piece.generateMoves(bs,randList);
+                    tempPos[0] = piece.x;
+                    tempPos[1] = piece.y;
 		    if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(tempPos,moves,bs,colour)){}else{
                     for(int j=0;j<moves.length;j++){
 			
@@ -288,7 +328,7 @@ public class AIdriver extends Player{
 		    }
                 }
             }
-	}
+	
 	return v;
     }
     
@@ -622,6 +662,8 @@ public class AIdriver extends Player{
 	BoardSquare[][] bs;
 	Boolean colour;
 	Piece[] pieces;
+	Piece blackKing;
+	Piece whiteKing;
 	/**
 	 * @param bs the board state
 	 * @param colour the colour of the current player
@@ -634,7 +676,6 @@ public class AIdriver extends Player{
 	}
 	@Override
 	public void run(){
-	    if(/*white*/colour){
 		for(Piece p:pieces){
 		    
 			if(p.colour==colour){
@@ -664,45 +705,58 @@ public class AIdriver extends Player{
 				default:
 				    break;
 			    }
-			}
-		    
-		}
-	    }else{
-		for(Piece piece:pieces){
-			if(piece.colour==colour){
-			    switch(piece.textRepresentation){
+			}else{
+			    switch(p.textRepresentation){
 				case "R":
 				    //Rook
-				    score = score+525;
+				    score = score-525;
 				    break;
 				case "N":
 				    //Knight
-				    score = score +350;
+				    score = score -350;
 				    break;
 				case "B":
 				    //Bishop
-				    score = score +350;
+				    score = score -350;
 				    break;
 				case "K":
 				    //King
-				    score = score +10000;
+				    score = score -10000;
 				    break;
 				case "P":
-				    score = score +100;
+				    score = score -100;
 				    //Pawn
 				    break;
 				case "Q":
-				    score +=1000;
+				    score -=1000;
 				    break;
 				default:
 				    break;
 			    }
 			}
+		    
 		}
+		scoreFromNumKingMoves();
+	}
+	public void scoreFromNumKingMoves(){
+	    ArrayList<Piece> moveList=new ArrayList();
+	    for(Piece p:pieces){
+		if(p.textRepresentation.equals("k")){
+		    whiteKing = new King((King)p);
+		}else if(p.textRepresentation.equals("K")){
+		    blackKing = new King((King)p);;
+		}
+	    }
+	    if(colour/*white*/){
+		score+=(whiteKing.generateMoves(bs,moveList).length-blackKing.generateMoves(bs,moveList).length)*10;
+	    }else{//black
+		score+=(blackKing.generateMoves(bs,moveList).length-whiteKing.generateMoves(bs,moveList).length)*10;
 	    }
 	}
     }
     
+    /**Determines the score from controlling the middle of the board, pieces surrounding the king, and how many pawns of a colour are in any column
+     */
     class ControlMiddle extends Thread{
 	double score;
 	BoardSquare[][] bs;
