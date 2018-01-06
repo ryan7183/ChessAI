@@ -75,6 +75,38 @@ public class AIdriver extends Player{
 	return p;
     }
     
+    /**Gets a list of pieces that are currently in play for both teams
+     * @param bs the board
+     * @param c which colour to check for white is true
+     * @return the array of a teams pieces
+     */
+    Piece[] getPieces(BoardSquare[][] bs){
+	Piece[] p;//The list of pieces
+	int numPieces=0;
+	//Count the number of pieces still in play for the given player
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs.length;y++){
+		if(bs[x][y].hasPiece){
+		    numPieces++;
+		}
+	    }
+	}
+	p=new Piece[numPieces];//Make the array of pieces
+	int count =0;
+	//Get each piece
+	for(int x=0;x<bs.length;x++){
+	    for(int y=0;y<bs.length;y++){
+		if(bs[x][y].hasPiece){
+                    bs[x][y].piece.x=x;
+                    bs[x][y].piece.y=y;
+		    p[count]=bs[x][y].piece;
+		    count++;
+		}
+	    }
+	}
+	return p;
+    }
+    
     @Override
     boolean validPiece() {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -290,15 +322,21 @@ public class AIdriver extends Player{
      */
     double boardEvaluation(BoardSquare[][] bs){
 	double score=0;//Greater value beter for this player
-	//Run each factor towards that contributes to the score as sepertate threads
-	ScoreFromNumPieces one = new ScoreFromNumPieces(bs,colour);//Determines the score for the number of pieces each team has
-	ScoreFromPawnDistanceToEnd two = new ScoreFromPawnDistanceToEnd(bs,colour);//Determines the score for how far each pawn has moved
-	ScoreFromPieceValue three = new ScoreFromPieceValue(bs,colour);//Determines the score from the value of pieces each team still has in play
+	//Run each factor that contributes to the score as sepertate threads
+	//Threads that don't require a piece list
 	ControlMiddle four = new ControlMiddle(bs,colour,getKingLocation(colour,bs));
+	//Start threads that don't need a move list
+	four.start();
+	//The threads that require a list of pieces
+	Piece[] pieces = getPieces(bs);
+	ScoreFromNumPieces one = new ScoreFromNumPieces(bs,colour,pieces);//Determines the score for the number of pieces each team has
+	ScoreFromPawnDistanceToEnd two = new ScoreFromPawnDistanceToEnd(bs,colour,pieces);//Determines the score for how far each pawn has moved
+	ScoreFromPieceValue three = new ScoreFromPieceValue(bs,colour,pieces);//Determines the score from the value of pieces each team still has in play
+	//Start threads that need a move lists
 	one.start();
 	two.start();
 	three.start();
-	four.start();
+	
 	try {
 	    //Wait for each thread to finish its evaluation
 	    one.join();
@@ -496,31 +534,27 @@ public class AIdriver extends Player{
 	double score;
 	BoardSquare[][] bs;
 	Boolean colour;
+	Piece[] pieces; 
 	/**
 	 * @param bs the board state
 	 * @param colour the colour of the current player
 	 */
-	ScoreFromNumPieces(BoardSquare[][] bs,Boolean colour){
+	ScoreFromNumPieces(BoardSquare[][] bs,Boolean colour,Piece[] pieces){
 	    this.bs = bs;
 	    this.score =0;
 	    this.colour = colour;
+	    this.pieces = pieces;
 	}
 	@Override
 	public void run(){
 	   int blackPieceCount=0;
 	   int whitePieceCount=0;
 	    //Count the number of pieces each player has
-	    for(BoardSquare[] bArray:bs){
-		for(BoardSquare s:bArray){
-		    if(s.hasPiece){
-			if(s.piece.colour){
-			    //Search for white
-			    whitePieceCount++;
-			}else{
-			    //search for black
-			    blackPieceCount++;
-			}
-		    }
+	    for(Piece p:pieces){
+		if(p.colour){
+		    whitePieceCount++;
+		}else{
+		    blackPieceCount++;
 		}
 	    }
 	    if(colour/*white*/){
@@ -546,37 +580,35 @@ public class AIdriver extends Player{
 	double score;
 	BoardSquare[][] bs;
 	Boolean colour;
+	Piece[] pieces;
 	/**
 	 * @param bs the board state
 	 * @param colour the colour of the current player
 	 */
-	ScoreFromPawnDistanceToEnd(BoardSquare[][] bs,Boolean colour){
+	ScoreFromPawnDistanceToEnd(BoardSquare[][] bs,Boolean colour, Piece[] pieces){
 	    this.score = 0;
 	    this.bs = bs;
 	    this.colour = colour;
+	    this.pieces = pieces;
 	}
 	@Override
 	public void run(){
 	    if(colour/*white*/){
-		for(int x=0;x<bs.length;x++){
-		    for(int y=0;y<bs[0].length;y++){
-			if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour&&bs[x][y].piece.textRepresentation.equals("p")){
-			    score = score+((8-bs[x][y].piece.y)*10);
-			    if(bs[x][y].piece.y==0){
+		for(Piece p : pieces){
+		    if(p.colour==colour&&p.textRepresentation.equals("p")){
+			score = score+((8-p.y)*10);
+			    if(p.y==0){
 				score += 50;
 			    }
-			}
 		    }
 		}
 	    }else{
-		for(int x=0;x<bs.length;x++){
-		    for(int y=0;y<bs[0].length;y++){
-			if(bs[x][y].hasPiece&&!bs[x][y].piece.colour==colour&&bs[x][y].piece.textRepresentation.equals("P")){
-			    score = score+((bs[x][y].piece.y)*10);
-			    if(bs[x][y].piece.y==7){
+		for(Piece p : pieces){
+		    if(p.colour==colour&&p.textRepresentation.equals("P")){
+			score = score+((p.y)*10);
+			    if(p.y==7){
 				score += 50;
 			    }
-			}
 		    }
 		}
 	    }
@@ -589,22 +621,24 @@ public class AIdriver extends Player{
 	double score;
 	BoardSquare[][] bs;
 	Boolean colour;
+	Piece[] pieces;
 	/**
 	 * @param bs the board state
 	 * @param colour the colour of the current player
 	 */
-	ScoreFromPieceValue(BoardSquare[][] bs,Boolean colour){
+	ScoreFromPieceValue(BoardSquare[][] bs,Boolean colour,Piece[] pieces){
 	    this.score = 0;
 	    this.bs = bs;
 	    this.colour = colour;
+	    this.pieces = pieces;
 	}
 	@Override
 	public void run(){
 	    if(/*white*/colour){
-		for(int x=0;x<bs.length;x++){
-		    for(int y=0;y<bs[0].length;y++){
-			if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour){
-			    switch(bs[x][y].piece.textRepresentation){
+		for(Piece p:pieces){
+		    
+			if(p.colour==colour){
+			    switch(p.textRepresentation){
 				case "r":
 				    //Rook
 				    score = score+525;
@@ -631,13 +665,12 @@ public class AIdriver extends Player{
 				    break;
 			    }
 			}
-		    }
+		    
 		}
 	    }else{
-		for(int x=0;x<bs.length;x++){
-		    for(int y=0;y<bs[0].length;y++){
-			if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour){
-			    switch(bs[x][y].piece.textRepresentation){
+		for(Piece piece:pieces){
+			if(piece.colour==colour){
+			    switch(piece.textRepresentation){
 				case "R":
 				    //Rook
 				    score = score+525;
@@ -665,7 +698,6 @@ public class AIdriver extends Player{
 				    break;
 			    }
 			}
-		    }
 		}
 	    }
 	}
