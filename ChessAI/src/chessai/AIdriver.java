@@ -366,7 +366,7 @@ public class AIdriver extends Player{
 		    moves = bs[x][y].piece.generateMoves(board, randList);
                     pos[0]=x;
                     pos[1]=y;
-                    if(pieceCanPreventCheck(kingPos,moves,board,c)){
+                    if(pieceCanPreventCheck(pos,moves,board,c)){
                         checkMate = false;
                     }
 		}
@@ -428,7 +428,9 @@ public class AIdriver extends Player{
 	    bs =copyBoard(board);
             boolean possibleMove = false;
             possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
-	    bs = requestMove(pos,m,bs);
+            if(possibleMove){
+                bs = requestMove(pos,m,bs);
+            }
             int[] kingPos = getKingLocation(c,bs);
 	    preventCheck = !isKingInCheck(colour,bs);
 	    if(preventCheck && possibleMove){

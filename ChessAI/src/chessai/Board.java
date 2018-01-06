@@ -200,9 +200,9 @@ public class Board {
 		    }
                     board[pieceSelected[0]][pieceSelected[1]].piece.x = pieceSelected[0];
                     board[pieceSelected[0]][pieceSelected[1]].piece.y = pieceSelected[1];
+                    System.out.println("Board class piece moving:"+pieceSelected[0]+","+pieceSelected[1]);
                     outerloop:
                     //Checks if move selected is valid
-		    System.out.println("Board class piece moving:"+pieceSelected[0]+","+pieceSelected[1]);
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
                         ArrayList<Piece> temp = new ArrayList<Piece>();
                         //If king is not in check, move piece unless it results in a check. Otherwise break out of the loop
@@ -254,7 +254,7 @@ public class Board {
                                 case "Rook":
                                     board[pieceMove[0]][pieceMove[1]].piece = new Rook(true,pieceMove[0],pieceMove[1],"r");
                                     break;
-                                default: piece.equals("");
+                                default:
                                     board[pieceMove[0]][pieceMove[1]].piece = new Queen(true,pieceMove[0],pieceMove[1],"q");
                                     break;
                                         
@@ -421,7 +421,7 @@ public class Board {
                                 case "Rook":
                                     board[pieceMove[0]][pieceMove[1]].piece = new Rook(false,pieceMove[0],pieceMove[1],"R");
                                     break;
-                                default: piece.equals("");
+                                default:
                                     board[pieceMove[0]][pieceMove[1]].piece = new Queen(false,pieceMove[0],pieceMove[1],"Q");
                                     break;
                                         
@@ -618,7 +618,7 @@ public class Board {
 		    moves = bs[x][y].piece.generateMoves(bs, moveList);
                     pos[0]=x;
                     pos[1]=y;
-                    if(pieceCanPreventCheck(kingPos,moves,bs,c)){
+                    if(pieceCanPreventCheck(pos,moves,bs,c)){
                         checkMate = false;
                     }
 		}
@@ -655,7 +655,7 @@ public class Board {
 		    moves = bs[x][y].piece.generateMoves(bs, moveList);
                     pos[0]=x;
                     pos[1]=y;
-                    if(canMove(kingPos,pos,moves,bs,c)){
+                    if(pieceCanPreventCheck(pos,moves,bs,c)){
                         staleMate = false;
                     }
 		}
@@ -691,7 +691,9 @@ public class Board {
 	for(int[] m:moves){
             boolean possibleMove = false;
             possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
-	    bs = requestMove(pos,m,bs,temp);
+            if(possibleMove){
+                bs = requestMove(pos,m,bs,temp);
+            }
             int[] kingPos = getKingLocation(c,bs);
 	    preventCheck = !isKingInCheck(colour,bs, temp);
 	    if(preventCheck && possibleMove){
@@ -704,44 +706,6 @@ public class Board {
 	return preventCheck;
     }
     
-    /**
-     * Checks to see if there is a piece that can make a move. Is used to see
-     * if the players are at a stalemate
-     * @param pos The position of the king
-     * @param piecePos The position of the piece
-     * @param moves All possible moves for the piece
-     * @param board The chess board 
-     * @param c The colour of the player
-     * @return True if a piece can move or false if there is not a piece that 
-     * can move
-     */
-    public boolean canMove(int[] pos,int[] piecePos,int[][] moves, BoardSquare[][] board, boolean c){
-        BoardSquare[][] bs = new BoardSquare[board.length][board[0].length];
-        ArrayList<Piece> temp = new ArrayList<Piece>();
-	//Make copy of array to work on
-	for(int x=0;x<bs.length;x++){
-	    for(int y=0;y<bs[0].length;y++){
-		bs[x][y] = new BoardSquare(board[x][y]);
-	    }
-	}
-        bs[pos[0]][pos[1]].piece.x = pos[0];
-        bs[pos[0]][pos[1]].piece.y = pos[1]; 
-        boolean preventCheck=false;
-	boolean colour = c;
-        
-        for(int[] m:moves){
-            boolean possibleMove = false;
-            possibleMove = bs[piecePos[0]][piecePos[1]].piece.isValidMove(m, bs, temp);
-            if(possibleMove){
-                bs = requestMove(pos,m,bs,temp);
-                preventCheck = !isKingInCheck(colour,bs,temp);
-                if(preventCheck){
-                    break;
-                }
-            }
-        }
-        return preventCheck;
-    }
     
     /**Prints the board state to console
      */
