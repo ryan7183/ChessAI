@@ -368,6 +368,7 @@ public class Board {
 		    if(p.cancelSelection){
 			break;
 		    }
+                    System.out.println("Board class piece moving:"+pieceSelected[0]+","+pieceSelected[1]);
                     outerloop:
                     //Checks if move selected is valid
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
@@ -691,17 +692,11 @@ public class Board {
 	for(int[] m:moves){
             boolean possibleMove = false;
             possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
-            if(possibleMove){
                 bs = requestMove(pos,m,bs,temp);
-            }
-            int[] kingPos = getKingLocation(c,bs);
-	    preventCheck = !isKingInCheck(colour,bs, temp);
-	    if(preventCheck && possibleMove){
-		break;
-	    }
-            else{
-                preventCheck = false;
-            }
+                preventCheck = !isKingInCheck(colour,bs, temp);
+                if(preventCheck && possibleMove){
+                    break;
+                }
 	}
 	return preventCheck;
     }

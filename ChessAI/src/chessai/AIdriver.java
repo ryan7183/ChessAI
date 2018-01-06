@@ -428,9 +428,7 @@ public class AIdriver extends Player{
 	    bs =copyBoard(board);
             boolean possibleMove = false;
             possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
-            if(possibleMove){
-                bs = requestMove(pos,m,bs);
-            }
+            bs = requestMove(pos,m,bs);
             int[] kingPos = getKingLocation(c,bs);
 	    preventCheck = !isKingInCheck(colour,bs);
 	    if(preventCheck && possibleMove){
