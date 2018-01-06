@@ -437,6 +437,11 @@ public class AIdriver extends Player{
             else{
                 preventCheck = false;
             }
+            for(int x=0;x<bs.length;x++){
+                for(int y=0;y<bs[0].length;y++){
+                    bs[x][y] = new BoardSquare(board[x][y]);
+                }
+            }
 	}
 	return preventCheck;
     }

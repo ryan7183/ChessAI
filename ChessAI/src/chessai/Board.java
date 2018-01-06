@@ -516,6 +516,7 @@ public class Board {
      * @return The chess board with the piece being moved to its new location
      */
     BoardSquare[][] requestMove(int[] piece, int[] move, BoardSquare[][] board, ArrayList<Piece> moveList){
+        System.out.println("\t\t"+move[0]+" "+move[1]);
 	int x,y;
 	board[move[0]][move[1]].piece = board[piece[0]][piece[1]].piece;
 	board[move[0]][move[1]].piece.x = move[0];
@@ -691,13 +692,24 @@ public class Board {
 	
 	for(int[] m:moves){
             boolean possibleMove = false;
+            System.out.println(pos[0]+" "+pos[1]);
             possibleMove = bs[pos[0]][pos[1]].piece.isValidMove(m, bs, temp);
                 bs = requestMove(pos,m,bs,temp);
                 preventCheck = !isKingInCheck(colour,bs, temp);
+                System.out.println(preventCheck);
                 if(preventCheck && possibleMove){
                     break;
                 }
+                else{
+                    preventCheck = false;
+                }
+                for(int x=0;x<bs.length;x++){
+                    for(int y=0;y<bs[0].length;y++){
+                        bs[x][y] = new BoardSquare(board[x][y]);
+                    }
+                }
 	}
+        System.out.println();
 	return preventCheck;
     }
     
