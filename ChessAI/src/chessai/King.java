@@ -140,8 +140,8 @@ public class King extends Piece{
 	int[] possibleMove=new int[2];
 	int validCount =0;
 	int[][] returnMove;
-	for(int y=this.x-1;y<this.x+2;y++){
-	    for(int x=this.y-1;x<this.y+2;x++){
+	for(int x=this.x-1;x<this.x+2;x++){
+	    for(int y=this.y-1;y<this.y+2;y++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
 		if(isValidMove(possibleMove,bs, moveList)){

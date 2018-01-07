@@ -14,7 +14,7 @@ public class AIdriver extends Player{
     volatile Passer passer;//A class used to pass values between threads
     int[] move;//The position the ai will move the selected piece to 
     int[] pieceChosen;//Th epiece the ai is moving
-    final int Max_Depth=2;//The number of moves the ai looks ahead for
+    final int Max_Depth=2;//The dpeth of the minmax algorithm, looks Max_Depth+1 moves ahead
     final double Max_Time = 60;//Max time the ai has to find a move, in seconds
     ArrayList<Piece> randList= new ArrayList();
     AIdriver(Passer p, boolean colour){
