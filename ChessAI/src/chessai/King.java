@@ -121,9 +121,6 @@ public class King extends Piece{
             return false;
         }
 	
-	/*if(bs[newPos[0]][newPos[1]].hasPiece&&(bs[newPos[0]][newPos[1]].piece.textRepresentation.equals("K")||bs[newPos[0]][newPos[1]].piece.textRepresentation.equals("k"))){
-	   return false; 
-	}*/
         return true;
     }
 
