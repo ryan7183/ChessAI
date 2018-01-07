@@ -14,9 +14,9 @@ public class AIdriver extends Player{
     volatile Passer passer;//A class used to pass values between threads
     int[] move;//The position the ai will move the selected piece to 
     int[] pieceChosen;//Th epiece the ai is moving
-    int Max_Depth=3;//The number of moves the ai looks ahead for
+    final int Max_Depth=3;//The number of moves the ai looks ahead for
+    final double Max_Time = 15;//Max time the ai has to find a move, in seconds
     ArrayList<Piece> randList= new ArrayList();
-    
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;//The colour the ai is controlling
 	this.isHuman = false;//DEtermines if it is a person or the computer
@@ -62,8 +62,8 @@ public class AIdriver extends Player{
 	p=new Piece[numPieces];//Make the array of pieces
 	int count =0;
 	//Get each piece
-	for(int x=0;x<bs.length;x++){
-	    for(int y=0;y<bs.length;y++){
+	for(int y=0;y<bs.length;y++){
+	    for(int x=0;x<bs.length;x++){
 		if(bs[x][y].hasPiece&&bs[x][y].piece.colour==c){
                     bs[x][y].piece.x=x;
                     bs[x][y].piece.y=y;
@@ -169,7 +169,7 @@ public class AIdriver extends Player{
 			    newBoard = requestMove(tempPos,moves[j],newBoard);
 			    //if the game is not in a end state explore further
 			    if(!isCheckMate(colour,newBoard)){
-				value = minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);//Determine if a previously explored path or the new path is better
+				value = minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY,startTime);//Determine if a previously explored path or the new path is better
 			    }
 			    //If the new value is better than the previous best make the new move the best found
 			    if(value>=best){
@@ -183,50 +183,12 @@ public class AIdriver extends Player{
 			
                     }
 		    }
+		    if(((System.nanoTime()-startTime)/1000000000.0)>Max_Time){
+			break;
+		    }
                 
             }
 	
-	
-	/*for(int y=0;y<bs.length;y++){
-            for(int x=0;x<bs[0].length;x++){
-                if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
-                    moves = bs[x][y].piece.generateMoves(bs,randList);//Generate each move the piece can make
-                    tempPos[0] = x;
-                    tempPos[1] = y;
-		    System.out.println("Looking at "+bs[x][y].piece.textRepresentation+" num moves:"+moves.length);
-		    if(isKingInCheck(colour,bs)&&!pieceCanPreventCheck(tempPos,moves,bs,colour)){
-		    }else{
-		    		    
-		    //Explore each move the piece can make
-                    for(int j=0;j<moves.length;j++){
-			    int[] mCC=new int[2];
-			    mCC[0] = x;
-			    mCC[1] = y;
-			    int[] mCCMove = moves[j].clone();
-			    if(!moveCanPreventCheck(mCC,moves[j],bs,colour)){
-				
-			    }else{
-			    newBoard = copyBoard(bs);//Make a copy of the board to make the next move
-			    newBoard = requestMove(tempPos,moves[j],newBoard);
-			    //if the game is not in a end state explore further
-			    if(!isCheckMate(colour,newBoard)){
-				value = minValue(newBoard,0,Double.NEGATIVE_INFINITY,Double.POSITIVE_INFINITY);//Determine if a previously explored path or the new path is better
-			    }
-			    //If the new value is better than the previous best make the new move the best found
-			    if(value>=best){
-				best =value;
-				move = moves[j];
-				piecePos[0]=x;
-				piecePos[1]=y;
-				pieceChosen = piecePos;
-			    }
-			    }
-			
-                    }
-		    }
-                }
-            }
-	}*/
 	long estimatedTime = System.nanoTime() - startTime;
 	System.out.println("Turn took "+(double)estimatedTime/1000000000.0+" sceonds.");
 	return best;
@@ -239,8 +201,9 @@ public class AIdriver extends Player{
      * @param b the beta score
      * @return the score 
      */
-    double maxValue(BoardSquare[][] bs,int depth,double a, double b){
+    double maxValue(BoardSquare[][] bs,int depth,double a, double b,Long startTime){
 	double v;
+	double timeElapsed;
 	Piece[] p=getPieces(bs,colour);
 	int[][] moves;
 	BoardSquare[][] newBoard;
@@ -248,9 +211,10 @@ public class AIdriver extends Player{
 	int[] tempPos = new int[2];
 	//If the algorithm is at its max depth or reached an end state returnt he current value of the board
 	if(isKingInCheck(colour,bs)){
-	    return boardEvaluation(bs);//Double.NEGATIVE_INFINITY;
+	    return boardEvaluation(bs);
 	}
-	if(depth >= Max_Depth||isCheckMate(!colour,bs)||isKingInCheck(!colour,bs)){
+	timeElapsed = (System.nanoTime()-startTime)/1000000000.0;
+	if(depth >= Max_Depth||timeElapsed>=Max_Time||isCheckMate(!colour,bs)||isKingInCheck(!colour,bs)){
 	    return boardEvaluation(bs);
 	}
 	v=Double.NEGATIVE_INFINITY;
@@ -266,7 +230,7 @@ public class AIdriver extends Player{
 			    newBoard = copyBoard(bs);
 			    newBoard = requestMove(tempPos,moves[j],newBoard);
 			    if(!isCheckMate(colour,newBoard)){
-				v = max(v,minValue(newBoard,depth+1,a,b));
+				v = max(v,minValue(newBoard,depth+1,a,b,startTime));
 			    }
 			    //if score is greater than the value of beta don't look any further on this path
 			    if(v>=b){
@@ -289,8 +253,9 @@ public class AIdriver extends Player{
      * @param b the beta score
      * @return the nodes score
      */
-    double minValue(BoardSquare[][] bs,int depth,double a, double b){
+    double minValue(BoardSquare[][] bs,int depth,double a, double b,Long startTime){
 	double v;
+	double timeElapsed;
 	Piece[] p=getPieces(bs,!colour);
 	int[][] moves;
 	BoardSquare[][] newBoard;
@@ -299,7 +264,9 @@ public class AIdriver extends Player{
 	if(isKingInCheck(!colour,bs)){
 	    return boardEvaluation(bs);//Double.POSITIVE_INFINITY;
 	}
-	if(depth >= Max_Depth||isCheckMate(colour,bs)||isKingInCheck(colour,bs)){
+	timeElapsed = (System.nanoTime()-startTime)/1000000000.0;
+	if(depth >= Max_Depth||timeElapsed>=Max_Time||isCheckMate(colour,bs)||isKingInCheck(colour,bs)){
+	    //Return value if at max depth, max time, checkmate, or check
 	    return boardEvaluation(bs);
 	}
 	v=Double.POSITIVE_INFINITY;
@@ -315,7 +282,7 @@ public class AIdriver extends Player{
                         newBoard = copyBoard(bs);
                         newBoard = requestMove(tempPos,moves[j],newBoard);
                         if(!isCheckMate(!colour,newBoard)){
-                            v = min(v,maxValue(newBoard,depth+1,a,b));
+                            v = min(v,maxValue(newBoard,depth+1,a,b,startTime));
                         }
 			//If score is less than alpha don't look at path any further
                         if(v<=a){
@@ -360,15 +327,17 @@ public class AIdriver extends Player{
      */
     double boardEvaluation(BoardSquare[][] bs){
 	double score=0;//Greater value beter for this player
+	int[] kingLocation = getKingLocation(colour,bs);
+	int[] opponentKingLoc = getKingLocation(!colour,bs);
 	//Run each factor that contributes to the score as sepertate threads
 	//Threads that don't require a piece list
-	ControlMiddle four = new ControlMiddle(bs,colour,getKingLocation(colour,bs));
+	ControlMiddle four = new ControlMiddle(bs,colour);
 	//Start threads that don't need a move list
 	four.start();
 	//The threads that require a list of pieces
 	Piece[] pieces = getPieces(bs);
-	ScoreFromNumPieces one = new ScoreFromNumPieces(bs,colour,pieces);//Determines the score for the number of pieces each team has
-	ScoreFromPawnDistanceToEnd two = new ScoreFromPawnDistanceToEnd(bs,colour,pieces);//Determines the score for how far each pawn has moved
+	ScoreFromNumPieces one = new ScoreFromNumPieces(bs,colour,pieces,kingLocation);//Determines the score for the number of pieces each team has
+	ScoreFromPawnDistanceToEnd two = new ScoreFromPawnDistanceToEnd(bs,colour,pieces,opponentKingLoc);//Determines the score for how far each pawn has moved
 	ScoreFromPieceValue three = new ScoreFromPieceValue(bs,colour,pieces);//Determines the score from the value of pieces each team still has in play
 	//Start threads that need a move lists
 	one.start();
@@ -573,20 +542,25 @@ public class AIdriver extends Player{
 	BoardSquare[][] bs;
 	Boolean colour;
 	Piece[] pieces; 
+	int blackPieceCount;
+	int whitePieceCount;
+	int[] kingPos;
 	/**
 	 * @param bs the board state
 	 * @param colour the colour of the current player
 	 */
-	ScoreFromNumPieces(BoardSquare[][] bs,Boolean colour,Piece[] pieces){
+	ScoreFromNumPieces(BoardSquare[][] bs,Boolean colour,Piece[] pieces,int[] kingPos){
 	    this.bs = bs;
 	    this.score =0;
 	    this.colour = colour;
 	    this.pieces = pieces;
+	    this.kingPos = kingPos;
 	}
 	@Override
 	public void run(){
-	   int blackPieceCount=0;
-	   int whitePieceCount=0;
+	    long startTime = System.nanoTime(); 
+	    blackPieceCount=0;
+	    whitePieceCount=0;
 	    //Count the number of pieces each player has
 	    for(Piece p:pieces){
 		if(p.colour){
@@ -598,19 +572,86 @@ public class AIdriver extends Player{
 	    if(colour/*white*/){
 		score = score + ((whitePieceCount+(16-blackPieceCount))*10);//White pieces currently in play plus pieces black lost
 		if(whitePieceCount>blackPieceCount){
-		    score = score+200;
+		    score = score+100;
 		}else{
 		    
 		}
 	    }else{
 		score = score+ ((blackPieceCount+(16-whitePieceCount))*10);//Black pieces currently in play plus pieces white lost
 		if(blackPieceCount>whitePieceCount){
-		    score = score+200;
+		    score = score+100;
 		}else{
 		    
 		}
 	    }
+	    long estimatedTime = System.nanoTime() - startTime;
+	//System.out.println("Thread one took "+(double)estimatedTime/1000000000.0+" sceonds."); 
 	}
+	public double kingsGaurds(){
+	    double gaurdScore=0;
+	    //Left
+	   if(kingPos[0]>0&&bs[kingPos[0]-1][kingPos[1]].hasPiece&&bs[kingPos[0]-1][kingPos[1]].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]-1][kingPos[1]].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //UpperLeft
+	   if(kingPos[0]>0&&kingPos[1]>0&&bs[kingPos[0]-1][kingPos[1]-1].hasPiece&&bs[kingPos[0]-1][kingPos[1]-1].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]-1][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]-1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Upper
+	   if(kingPos[1]>0&&bs[kingPos[0]][kingPos[1]-1].hasPiece&&bs[kingPos[0]][kingPos[1]-1].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]][kingPos[1]-1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //upper Right
+	   if(kingPos[0]<7&&kingPos[1]>0&&bs[kingPos[0]+1][kingPos[1]-1].hasPiece&&bs[kingPos[0]+1][kingPos[1]-1].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]+1][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]-1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Right
+	   if(kingPos[0]<7&&bs[kingPos[0]+1][kingPos[1]].hasPiece&&bs[kingPos[0]+1][kingPos[1]].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]+1][kingPos[1]].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //LowerRight
+	   if(kingPos[0]<7&&kingPos[1]<7&&bs[kingPos[0]+1][kingPos[1]+1].hasPiece&&bs[kingPos[0]+1][kingPos[1]+1].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]+1][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]+1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Lower
+	   if(kingPos[1]<7&&bs[kingPos[0]][kingPos[1]+1].hasPiece&&bs[kingPos[0]][kingPos[1]+1].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]][kingPos[1]+1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //LowerLeft
+	   if(kingPos[0]>0&&kingPos[1]<7&&bs[kingPos[0]-1][kingPos[1]+1].hasPiece&&bs[kingPos[0]-1][kingPos[1]+1].piece.colour==colour){
+	       gaurdScore += 80;
+	       if(bs[kingPos[0]-1][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]+1].piece.textRepresentation.equals("P")){
+		   gaurdScore+=40;
+	       }else{gaurdScore-=20;}
+	   }
+	   //Once half the pieces are gone reduce the value of gaurding the king
+	   if((blackPieceCount+whitePieceCount)<16){
+	       gaurdScore = gaurdScore/2.0;
+	   }
+	   return gaurdScore;
+	}
+	
     }
     
     //Class that evaluates the score from the distance each pawn has moved from their starting position 
@@ -619,22 +660,25 @@ public class AIdriver extends Player{
 	BoardSquare[][] bs;
 	Boolean colour;
 	Piece[] pieces;
+	int[] kingPos;
 	/**
 	 * @param bs the board state
 	 * @param colour the colour of the current player
 	 */
-	ScoreFromPawnDistanceToEnd(BoardSquare[][] bs,Boolean colour, Piece[] pieces){
+	ScoreFromPawnDistanceToEnd(BoardSquare[][] bs,Boolean colour, Piece[] pieces,int[] oppKing){
 	    this.score = 0;
 	    this.bs = bs;
 	    this.colour = colour;
 	    this.pieces = pieces;
+	    this.kingPos = oppKing;
 	}
 	@Override
 	public void run(){
+	    long startTime = System.nanoTime(); 
 	    if(colour/*white*/){
 		for(Piece p : pieces){
 		    if(p.colour==colour&&p.textRepresentation.equals("p")){
-			score = score+((8-p.y)*10);
+			score = score+((7-p.y)*15);
 			    if(p.y==0){
 				score += 50;
 			    }
@@ -643,14 +687,56 @@ public class AIdriver extends Player{
 	    }else{
 		for(Piece p : pieces){
 		    if(p.colour==colour&&p.textRepresentation.equals("P")){
-			score = score+((p.y)*10);
+			score = score+((p.y)*15);
 			    if(p.y==7){
 				score += 50;
 			    }
 		    }
 		}
 	    }
+	    score+=toCloseToOpponentKing();
+	    long estimatedTime = System.nanoTime() - startTime;
+	//System.out.println("Thread two took "+(double)estimatedTime/1000000000.0+" sceonds."); 
 	}
+	//Negative score from pieces being to close to opponents king
+	public double toCloseToOpponentKing(){
+	    double gaurdScore=0;
+	    //Left
+	   if(kingPos[0]>0&&bs[kingPos[0]-1][kingPos[1]].hasPiece&&bs[kingPos[0]-1][kingPos[1]].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //UpperLeft
+	   if(kingPos[0]>0&&kingPos[1]>0&&bs[kingPos[0]-1][kingPos[1]-1].hasPiece&&bs[kingPos[0]-1][kingPos[1]-1].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //Upper
+	   if(kingPos[1]>0&&bs[kingPos[0]][kingPos[1]-1].hasPiece&&bs[kingPos[0]][kingPos[1]-1].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //upper Right
+	   if(kingPos[0]<7&&kingPos[1]>0&&bs[kingPos[0]+1][kingPos[1]-1].hasPiece&&bs[kingPos[0]+1][kingPos[1]-1].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //Right
+	   if(kingPos[0]<7&&bs[kingPos[0]+1][kingPos[1]].hasPiece&&bs[kingPos[0]+1][kingPos[1]].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //LowerRight
+	   if(kingPos[0]<7&&kingPos[1]<7&&bs[kingPos[0]+1][kingPos[1]+1].hasPiece&&bs[kingPos[0]+1][kingPos[1]+1].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //Lower
+	   if(kingPos[1]<7&&bs[kingPos[0]][kingPos[1]+1].hasPiece&&bs[kingPos[0]][kingPos[1]+1].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   //LowerLeft
+	   if(kingPos[0]>0&&kingPos[1]<7&&bs[kingPos[0]-1][kingPos[1]+1].hasPiece&&bs[kingPos[0]-1][kingPos[1]+1].piece.colour==!colour){
+	       gaurdScore -= 80;
+	   }
+	   return gaurdScore;
+	}
+	
+	
     }
     
     //Class that evaulates the score from the value of each piece still in play
@@ -674,6 +760,8 @@ public class AIdriver extends Player{
 	}
 	@Override
 	public void run(){
+	    long startTime = System.nanoTime(); 
+	    ArrayList<Piece> moveList = new ArrayList();
 		for(Piece p:pieces){
 		    
 			if(p.colour==colour){
@@ -703,6 +791,8 @@ public class AIdriver extends Player{
 				default:
 				    break;
 			    }
+			    //Count total number of moves
+			    score += p.generateMoves(bs,moveList).length;
 			}else{
 			    switch(p.textRepresentation){
 				case "R":
@@ -731,10 +821,14 @@ public class AIdriver extends Player{
 				default:
 				    break;
 			    }
+			    //Count oppenents total number of moves
+			    score -= p.generateMoves(bs,moveList).length;
 			}
 		    
 		}
 		scoreFromNumKingMoves();
+		long estimatedTime = System.nanoTime() - startTime;
+	//System.out.println("Thread three took "+(double)estimatedTime/1000000000.0+" sceonds."); 
 	}
 	public void scoreFromNumKingMoves(){
 	    ArrayList<Piece> moveList=new ArrayList();
@@ -746,9 +840,9 @@ public class AIdriver extends Player{
 		}
 	    }
 	    if(colour/*white*/){
-		score+=(whiteKing.generateMoves(bs,moveList).length-blackKing.generateMoves(bs,moveList).length)*10;
+		score+=(whiteKing.generateMoves(bs,moveList).length-blackKing.generateMoves(bs,moveList).length)*5;
 	    }else{//black
-		score+=(blackKing.generateMoves(bs,moveList).length-whiteKing.generateMoves(bs,moveList).length)*10;
+		score+=(blackKing.generateMoves(bs,moveList).length-whiteKing.generateMoves(bs,moveList).length)*5;
 	    }
 	}
     }
@@ -759,28 +853,27 @@ public class AIdriver extends Player{
 	double score;
 	BoardSquare[][] bs;
 	Boolean colour;
-	int[] kingPos;
-	ControlMiddle(BoardSquare[][] bs,Boolean colour,int[] kingPos){
+	ControlMiddle(BoardSquare[][] bs,Boolean colour){
 	    score = 0 ; 
 	    this.bs = bs;
 	    this.colour = colour;
-	    this.kingPos = kingPos;
 	    
 	}
 	
 	@Override
 	public void run(){
+	    long startTime = System.nanoTime(); 
 	    for(int x=2;x<6;x++){
 		for(int y=2;y<6;y++){
 		    if(bs[x][y].hasPiece && bs[x][y].piece.colour==colour){
-			score+=10;
+			score+=20;
 		    }
 		}
 	    }
-	    score+=kingsGaurds();
-	    //score += pawnsInFile();
+	    score += pawnsInFile();
+	    long estimatedTime = System.nanoTime() - startTime;
+	//System.out.println("Thread four took "+(double)estimatedTime/1000000000.0+" sceonds.");   
 	}
-	
 	public double pawnsInFile(){
 	    int fileScore=0;
 	    int fileCount=0;
@@ -790,72 +883,12 @@ public class AIdriver extends Player{
 			fileCount++;
 		    }
 		}
-		fileScore += (-1)*(fileCount*2);
+		fileScore += (-1)*(fileCount*3);
 	    }
 	    
 	    return fileScore;
 	}
 	
-	public double kingsGaurds(){
-	    int gaurdScore=0;
-	    //Left
-	   if(kingPos[0]>0&&bs[kingPos[0]-1][kingPos[1]].hasPiece&&bs[kingPos[0]-1][kingPos[1]].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]-1][kingPos[1]].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //UpperLeft
-	   if(kingPos[0]>0&&kingPos[1]>0&&bs[kingPos[0]-1][kingPos[1]-1].hasPiece&&bs[kingPos[0]-1][kingPos[1]-1].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]-1][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]-1].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //Upper
-	   if(kingPos[1]>0&&bs[kingPos[0]][kingPos[1]-1].hasPiece&&bs[kingPos[0]][kingPos[1]-1].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]][kingPos[1]-1].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //upper Right
-	   if(kingPos[0]<7&&kingPos[1]>0&&bs[kingPos[0]+1][kingPos[1]-1].hasPiece&&bs[kingPos[0]+1][kingPos[1]-1].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]+1][kingPos[1]-1].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]-1].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //Right
-	   if(kingPos[0]<7&&bs[kingPos[0]+1][kingPos[1]].hasPiece&&bs[kingPos[0]+1][kingPos[1]].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]+1][kingPos[1]].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //LowerRight
-	   if(kingPos[0]<7&&kingPos[1]<7&&bs[kingPos[0]+1][kingPos[1]+1].hasPiece&&bs[kingPos[0]+1][kingPos[1]+1].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]+1][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]+1][kingPos[1]+1].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //Lower
-	   if(kingPos[1]<7&&bs[kingPos[0]][kingPos[1]+1].hasPiece&&bs[kingPos[0]][kingPos[1]+1].piece.colour==colour){
-	       gaurdScore += 50;
-	       if(bs[kingPos[0]][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]][kingPos[1]+1].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   //LowerLeft
-	   if(kingPos[0]>0&&kingPos[1]<7&&bs[kingPos[0]-1][kingPos[1]+1].hasPiece&&bs[kingPos[0]-1][kingPos[1]+1].piece.colour==colour){
-	       gaurdScore += 100;
-	       if(bs[kingPos[0]-1][kingPos[1]+1].piece.textRepresentation.equals("p")||bs[kingPos[0]-1][kingPos[1]+1].piece.textRepresentation.equals("P")){
-		   gaurdScore+=20;
-	       }else{gaurdScore-=20;}
-	   }
-	   return gaurdScore;
-	}
     }
     
 }

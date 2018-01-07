@@ -200,7 +200,6 @@ public class Board {
 		    }
                     board[pieceSelected[0]][pieceSelected[1]].piece.x = pieceSelected[0];
                     board[pieceSelected[0]][pieceSelected[1]].piece.y = pieceSelected[1];
-                    System.out.println("Board class piece moving:"+pieceSelected[0]+","+pieceSelected[1]);
                     outerloop:
                     //Checks if move selected is valid
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){
@@ -368,7 +367,6 @@ public class Board {
 		    if(p.cancelSelection){
 			break;
 		    }
-                    System.out.println("Board class piece moving:"+pieceSelected[0]+","+pieceSelected[1]);
                     outerloop:
                     //Checks if move selected is valid
 		    if(board[pieceSelected[0]][pieceSelected[1]].piece.isValidMove(pieceMove, board, moveList)){

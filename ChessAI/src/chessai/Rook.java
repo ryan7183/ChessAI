@@ -88,8 +88,8 @@ public class Rook extends Piece {
 	int[] possibleMove=new int[2];
 	int validCount =0;
 	int[][] returnMove;
-	for(int x=0;x<bs.length;x++){
-	    for(int y=0;y<bs[0].length;y++){
+	for(int y=0;y<bs.length;y++){
+	    for(int x=0;x<bs[0].length;x++){
 		possibleMove[0]=x;
 		possibleMove[1]=y;
 		if(isValidMove(possibleMove,bs, moveList)){

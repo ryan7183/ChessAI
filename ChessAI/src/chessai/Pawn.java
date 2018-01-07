@@ -57,43 +57,7 @@ public class Pawn extends Piece {
         if(!this.colour && newPos[1]<this.y){
             return false;
         }
-        //System.out.println(500);
-        //System.out.println(this.y+changeInY);
-        //Checks to see if there is a piece that the pawn can capture at the new position
-        /*if(this.x-1 >=0 && (this.y+changeInY <=7 && this.y+changeInY >=0)){
-            if(bs[this.x-1][this.y+changeInY].hasPiece && newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)){
-                System.out.println(Math.abs(this.y - newPos[1])+"\t"+this.y+"\t"+newPos[1]);
-                if(Math.abs(this.y - newPos[1])>1){
-                    return false;
-                }
-                else{
-                    //Returns false if the piece that the pawn can attack is the same colour as the pawn
-                    if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
-                        System.out.println(1);
-                        return false;
-                    }
-                    //Returns true if the piece at the new position is not the same colour as the pawn
-                    else{
-                        System.out.println(2);
-                        return true;
-                    }
-                }
-            }
-        }
-        else if(this.x+1 >=7 && (this.y+changeInY <=7 && this.y+changeInY >=0)){
-            if(bs[this.x+1][this.y+changeInY].hasPiece && newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1)){
-                //Returns false if the piece that the pawn can attack is the same colour as the pawn
-                if(bs[newPos[0]][newPos[1]].hasPiece && bs[newPos[0]][newPos[1]].piece.colour == this.colour){
-                    System.out.println(3);
-                    return false;
-                }
-                //Returns true if the piece at the new position is not the same colour as the pawn
-                else{
-                    System.out.println(4);
-                    return true;
-                }
-            }
-        }*/
+        
         if((((this.x-1 >=0 && (this.y+changeInY <=7 && this.y+changeInY >=0)) && (bs[this.x-1][this.y+changeInY].hasPiece)) && 
                 (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x-1))) || (((this.x+1 <=7 && (this.y+changeInY <=7 && this.y+changeInY >=0))&& (bs[this.x+1][this.y+changeInY].hasPiece))
                 && (newPos[1]==(this.y+changeInY) && newPos[0]==(this.x+1)))){
@@ -262,32 +226,18 @@ public class Pawn extends Piece {
 	int[] possibleMove=new int[2];
 	int validCount = 0;
 	int[][] returnMove;
-        //System.out.println(10);
 	for(int x=this.x-1;x<this.x+2;x++){
-            //System.out.println(20);
 	    for(int y=0;y<bs[0].length;y++){
-                //System.out.println(30);
 		possibleMove[0]=x;
 		possibleMove[1]=y;
-                //System.out.println(40);
-		//System.out.println(1);
 		if(isValidMove(possibleMove,bs, moveList)){
-                    //System.out.println(666);
-                    //System.out.println(validCount);
 		    moves[validCount]=possibleMove.clone();
-		    //System.out.println(2);
-                    //System.out.println(777);
 		    validCount++;
-                    //System.out.println(888);
 		}
-		//System.out.println(3);
-                //System.out.println(50);
 	    }
 	}
-        //System.out.println(60);
 	returnMove =new int[validCount][];//Create an array of the correct size to store the moves
 	System.arraycopy(moves, 0,returnMove , 0, validCount);//Copy the valid moves to an array of the correct size
-        //System.out.println("fdsdsgds");
 	return returnMove;
     }
     
