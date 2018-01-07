@@ -14,8 +14,8 @@ public class AIdriver extends Player{
     volatile Passer passer;//A class used to pass values between threads
     int[] move;//The position the ai will move the selected piece to 
     int[] pieceChosen;//Th epiece the ai is moving
-    final int Max_Depth=3;//The number of moves the ai looks ahead for
-    final double Max_Time = 15;//Max time the ai has to find a move, in seconds
+    final int Max_Depth=2;//The number of moves the ai looks ahead for
+    final double Max_Time = 60;//Max time the ai has to find a move, in seconds
     ArrayList<Piece> randList= new ArrayList();
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;//The colour the ai is controlling
@@ -879,7 +879,7 @@ public class AIdriver extends Player{
 	    int fileCount=0;
 	    for(int x=0;x<bs.length;x++){
 		for(int y=0;y<bs[0].length;y++){
-		    if(bs[x][y].hasPiece&&bs[x][y].piece.colour==colour&&(bs[x][y].piece.textRepresentation.equals("p")||bs[x][y].piece.textRepresentation.equals("P"))){
+		    if(bs[x][y].hasPiece/*&&bs[x][y].piece.colour==colour*/&&(bs[x][y].piece.textRepresentation.equals("p")||bs[x][y].piece.textRepresentation.equals("P"))){
 			fileCount++;
 		    }
 		}
