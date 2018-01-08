@@ -51,7 +51,7 @@ public class ChessAIUI extends Application {
 	Image whiteRookImg = new Image("img/WhitePieces/WhiteRook.png");
 	
 	Passer p = new Passer();//Create a way to communicate with board
-	AIdriver p1=new AIdriver(p,true);
+	Human p1=new Human(p,true);
 	AIdriver p2 = new AIdriver(p,false);
 	
 	Pane root = new Pane();
@@ -127,6 +127,18 @@ public class ChessAIUI extends Application {
         });
         root.getChildren().addAll(promotionSelect, pieces,promotionHelp);
 	
+        Text playerTurn = new Text();
+        playerTurn.setText("It is your turn to move a piece");
+        playerTurn.setLayoutX(5);
+        playerTurn.setLayoutY(100);
+        playerTurn.setVisible(false);
+        Text aiTurn = new Text();
+        aiTurn.setText("The AI is thinking");
+        aiTurn.setLayoutX(5);
+        aiTurn.setLayoutY(100);
+        aiTurn.setVisible(false);
+        root.getChildren().addAll(playerTurn,aiTurn);
+        
 	primaryStage.setTitle("Best Chess Game In The World... Maybe, Possibly Not, I Don't Know!");
 	primaryStage.setScene(scene);
 	
@@ -212,6 +224,20 @@ public class ChessAIUI extends Application {
                     alert.setOnHidden(e -> Platform.exit());
                     alert.show();
                     
+                }
+                //Lets player know its their turn
+                if(p.isPlayerTurn){
+                    playerTurn.setVisible(true);
+                }
+                else{
+                    playerTurn.setVisible(false);
+                }
+                //Lets the player know it the AI's turn
+                if(p.isAITurn){
+                    aiTurn.setVisible(true);
+                }
+                else{
+                    aiTurn.setVisible(false);
                 }
 	    }
             

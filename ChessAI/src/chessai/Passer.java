@@ -17,12 +17,14 @@ public class Passer {
     volatile boolean whiteCheckmate;//True if white is in check mate
     volatile boolean blackCheckmate;//True if black is in check mate
     volatile boolean stalemate;//True if board is in stalemate
-    volatile boolean promotion;
+    volatile boolean promotion;//True of pawn promotion is possible
     volatile boolean newBoardAvailable;//True if a new board has been loaded
-    volatile boolean isInvalid;
+    volatile boolean isInvalid;//True if the move choosen is invalid
     volatile BoardSquare[][] newBoard;//The new board
     volatile String newPiece;
     volatile int[] selectionPosition;//The posiition of the selection box
+    volatile boolean isPlayerTurn;//True if it is the player's turn
+    volatile boolean isAITurn;//True if it is the AI's turn
     Passer(){
 	cancelSelection = false;
 	playerSelect = false;
@@ -40,6 +42,8 @@ public class Passer {
 	selectionPosition = new int[2];
 	newBoard = null;
 	newBoardAvailable=false;
+        isPlayerTurn = false;
+        isAITurn = false;
     }
     
     /**Sets the position for the selection box

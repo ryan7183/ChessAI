@@ -168,6 +168,7 @@ public class Board {
 	while(cont){
 	while(cont){
 	    //Player1 move loop
+            p.isPlayerTurn = true;
 	    if(skipTurn){
 		skipTurn=false;
 	    }else{
@@ -305,6 +306,7 @@ public class Board {
 		    break;
 		}
 	    }//End of Player1 turn
+            p.isPlayerTurn = false;
 	    }
 	    if(p.newBoardAvailable){
 		p.board=p.newBoard;
@@ -340,6 +342,7 @@ public class Board {
 	    }else{
 	     //Player2 move loop
 	    while(true){
+                p.isAITurn = true;
 		//Ask player2
 		valid = false;
 		//Wait till valid piece is selected
@@ -472,6 +475,7 @@ public class Board {
 		    break;
 		}
 	    }//End of player 2 turn
+            p.isAITurn = false;
 	    }
 	    p.drawSelection=false;
 	    if(p.newBoardAvailable){
