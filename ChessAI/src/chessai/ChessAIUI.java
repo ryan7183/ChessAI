@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -39,25 +41,75 @@ public class ChessAIUI extends Application {
 	File fl;//File for initial board state if board is being loaded
 	
 	//Get who is human and who is AI
-	String[] options = new String[] {"All Human", "All AI", "Human Black", "Human White"};
+        Alert playerType = new Alert(AlertType.CONFIRMATION);
+        playerType.setTitle("Which type of game would you like to play?");
+        playerType.setHeaderText("Decide which team is human and ai controlled");
+        playerType.setContentText("Choose 'All Human' for player vs player, 'All Ai' for AI vs AI, 'Black' to play against the AI using the black pieces, or 'White' to play against the AI using the white pieces.");
+        ButtonType allHuman = new ButtonType("All Human");
+        ButtonType allAI = new ButtonType("All AI");
+        ButtonType humanBlack = new ButtonType("Black");
+        ButtonType humanWhite = new ButtonType("White");
+        playerType.getButtonTypes().setAll(allHuman,allAI,humanBlack,humanWhite);
+        Optional<ButtonType> response = playerType.showAndWait();
+        
+        Passer p = new Passer();//Create a way to communicate with board
+	
+	Player p1;
+	Player p2;
+        if(response.get() == allHuman){
+            p1=new Human(p,true);
+            p2=new Human(p,false);
+        }
+        else if(response.get() == allAI){
+            p1 = new AIdriver(p,true);
+            p2 = new AIdriver(p,false);
+        }
+        else if(response.get() == humanBlack){
+            p1 = new AIdriver(p,true);
+            p2=new Human(p,false);
+        }
+        else if(response.get() == humanWhite){
+            p1 = new Human(p,true);
+            p2 = new AIdriver(p,false);
+        }
+        else{
+            p1 = new Human(p,true);
+            p2 = new AIdriver(p,false);
+        }
+	/*String[] options = new String[] {"All Human", "All AI", "Human Black", "Human White"};
 	int response = JOptionPane.showOptionDialog(null, "Which type of game would you like to play?", "Decide which team is human and ai controlled",
         JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-        null, options, options[0]);
+        null, options, options[0]);*/
 	
 	//Get if board will be loaded or set to a normal start
-	String[] load = new String[] {"normal Start", "load board"};
+        Alert boardType = new Alert(AlertType.CONFIRMATION);
+        boardType.setTitle("Which type of game would you like to play?");
+        boardType.setHeaderText("Decide which team is human and ai controlled");
+        ButtonType normalStart = new ButtonType("Normal Start");
+        ButtonType load = new ButtonType("Load Board");
+        boardType.getButtonTypes().setAll(normalStart, load);
+        Optional<ButtonType> responseLoad = boardType.showAndWait();
+	/*String[] load = new String[] {"normal Start", "load board"};
 	int responseLoad = JOptionPane.showOptionDialog(null, "Load board or start normally", "Load board?",
         JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-        null, load, load[0]);
+        null, load, load[0]);*/
 
 	//Get file location of loaded board if needed
-	if(responseLoad == 1){
+        if(responseLoad.get() == load){
+           FileChooser fc = new FileChooser();
+	   fc.setTitle("Open chess state");
+	   fl =fc.showOpenDialog(primaryStage); 
+        }
+        else{
+            fl=null;
+        }
+	/*if(responseLoad == 1){
 	    FileChooser fc = new FileChooser();
 	    fc.setTitle("Open chess state");
 	    fl =fc.showOpenDialog(primaryStage);
 	}else{
 	    fl=null;
-	}
+	}*/
 	//Get Images
 	Image boardImg = new Image("img/board.png");
 	Image blackBishopImg =new Image("img/BlackPieces/BlackBishop.png");
@@ -73,11 +125,8 @@ public class ChessAIUI extends Application {
 	Image blackRookImg = new Image("img/BlackPieces/BlackRook.png");;
 	Image whiteRookImg = new Image("img/WhitePieces/WhiteRook.png");
 	
-	Passer p = new Passer();//Create a way to communicate with board
 	
-	Player p1;
-	Player p2;
-	switch(response){
+	/*switch(response){
 	    case 0 :
 		p1=new Human(p,true);
 		p2=new Human(p,false);
@@ -98,7 +147,7 @@ public class ChessAIUI extends Application {
 		p1 = new Human(p,true);
 		p2 = new AIdriver(p,false);
 		break;
-	}
+	}*/
 	Pane root = new Pane();
 	Scene scene = new Scene(root, 1920, 1080);
 	//Add canvas
@@ -195,7 +244,17 @@ public class ChessAIUI extends Application {
 		Board b;
 		//File f =new File("C:/Users/Ryan/OneDrive/School/COSC 3P71/Project/ChessAI/ChessAI/ChessAI/ChessBoard.txt");
 		
-		switch(responseLoad){
+                if(responseLoad.get() == load){
+                    if(fl !=null){
+                        b = new Board(fl,p,p1,p2);
+                    }else{
+                        b = new Board(p,p1,p2);  
+                    }
+                }
+                else{
+                    b = new Board(p,p1,p2);
+                }
+		/*switch(responseLoad){
 		    case 0:
 			b = new Board(p,p1,p2);
 			break;
@@ -210,7 +269,7 @@ public class ChessAIUI extends Application {
 		    default:
 			b = new Board(p,p1,p2);
 			break;
-		}
+		}*/
 		b = new Board(p,p1,p2); 
                 return null;
                 
