@@ -16,7 +16,7 @@ public class AIdriver extends Player{
     int[] pieceChosen;//Th epiece the ai is moving
     final int Max_Depth=2;//The dpeth of the minmax algorithm, looks Max_Depth+1 moves ahead
     final double Max_Time = 60;//Max time the ai has to find a move, in seconds
-    ArrayList<Piece> randList= new ArrayList();
+    ArrayList<Piece> randList= new ArrayList<Piece>();
     AIdriver(Passer p, boolean colour){
 	this.colour = colour;//The colour the ai is controlling
 	this.isHuman = false;//DEtermines if it is a person or the computer
@@ -761,7 +761,7 @@ public class AIdriver extends Player{
 	@Override
 	public void run(){
 	    long startTime = System.nanoTime(); 
-	    ArrayList<Piece> moveList = new ArrayList();
+	    ArrayList<Piece> moveList = new ArrayList<Piece>();
 		for(Piece p:pieces){
 		    
 			if(p.colour==colour){
@@ -831,7 +831,7 @@ public class AIdriver extends Player{
 	//System.out.println("Thread three took "+(double)estimatedTime/1000000000.0+" sceonds."); 
 	}
 	public void scoreFromNumKingMoves(){
-	    ArrayList<Piece> moveList=new ArrayList();
+	    ArrayList<Piece> moveList=new ArrayList<Piece>();
 	    for(Piece p:pieces){
 		if(p.textRepresentation.equals("k")){
 		    whiteKing = new King((King)p);
