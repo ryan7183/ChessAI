@@ -76,10 +76,6 @@ public class ChessAIUI extends Application {
             p1 = new Human(p,true);
             p2 = new AIdriver(p,false);
         }
-	/*String[] options = new String[] {"All Human", "All AI", "Human Black", "Human White"};
-	int response = JOptionPane.showOptionDialog(null, "Which type of game would you like to play?", "Decide which team is human and ai controlled",
-        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-        null, options, options[0]);*/
 	
 	//Get if board will be loaded or set to a normal start
         Alert boardType = new Alert(AlertType.CONFIRMATION);
@@ -89,10 +85,6 @@ public class ChessAIUI extends Application {
         ButtonType load = new ButtonType("Load Board");
         boardType.getButtonTypes().setAll(normalStart, load);
         Optional<ButtonType> responseLoad = boardType.showAndWait();
-	/*String[] load = new String[] {"normal Start", "load board"};
-	int responseLoad = JOptionPane.showOptionDialog(null, "Load board or start normally", "Load board?",
-        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-        null, load, load[0]);*/
 
 	//Get file location of loaded board if needed
         if(responseLoad.get() == load){
@@ -103,13 +95,7 @@ public class ChessAIUI extends Application {
         else{
             fl=null;
         }
-	/*if(responseLoad == 1){
-	    FileChooser fc = new FileChooser();
-	    fc.setTitle("Open chess state");
-	    fl =fc.showOpenDialog(primaryStage);
-	}else{
-	    fl=null;
-	}*/
+	
 	//Get Images
 	Image boardImg = new Image("img/board.png");
 	Image blackBishopImg =new Image("img/BlackPieces/BlackBishop.png");
@@ -125,29 +111,6 @@ public class ChessAIUI extends Application {
 	Image blackRookImg = new Image("img/BlackPieces/BlackRook.png");;
 	Image whiteRookImg = new Image("img/WhitePieces/WhiteRook.png");
 	
-	
-	/*switch(response){
-	    case 0 :
-		p1=new Human(p,true);
-		p2=new Human(p,false);
-		break;
-	    case 1:
-		p1 = new AIdriver(p,true);
-		p2 = new AIdriver(p,false);
-		break;
-	    case 2:
-		p1 = new AIdriver(p,true);
-		p2=new Human(p,false);
-		break;
-	    case 3:
-		p1 = new Human(p,true);
-		p2 = new AIdriver(p,false);
-		break;
-	    default:
-		p1 = new Human(p,true);
-		p2 = new AIdriver(p,false);
-		break;
-	}*/
 	Pane root = new Pane();
 	Scene scene = new Scene(root, 1920, 1080);
 	//Add canvas
@@ -254,22 +217,7 @@ public class ChessAIUI extends Application {
                 else{
                     b = new Board(p,p1,p2);
                 }
-		/*switch(responseLoad){
-		    case 0:
-			b = new Board(p,p1,p2);
-			break;
-		    case 1:
-			System.out.println(1);
-			if(fl !=null){
-			    b = new Board(fl,p,p1,p2);
-			}else{
-			  b = new Board(p,p1,p2);  
-			}
-			break;
-		    default:
-			b = new Board(p,p1,p2);
-			break;
-		}*/
+		
 		b = new Board(p,p1,p2); 
                 return null;
                 
