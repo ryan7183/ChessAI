@@ -14,10 +14,12 @@ public class AIdriver extends Player{
     volatile Passer passer;//A class used to pass values between threads
     int[] move;//The position the ai will move the selected piece to 
     int[] pieceChosen;//Th epiece the ai is moving
-    final int Max_Depth=2;//The dpeth of the minmax algorithm, looks Max_Depth+1 moves ahead
-    final double Max_Time = 60;//Max time the ai has to find a move, in seconds
+    int Max_Depth;//The dpeth of the minmax algorithm, looks Max_Depth+1 moves ahead
+    double Max_Time;//Max time the ai has to find a move, in seconds
     ArrayList<Piece> randList= new ArrayList<Piece>();
-    AIdriver(Passer p, boolean colour){
+    AIdriver(Passer p, boolean colour,int depth, int time){
+	this.Max_Depth =depth;
+	this.Max_Time =time;
 	this.colour = colour;//The colour the ai is controlling
 	this.isHuman = false;//DEtermines if it is a person or the computer
 	passer=p;//The passer
