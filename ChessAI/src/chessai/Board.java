@@ -168,11 +168,33 @@ public class Board {
 	while(cont){
 	while(cont){
 	    //Player1 move loop
-            p.isPlayerTurn = true;
+	    if(player1.isHuman){
+		p.isPlayerTurn = true;
+		p.isAITurn=false;
+	    }else{
+		p.isAITurn = true;
+		p.isPlayerTurn = false;
+	    }
 	    if(skipTurn){
 		skipTurn=false;
 	    }else{
 	    while(true){
+		//Check for check mate
+            if(isKingInCheck(true,board,moveList)){
+                isCheckMate = isCheckMate(true,board,moveList);
+                if(isCheckMate){
+                    p.whiteCheckmate = true;
+                    System.out.println("CheckMate! Black Wins.");
+                } 
+            }
+            //Check for stalemate
+            else{
+                stalemate = isStalemate(true,board,moveList);
+                if(stalemate){
+                    p.stalemate = true;
+                    System.out.println("Stalemate. The game is a draw.");
+                }
+            }
 		//Ask player1
 		valid = false;
 		//Wait till valid piece is selected
@@ -342,7 +364,13 @@ public class Board {
 	    }else{
 	     //Player2 move loop
 	    while(true){
-                p.isAITurn = true;
+                if(player2.isHuman){
+		    p.isPlayerTurn = true;
+		    p.isAITurn=false;
+		}else{
+		    p.isAITurn = true;
+		    p.isPlayerTurn = false;
+		}
 		//Ask player2
 		valid = false;
 		//Wait till valid piece is selected
@@ -475,7 +503,6 @@ public class Board {
 		    break;
 		}
 	    }//End of player 2 turn
-            p.isAITurn = false;
 	    }
 	    p.drawSelection=false;
 	    if(p.newBoardAvailable){
@@ -489,22 +516,7 @@ public class Board {
 	    //Update board
 	    p.boardUpdate = true;//Tell the render there is a change to update
 	    
-	    //Check for check mate
-            if(isKingInCheck(true,board,moveList)){
-                isCheckMate = isCheckMate(true,board,moveList);
-                if(isCheckMate){
-                    p.whiteCheckmate = true;
-                    System.out.println("CheckMate! Black Wins.");
-                } 
-            }
-            //Check for stalemate
-            else{
-                stalemate = isStalemate(true,board,moveList);
-                if(stalemate){
-                    p.stalemate = true;
-                    System.out.println("Stalemate. The game is a draw.");
-                }
-            }
+	    
 	}
 	}
     }
