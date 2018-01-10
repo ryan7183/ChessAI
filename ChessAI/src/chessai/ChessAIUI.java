@@ -20,15 +20,21 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import javax.swing.JOptionPane;
 
 /**
@@ -54,6 +60,32 @@ public class ChessAIUI extends Application {
         
         Passer p = new Passer();//Create a way to communicate with board
 	
+	
+	//Control parameters
+	Dialog<Pair<String,String>> param = new Dialog<>();
+	param.setTitle("Control Parameters");
+	param.setHeaderText("Choose depth and max turbn time for AI");
+	TextField depthField = new TextField();
+	depthField.setPromptText("Search Depth For AI");
+	TextField timeField = new TextField();
+	timeField.setPromptText("Max Turn Time for AI");
+	GridPane grid = new GridPane();
+	//grid.add(new Label("Depth For AI:"),0,0);
+	grid.add(depthField, 0, 0);
+	//grid.add(new Label("Time For AI Turn In Seconds:"),0,1);
+	grid.add(timeField,0,1);
+	ButtonType doneButton = new ButtonType("Done", ButtonData.OK_DONE);
+	param.getDialogPane().getButtonTypes().addAll(doneButton, ButtonType.CANCEL);
+	param.getDialogPane().setContent(grid);
+	param.setResultConverter(dialogButton -> {
+	if (dialogButton == doneButton) {
+	    return new Pair<>(depthField.getText(), timeField.getText());
+	}
+	return null;
+	});
+
+	Optional<Pair<String,String>> paramResult = param.showAndWait();
+	//Make players
 	Player p1;
 	Player p2;
         if(response.get() == allHuman){
@@ -61,20 +93,20 @@ public class ChessAIUI extends Application {
             p2=new Human(p,false);
         }
         else if(response.get() == allAI){
-            p1 = new AIdriver(p,true);
-            p2 = new AIdriver(p,false);
+            p1 = new AIdriver(p,true,Integer.parseInt(paramResult.get().getKey()),Integer.parseInt(paramResult.get().getValue()));
+            p2 = new AIdriver(p,false,Integer.parseInt(paramResult.get().getKey()),Integer.parseInt(paramResult.get().getValue()));
         }
         else if(response.get() == humanBlack){
-            p1 = new AIdriver(p,true);
+            p1 = new AIdriver(p,true,Integer.parseInt(paramResult.get().getKey()),Integer.parseInt(paramResult.get().getValue()));
             p2=new Human(p,false);
         }
         else if(response.get() == humanWhite){
             p1 = new Human(p,true);
-            p2 = new AIdriver(p,false);
+            p2 = new AIdriver(p,false,Integer.parseInt(paramResult.get().getKey()),Integer.parseInt(paramResult.get().getValue()));
         }
         else{
             p1 = new Human(p,true);
-            p2 = new AIdriver(p,false);
+            p2 = new AIdriver(p,false,Integer.parseInt(paramResult.get().getKey()),Integer.parseInt(paramResult.get().getValue()));
         }
 	
 	//Get if board will be loaded or set to a normal start
@@ -94,7 +126,7 @@ public class ChessAIUI extends Application {
         }
         else{
             fl=null;
-        }
+	}
 	
 	//Get Images
 	Image boardImg = new Image("img/board.png");
