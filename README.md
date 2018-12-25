@@ -1,2 +1,3 @@
 # ChessAI
-For 3P71
+
+Chess packaged with an AI to play against.
